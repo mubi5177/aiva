@@ -1,9 +1,11 @@
+import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/widgets/custom_social_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -51,6 +53,7 @@ class WelcomeScreen extends StatelessWidget {
               text: AppStrings.letGetStarted,
               onPressed: () {
                 // Add your onPressed logic here
+                context.push(AppRoute.createProfileScreenOne);
               },
               color: context.secondary, // Change color as needed
               width: context.width * .6, // Change width as needed

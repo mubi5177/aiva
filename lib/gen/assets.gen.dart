@@ -33,10 +33,30 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [google, aivaMic, apple, aviaLogo, fb];
 }
 
+class $AssetsSvgsGen {
+  const $AssetsSvgsGen();
+
+  /// File path: assets/svgs/back.svg
+  String get back => 'assets/svgs/back.svg';
+
+  /// File path: assets/svgs/delete.svg
+  String get delete => 'assets/svgs/delete.svg';
+
+  /// File path: assets/svgs/drawer.svg
+  String get drawer => 'assets/svgs/drawer.svg';
+
+  /// File path: assets/svgs/upload.svg
+  String get upload => 'assets/svgs/upload.svg';
+
+  /// List of all assets
+  List<String> get values => [back, delete, drawer, upload];
+}
+
 class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsSvgsGen svgs = $AssetsSvgsGen();
 }
 
 class AssetGenImage {

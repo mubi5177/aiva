@@ -2,6 +2,10 @@ class AppStrings {
   // Onboarding Flow
   static const cancel = 'Cancel';
   static const confirm = 'Confirm';
+  static const enterName = 'Enter Name';
+  static const enterEmail = 'Jegan@example.com';
+  static const enterPhone = 'Enter Phone';
+  static const createProfile = 'Create Profile';
   static const letGetStarted = "Let’s Get Started";
   static const continueWithGoogle = 'Continue with Google';
   static const continueWithFb = 'Continue with Facebook';
