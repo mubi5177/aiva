@@ -29,15 +29,30 @@ class $AssetsImagesGen {
   /// File path: assets/images/fb.png
   AssetGenImage get fb => const AssetGenImage('assets/images/fb.png');
 
+  /// File path: assets/images/no_habbit_icon.png
+  AssetGenImage get noHabbitIcon =>
+      const AssetGenImage('assets/images/no_habbit_icon.png');
+
+  /// File path: assets/images/no_task_icon.png
+  AssetGenImage get noTaskIcon =>
+      const AssetGenImage('assets/images/no_task_icon.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [google, aivaMic, apple, aviaLogo, fb];
+  List<AssetGenImage> get values =>
+      [google, aivaMic, apple, aviaLogo, fb, noHabbitIcon, noTaskIcon];
 }
 
 class $AssetsSvgsGen {
   const $AssetsSvgsGen();
 
+  /// File path: assets/svgs/about.svg
+  String get about => 'assets/svgs/about.svg';
+
   /// File path: assets/svgs/back.svg
   String get back => 'assets/svgs/back.svg';
+
+  /// File path: assets/svgs/cycle.svg
+  String get cycle => 'assets/svgs/cycle.svg';
 
   /// File path: assets/svgs/delete.svg
   String get delete => 'assets/svgs/delete.svg';
@@ -45,11 +60,46 @@ class $AssetsSvgsGen {
   /// File path: assets/svgs/drawer.svg
   String get drawer => 'assets/svgs/drawer.svg';
 
+  /// File path: assets/svgs/labels.svg
+  String get labels => 'assets/svgs/labels.svg';
+
+  /// File path: assets/svgs/logout.svg
+  String get logout => 'assets/svgs/logout.svg';
+
+  /// File path: assets/svgs/notes.svg
+  String get notes => 'assets/svgs/notes.svg';
+
+  /// File path: assets/svgs/notification.svg
+  String get notification => 'assets/svgs/notification.svg';
+
+  /// File path: assets/svgs/notificatons.svg
+  String get notificatons => 'assets/svgs/notificatons.svg';
+
+  /// File path: assets/svgs/profile.svg
+  String get profile => 'assets/svgs/profile.svg';
+
+  /// File path: assets/svgs/search.svg
+  String get search => 'assets/svgs/search.svg';
+
   /// File path: assets/svgs/upload.svg
   String get upload => 'assets/svgs/upload.svg';
 
   /// List of all assets
-  List<String> get values => [back, delete, drawer, upload];
+  List<String> get values => [
+        about,
+        back,
+        cycle,
+        delete,
+        drawer,
+        labels,
+        logout,
+        notes,
+        notification,
+        notificatons,
+        profile,
+        search,
+        upload
+      ];
 }
 
 class Assets {

@@ -13,6 +13,8 @@ class AppBarWithDrawer extends StatelessWidget implements PreferredSizeWidget {
     required this.scaffoldKey,
     this.isIconBack = false,
     this.backgroundColor,
+    this.centerTitle=false,
+    this.onTap,
     this.isDrawerIcon = false,
     this.actions,
     this.bottom,
@@ -23,12 +25,15 @@ class AppBarWithDrawer extends StatelessWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final List<Widget>? actions;
   final bool isIconBack;
+  final void Function()? onTap;
   final bool isDrawerIcon;
+  final bool centerTitle;
   final PreferredSizeWidget? bottom;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      centerTitle: centerTitle,
       backgroundColor: backgroundColor,
       title: Text(title,style: context.displaySmall?.copyWith(fontWeight: FontWeight.bold),),
       leading: isIconBack
@@ -40,7 +45,8 @@ class AppBarWithDrawer extends StatelessWidget implements PreferredSizeWidget {
           : isDrawerIcon
               ? AppButton.icon(
                   decoration: const BoxDecoration(),
-                  onTap: () => scaffoldKey.currentState?.openDrawer(),
+                  // onTap: () => scaffoldKey.currentState?.openDrawer(),
+                  onTap: onTap!,
                   margin: const EdgeInsets.all(8.0),
                   child: AppImage.svg(assetName: Assets.svgs.drawer),
                 )
