@@ -26,8 +26,49 @@ class $AssetsImagesGen {
   AssetGenImage get aviaLogo =>
       const AssetGenImage('assets/images/avia_logo.png');
 
+  /// File path: assets/images/clock.png
+  AssetGenImage get clock => const AssetGenImage('assets/images/clock.png');
+
+  /// File path: assets/images/daily_habbit.png
+  AssetGenImage get dailyHabbit =>
+      const AssetGenImage('assets/images/daily_habbit.png');
+
+  /// File path: assets/images/daily_habbit_filled.png
+  AssetGenImage get dailyHabbitFilled =>
+      const AssetGenImage('assets/images/daily_habbit_filled.png');
+
+  /// File path: assets/images/dashboard.png
+  AssetGenImage get dashboard =>
+      const AssetGenImage('assets/images/dashboard.png');
+
+  /// File path: assets/images/dashboard_filled.png
+  AssetGenImage get dashboardFilled =>
+      const AssetGenImage('assets/images/dashboard_filled.png');
+
   /// File path: assets/images/fb.png
   AssetGenImage get fb => const AssetGenImage('assets/images/fb.png');
+
+  /// File path: assets/images/gallery.png
+  AssetGenImage get gallery => const AssetGenImage('assets/images/gallery.png');
+
+  /// File path: assets/images/logo_bar.png
+  AssetGenImage get logoBar =>
+      const AssetGenImage('assets/images/logo_bar.png');
+
+  /// File path: assets/images/magic-brush.png
+  AssetGenImage get magicBrush =>
+      const AssetGenImage('assets/images/magic-brush.png');
+
+  /// File path: assets/images/menu-list.png
+  AssetGenImage get menuList =>
+      const AssetGenImage('assets/images/menu-list.png');
+
+  /// File path: assets/images/mic.png
+  AssetGenImage get mic => const AssetGenImage('assets/images/mic.png');
+
+  /// File path: assets/images/new_note.png
+  AssetGenImage get newNote =>
+      const AssetGenImage('assets/images/new_note.png');
 
   /// File path: assets/images/no_habbit_icon.png
   AssetGenImage get noHabbitIcon =>
@@ -37,9 +78,45 @@ class $AssetsImagesGen {
   AssetGenImage get noTaskIcon =>
       const AssetGenImage('assets/images/no_task_icon.png');
 
+  /// File path: assets/images/notes.png
+  AssetGenImage get notes => const AssetGenImage('assets/images/notes.png');
+
+  /// File path: assets/images/notes_filled.png
+  AssetGenImage get notesFilled =>
+      const AssetGenImage('assets/images/notes_filled.png');
+
+  /// File path: assets/images/task.png
+  AssetGenImage get task => const AssetGenImage('assets/images/task.png');
+
+  /// File path: assets/images/task_filled.png
+  AssetGenImage get taskFilled =>
+      const AssetGenImage('assets/images/task_filled.png');
+
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [google, aivaMic, apple, aviaLogo, fb, noHabbitIcon, noTaskIcon];
+  List<AssetGenImage> get values => [
+        google,
+        aivaMic,
+        apple,
+        aviaLogo,
+        clock,
+        dailyHabbit,
+        dailyHabbitFilled,
+        dashboard,
+        dashboardFilled,
+        fb,
+        gallery,
+        logoBar,
+        magicBrush,
+        menuList,
+        mic,
+        newNote,
+        noHabbitIcon,
+        noTaskIcon,
+        notes,
+        notesFilled,
+        task,
+        taskFilled
+      ];
 }
 
 class $AssetsSvgsGen {
@@ -59,6 +136,9 @@ class $AssetsSvgsGen {
 
   /// File path: assets/svgs/drawer.svg
   String get drawer => 'assets/svgs/drawer.svg';
+
+  /// File path: assets/svgs/edit.svg
+  String get edit => 'assets/svgs/edit.svg';
 
   /// File path: assets/svgs/labels.svg
   String get labels => 'assets/svgs/labels.svg';
@@ -91,6 +171,7 @@ class $AssetsSvgsGen {
         cycle,
         delete,
         drawer,
+        edit,
         labels,
         logout,
         notes,

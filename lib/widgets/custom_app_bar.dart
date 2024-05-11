@@ -33,6 +33,7 @@ class AppBarWithDrawer extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+
       centerTitle: centerTitle,
       backgroundColor: backgroundColor,
       title: Text(title,style: context.displaySmall?.copyWith(fontWeight: FontWeight.bold),),

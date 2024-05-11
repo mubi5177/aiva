@@ -14,10 +14,14 @@ class AppStrings {
   static const notificationSetting = 'Notification Setting';
 
   static const enterName = 'Enter Name';
+  static const whatNeedToBeDone = 'What Needs to be done?';
   static const enterEmail = 'Jegan@example.com';
   static const enterPhone = 'Enter Phone';
   static const createProfile = 'Create Profile';
   static const editProfile = 'Edit Profile';
+  static const edit = 'Edit';
+  static const addNewNote = 'Add New Note';
+  static const notesDetails = 'Notes Details';
   static const letGetStarted = "Let’s Get Started";
   static const continueWithGoogle = 'Continue with Google';
   static const continueWithFb = 'Continue with Facebook';

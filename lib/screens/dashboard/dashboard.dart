@@ -2,10 +2,12 @@ import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 class Dashboard extends StatefulWidget {
@@ -16,31 +18,37 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  late DrawerCubit _drawerCubit;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    _drawerCubit = BlocProvider.of<DrawerCubit>(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const AppDrawer(),
-
+      onDrawerChanged: (value) => _drawerCubit.onChanged(value),
       backgroundColor: Colors.grey.shade50,
       appBar: AppBarWithDrawer(
-        onTap: (){
-          _scaffoldKey.currentState?.openDrawer();
-        },
-        centerTitle: false,
-        isDrawerIcon: true,
-        backgroundColor: Colors.grey.shade50,
-        isIconBack: false,
-        title: "Good Morning, Jegan",
-        scaffoldKey: _scaffoldKey,
-        actions: [
-          AppImage.svg(assetName: Assets.svgs.notificatons),
-          const Gap(10),
-          AppImage.svg(assetName: Assets.svgs.search),
-          const Gap(10),
-        ],
-      ),
+      onTap: (){
+        _scaffoldKey.currentState?.openDrawer();
+      },
+      centerTitle: false,
+      isDrawerIcon: true,
+      backgroundColor: Colors.grey.shade50,
+      isIconBack: false,
+      title: "Good Morning, Jegan",
+      scaffoldKey: _scaffoldKey,
+      actions: [
+        AppImage.svg(assetName: Assets.svgs.notificatons),
+        const Gap(10),
+        AppImage.svg(assetName: Assets.svgs.search),
+        const Gap(10),
+      ],
+    ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),

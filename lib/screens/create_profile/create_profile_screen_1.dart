@@ -1,3 +1,4 @@
+import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:aivi/core/mixins/validations.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateProfileScreenOne extends StatefulWidget {
   const CreateProfileScreenOne({super.key});
@@ -38,7 +40,11 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
                   style: context.displaySmall,
                 )),
             const Gap(10.0),
-            AppButton.primary(height: 50, width: 170, background: context.secondary, child: const Text("Next")),
+            AppButton.primary(
+                onPressed: (){
+                  context.push(AppRoute.tabs);
+                },
+                height: 50, width: 170, background: context.secondary, child: const Text("Next")),
           ],
         ),
       ),

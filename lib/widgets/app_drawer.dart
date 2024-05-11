@@ -39,7 +39,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                 ),
               ),
-              title: const Text('John Wick'),
+              title:   Text('John Wick',style: context.displayMedium,),
               subtitle: const Text('Member Since : Jun 2024'),
             ),
           ),
@@ -157,7 +157,7 @@ List<SettingsModel> drawerList = [
   SettingsModel(title: AppStrings.editProfile, leadingIcon: Assets.svgs.profile),
   SettingsModel(title: AppStrings.notes, leadingIcon: Assets.svgs.notes),
   SettingsModel(title: AppStrings.dailyHabits, leadingIcon: Assets.svgs.cycle),
-  SettingsModel(title: AppStrings.notificationSetting, leadingIcon: Assets.svgs.notification),
+  SettingsModel(title: AppStrings.notificationSetting, leadingIcon: Assets.svgs.notificatons),
   SettingsModel(title: AppStrings.labels, leadingIcon: Assets.svgs.labels),
   SettingsModel(title: AppStrings.about, leadingIcon: Assets.svgs.about),
 ];
