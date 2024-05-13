@@ -20,8 +20,10 @@ class AppStrings {
   static const createProfile = 'Create Profile';
   static const editProfile = 'Edit Profile';
   static const edit = 'Edit';
+  static const search = 'Search';
   static const addNewNote = 'Add New Note';
   static const notesDetails = 'Notes Details';
+  static const taskDetails = 'Tasks Details';
   static const letGetStarted = "Let’s Get Started";
   static const continueWithGoogle = 'Continue with Google';
   static const continueWithFb = 'Continue with Facebook';

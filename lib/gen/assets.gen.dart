@@ -26,6 +26,15 @@ class $AssetsImagesGen {
   AssetGenImage get aviaLogo =>
       const AssetGenImage('assets/images/avia_logo.png');
 
+  /// File path: assets/images/bg_bell.png
+  AssetGenImage get bgBell => const AssetGenImage('assets/images/bg_bell.png');
+
+  /// File path: assets/images/bg_menu.png
+  AssetGenImage get bgMenu => const AssetGenImage('assets/images/bg_menu.png');
+
+  /// File path: assets/images/book.png
+  AssetGenImage get book => const AssetGenImage('assets/images/book.png');
+
   /// File path: assets/images/clock.png
   AssetGenImage get clock => const AssetGenImage('assets/images/clock.png');
 
@@ -45,11 +54,26 @@ class $AssetsImagesGen {
   AssetGenImage get dashboardFilled =>
       const AssetGenImage('assets/images/dashboard_filled.png');
 
+  /// File path: assets/images/done_check.png
+  AssetGenImage get doneCheck =>
+      const AssetGenImage('assets/images/done_check.png');
+
+  /// File path: assets/images/dumbell.png
+  AssetGenImage get dumbell => const AssetGenImage('assets/images/dumbell.png');
+
   /// File path: assets/images/fb.png
   AssetGenImage get fb => const AssetGenImage('assets/images/fb.png');
 
   /// File path: assets/images/gallery.png
   AssetGenImage get gallery => const AssetGenImage('assets/images/gallery.png');
+
+  /// File path: assets/images/keyboard.png
+  AssetGenImage get keyboard =>
+      const AssetGenImage('assets/images/keyboard.png');
+
+  /// File path: assets/images/location.png
+  AssetGenImage get location =>
+      const AssetGenImage('assets/images/location.png');
 
   /// File path: assets/images/logo_bar.png
   AssetGenImage get logoBar =>
@@ -85,6 +109,10 @@ class $AssetsImagesGen {
   AssetGenImage get notesFilled =>
       const AssetGenImage('assets/images/notes_filled.png');
 
+  /// File path: assets/images/recording_demo.png
+  AssetGenImage get recordingDemo =>
+      const AssetGenImage('assets/images/recording_demo.png');
+
   /// File path: assets/images/task.png
   AssetGenImage get task => const AssetGenImage('assets/images/task.png');
 
@@ -92,19 +120,30 @@ class $AssetsImagesGen {
   AssetGenImage get taskFilled =>
       const AssetGenImage('assets/images/task_filled.png');
 
+  /// File path: assets/images/task_without_bg.png
+  AssetGenImage get taskWithoutBg =>
+      const AssetGenImage('assets/images/task_without_bg.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
         google,
         aivaMic,
         apple,
         aviaLogo,
+        bgBell,
+        bgMenu,
+        book,
         clock,
         dailyHabbit,
         dailyHabbitFilled,
         dashboard,
         dashboardFilled,
+        doneCheck,
+        dumbell,
         fb,
         gallery,
+        keyboard,
+        location,
         logoBar,
         magicBrush,
         menuList,
@@ -114,8 +153,10 @@ class $AssetsImagesGen {
         noTaskIcon,
         notes,
         notesFilled,
+        recordingDemo,
         task,
-        taskFilled
+        taskFilled,
+        taskWithoutBg
       ];
 }
 

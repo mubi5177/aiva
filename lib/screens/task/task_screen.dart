@@ -1,12 +1,15 @@
+import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/screens/task/today/today_tasks.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
@@ -15,7 +18,7 @@ class TaskScreen extends StatefulWidget {
   State<TaskScreen> createState() => _TaskScreenState();
 }
 
-class _TaskScreenState extends State<TaskScreen>with SingleTickerProviderStateMixin {
+class _TaskScreenState extends State<TaskScreen> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _controller;
   late DrawerCubit _drawerCubit;
@@ -53,7 +56,11 @@ class _TaskScreenState extends State<TaskScreen>with SingleTickerProviderStateMi
         actions: [
           AppImage.svg(assetName: Assets.svgs.notificatons),
           const Gap(10),
-          AppImage.svg(assetName: Assets.svgs.search),
+          InkWell(
+              onTap: () {
+                context.push(AppRoute.searchScreen);
+              },
+              child: AppImage.svg(assetName: Assets.svgs.search)),
           const Gap(10),
         ],
         bottom: TabBar(
@@ -78,18 +85,16 @@ class _TaskScreenState extends State<TaskScreen>with SingleTickerProviderStateMi
             Tab(
               text: "Custom",
             ),
-
           ],
         ),
       ),
       body: TabBarView(
         controller: _controller,
         children: [
+          StackOver(),
           SizedBox(),
           SizedBox(),
           SizedBox(),
-          SizedBox(),
-
         ],
       ),
     );

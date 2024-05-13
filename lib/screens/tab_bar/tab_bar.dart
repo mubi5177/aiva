@@ -6,8 +6,11 @@ import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/dashboard/dashboard.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
 import 'package:aivi/screens/task/task_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 
 class TabsPage extends StatefulWidget {
   const TabsPage({super.key});
@@ -42,11 +45,79 @@ class _TabsPageState extends State<TabsPage> {
             return Scaffold(
                 floatingActionButton: state == true
                     ? const SizedBox()
-                    : AppImage.assets(
-                        assetName: Assets.images.logoBar.path,
-                        fit: BoxFit.cover,
-                        height: 70,
-                        width: 70,
+                    : InkWell(
+                        onTap: () {
+                          context.showBottomSheet(
+                              showDragHandle: false,
+                              maxHeight: context.height,
+                              child: SizedBox(
+                                // height: context.height * .7,
+                                width: context.width,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Gap(10),
+                                      Text(
+                                        "Say Something",
+                                        style: context.titleLarge,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                                        child: Text(
+                                          "You can ask me to add notes, input habit time, add food intake",
+                                          textAlign: TextAlign.center,
+                                          style: context.titleSmall?.copyWith(color: context.primary, fontSize: 15),
+                                        ),
+                                      ),
+                                      const Gap(30),
+                                      Text(
+                                        "Create a reminder to send files to Jegan tomorrow",
+                                        textAlign: TextAlign.center,
+                                        style: context.displayLarge?.copyWith(
+                                          height: 1.5,
+                                          fontSize: 32,
+                                        ),
+                                      ),
+                                      AppImage.assets(assetName: Assets.images.recordingDemo.path),
+                                      const Gap(30),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          const Expanded(child: SizedBox.shrink()),
+                                          const Gap(30),
+                                          AppImage.assets(
+                                            assetName: Assets.images.logoBar.path,
+                                            fit: BoxFit.cover,
+                                            height: 70,
+                                            width: 70,
+                                          ),
+                                          const Expanded(child: SizedBox.shrink()),
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: AppImage.assets(
+                                              assetName: Assets.images.keyboard.path,
+                                              fit: BoxFit.cover,
+                                              height: 30,
+                                              width: 30,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                        },
+                        child: AppImage.assets(
+                          assetName: Assets.images.logoBar.path,
+                          fit: BoxFit.cover,
+                          height: 70,
+                          width: 70,
+                        ),
                       ),
                 extendBodyBehindAppBar: true,
                 extendBody: true,

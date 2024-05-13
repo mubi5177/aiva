@@ -1,10 +1,14 @@
 import 'package:aivi/screens/create_profile/create_profile_screen_1.dart';
 import 'package:aivi/screens/dashboard/dashboard.dart';
+import 'package:aivi/screens/dashboard/dashboard_no_item.dart';
 import 'package:aivi/screens/notes/add_new_note.dart';
 import 'package:aivi/screens/notes/notes_details.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
 import 'package:aivi/screens/onboarding_screen.dart';
+import 'package:aivi/screens/search/ssearch_screen.dart';
 import 'package:aivi/screens/tab_bar/tab_bar.dart';
+import 'package:aivi/screens/task/task_details.dart';
+import 'package:aivi/screens/task/task_screen.dart';
 import 'package:aivi/screens/user/edit_profile.dart';
 import 'package:aivi/screens/welcome.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,6 +52,18 @@ final router = GoRouter(
       path: AppRoute.addNewNotes,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const AddNotes()),
     ),
+    GoRoute(
+      path: AppRoute.searchScreen,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const SearchScreen()),
+    ),
+    GoRoute(
+      path: AppRoute.dashboardNoItem,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const DashboardNoItem()),
+    ),
+    GoRoute(
+      path: AppRoute.taskDetails,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: TaskDetails()),
+    ),
   ],
 );
 
@@ -57,8 +73,11 @@ class AppRoute {
   static const String tabs = '/tabs';
   static const String welcome = '/welcome';
   static const String dashboard = '/dashboard';
+  static const String dashboardNoItem = '/dashboard-no-item';
+  static const String searchScreen = '/search-screen';
   static const String notes = '/notes';
   static const String notesDetails = '/notes-details';
   static const String editProfile = '/edit-profile';
+  static const String taskDetails = '/task-details';
   static const String createProfileScreenOne = '/create-profile-screen-one';
 }
