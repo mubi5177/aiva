@@ -75,6 +75,9 @@ class $AssetsImagesGen {
   AssetGenImage get location =>
       const AssetGenImage('assets/images/location.png');
 
+  /// File path: assets/images/logo.png
+  AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+
   /// File path: assets/images/logo_bar.png
   AssetGenImage get logoBar =>
       const AssetGenImage('assets/images/logo_bar.png');
@@ -144,6 +147,7 @@ class $AssetsImagesGen {
         gallery,
         keyboard,
         location,
+        logo,
         logoBar,
         magicBrush,
         menuList,
