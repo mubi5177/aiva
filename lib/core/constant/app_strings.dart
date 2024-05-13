@@ -19,9 +19,11 @@ class AppStrings {
   static const enterPhone = 'Enter Phone';
   static const createProfile = 'Create Profile';
   static const editProfile = 'Edit Profile';
+  static const dailyHabit = 'Daily Habit';
   static const edit = 'Edit';
   static const search = 'Search';
   static const addNewNote = 'Add New Note';
+  static const addNewTask = 'Add New Task';
   static const notesDetails = 'Notes Details';
   static const taskDetails = 'Tasks Details';
   static const letGetStarted = "Let’s Get Started";

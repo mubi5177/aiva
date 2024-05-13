@@ -3,6 +3,7 @@ import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/cubit/tab_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/screens/daily_habits/daily_habits.dart';
 import 'package:aivi/screens/dashboard/dashboard.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
 import 'package:aivi/screens/task/task_screen.dart';
@@ -20,7 +21,7 @@ class TabsPage extends StatefulWidget {
 }
 
 class _TabsPageState extends State<TabsPage> {
-  final List<Widget> _pages = <Widget>[const Dashboard(), const TaskScreen(), const NotesScreen(), const SizedBox()];
+  final List<Widget> _pages = <Widget>[const Dashboard(), const TaskScreen(), const NotesScreen(), const DailyHabits()];
 
   late TabCubit _tabCubit;
 

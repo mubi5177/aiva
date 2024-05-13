@@ -26,23 +26,27 @@ class _TodayAppointmentsState extends State<TodayAppointments> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Gap(20),
-          Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            height: 60,
-            width: context.width,
-            decoration: DottedDecoration(
-              shape: Shape.box,
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(10), //remove this to get plane rectange
-            ),
-            child: Text(
-              "+ Add New",
-              style: context.titleSmall?.copyWith(fontSize: 16, color: Colors.grey),
+          InkWell(
+            onTap: () {
+              context.push(AppRoute.addNewTask);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              height: 60,
+              width: context.width,
+              decoration: DottedDecoration(
+                shape: Shape.box,
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(10), //remove this to get plane rectange
+              ),
+              child: Text(
+                "+ Add New",
+                style: context.titleSmall?.copyWith(fontSize: 16, color: Colors.grey),
+              ),
             ),
           ),
           const Gap(20),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: SizedBox(
