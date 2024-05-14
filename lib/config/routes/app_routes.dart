@@ -1,11 +1,14 @@
 import 'package:aivi/screens/create_profile/create_profile_screen_1.dart';
+import 'package:aivi/screens/daily_habits/create_new_habbit.dart';
 import 'package:aivi/screens/daily_habits/habits.dart';
 import 'package:aivi/screens/dashboard/dashboard.dart';
 import 'package:aivi/screens/dashboard/dashboard_no_item.dart';
 import 'package:aivi/screens/notes/add_new_note.dart';
 import 'package:aivi/screens/notes/notes_details.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
+import 'package:aivi/screens/notification_settings.dart';
 import 'package:aivi/screens/onboarding_screen.dart';
+import 'package:aivi/screens/say_something.dart';
 import 'package:aivi/screens/search/ssearch_screen.dart';
 import 'package:aivi/screens/tab_bar/tab_bar.dart';
 import 'package:aivi/screens/task/add_new_task.dart';
@@ -74,6 +77,18 @@ final router = GoRouter(
       path: AppRoute.habits,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const Habits()),
     ),
+    GoRoute(
+      path: AppRoute.createNewHabits,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const CreateNewHabbit()),
+    ),
+    GoRoute(
+      path: AppRoute.notificationSettings,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const NotificationSettings()),
+    ),
+    GoRoute(
+      path: AppRoute.saySomething,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: SaySomething()),
+    ),
   ],
 );
 
@@ -81,9 +96,12 @@ class AppRoute {
   static const String splash = '/';
   static const String addNewNotes = '/add-new-notes';
   static const String tabs = '/tabs';
+  static const String saySomething = '/say-something';
   static const String welcome = '/welcome';
+  static const String notificationSettings = '/notification-settings';
   static const String dashboard = '/dashboard';
   static const String habits = '/habits';
+  static const String createNewHabits = '/create-new-habits';
   static const String dashboardNoItem = '/dashboard-no-item';
   static const String searchScreen = '/search-screen';
   static const String notes = '/notes';

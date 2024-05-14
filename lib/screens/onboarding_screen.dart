@@ -101,9 +101,14 @@ class OnBoardingScreen extends StatelessWidget {
                 ],
               ),
               const Gap(10),
-              Text(
-                AppStrings.continueWithEmail,
-                style: context.displaySmall?.copyWith(color: context.secondary, fontWeight: FontWeight.bold),
+              InkWell(
+                onTap: (){
+
+                },
+                child: Text(
+                  AppStrings.continueWithEmail,
+                  style: context.displaySmall?.copyWith(color: context.secondary, fontWeight: FontWeight.bold),
+                ),
               ),
               const Spacer(),
               Divider(

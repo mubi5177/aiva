@@ -70,11 +70,11 @@ class _AppDrawerState extends State<AppDrawer> {
 
                       context.push(AppRoute.editProfile);
                       break;
-                    // case 1:
-                    //   selectedTileCubit.onChanged(index);
-                    //   context.push(AppRoute.savedPage);
-                    //   break;
-                    //
+                    case 3:
+
+                      context.push(AppRoute.notificationSettings);
+                      break;
+
                     // case 2:
                     //   selectedTileCubit.onChanged(index);
                     //   context.push(AppRoute.boostsPage);
@@ -126,25 +126,7 @@ class _AppDrawerState extends State<AppDrawer> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
             // trailing: Icon(CupertinoIcons.chevron_right, color: context.primary),
             onTap: () {
-              // switch (index) {
-              //   case 0:
-              //     selectedTileCubit.onChanged(index);
-              //     context.push(AppRoute.eventPage);
-              //     break;
-              //   case 1:
-              //     selectedTileCubit.onChanged(index);
-              //     context.push(AppRoute.savedPage);
-              //     break;
-              //
-              //   case 2:
-              //     selectedTileCubit.onChanged(index);
-              //     context.push(AppRoute.boostsPage);
-              //   case 3:
-              //     selectedTileCubit.onChanged(index);
-              //     context.push(AppRoute.communityMembershipSubscrptions);
-              //     break;
-              //   default:
-              // }
+
             },
           ))
         ],

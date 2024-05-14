@@ -23,19 +23,15 @@ class AddNewTask extends StatefulWidget {
 
 class _AddNewTaskState extends State<AddNewTask> {
   final ExpansionCubit _expansionCubit = ExpansionCubit();
+  final ActionCubit _actionCubit = ActionCubit("Tasks");
+
   final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
 
-  final ActionCubit _actionCubit = ActionCubit("Tasks");
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<DateTime?> _dates = [
-    DateTime.now().add(const Duration(days: 1)),
-  ];
+
   @override
   Widget build(BuildContext context) {
-    final items = <String>[
-      "Appointments",
-      "Tasks",
-    ];
+
     return Scaffold(
       bottomNavigationBar: Container(
         height: 100,
@@ -360,7 +356,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                   );
                                 },
                                 // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
-                                child: Icon(Icons.calendar_month),
+                                child: const Icon(Icons.calendar_month),
                               ),
                             ),
                           );

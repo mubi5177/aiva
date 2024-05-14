@@ -75,7 +75,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   AppButton.primary(
                     onPressed: (){
-                      context.push(AppRoute.dashboardNoItem);
+                      context.push(AppRoute.addNewTask);
                     },
                     height: 35,
                     width: 130,

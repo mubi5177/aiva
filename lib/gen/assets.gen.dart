@@ -116,6 +116,9 @@ class $AssetsImagesGen {
   AssetGenImage get recordingDemo =>
       const AssetGenImage('assets/images/recording_demo.png');
 
+  /// File path: assets/images/send.png
+  AssetGenImage get send => const AssetGenImage('assets/images/send.png');
+
   /// File path: assets/images/task.png
   AssetGenImage get task => const AssetGenImage('assets/images/task.png');
 
@@ -158,6 +161,7 @@ class $AssetsImagesGen {
         notes,
         notesFilled,
         recordingDemo,
+        send,
         task,
         taskFilled,
         taskWithoutBg

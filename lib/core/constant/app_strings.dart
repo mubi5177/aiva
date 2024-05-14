@@ -20,7 +20,9 @@ class AppStrings {
   static const createProfile = 'Create Profile';
   static const editProfile = 'Edit Profile';
   static const dailyHabit = 'Daily Habit';
+  static const addNewHabit = 'Create New Habit';
   static const edit = 'Edit';
+  static const notificationSettings = 'Notification Settings';
   static const search = 'Search';
   static const addNewNote = 'Add New Note';
   static const addNewTask = 'Add New Task';

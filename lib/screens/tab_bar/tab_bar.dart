@@ -1,3 +1,4 @@
+import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
@@ -7,11 +8,10 @@ import 'package:aivi/screens/daily_habits/daily_habits.dart';
 import 'package:aivi/screens/dashboard/dashboard.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
 import 'package:aivi/screens/task/task_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class TabsPage extends StatefulWidget {
   const TabsPage({super.key});
@@ -99,11 +99,16 @@ class _TabsPageState extends State<TabsPage> {
                                           const Expanded(child: SizedBox.shrink()),
                                           Align(
                                             alignment: Alignment.centerRight,
-                                            child: AppImage.assets(
-                                              assetName: Assets.images.keyboard.path,
-                                              fit: BoxFit.cover,
-                                              height: 30,
-                                              width: 30,
+                                            child: InkWell(
+                                              onTap: () {
+                                                context.push(AppRoute.saySomething);
+                                              },
+                                              child: AppImage.assets(
+                                                assetName: Assets.images.keyboard.path,
+                                                fit: BoxFit.cover,
+                                                height: 30,
+                                                width: 30,
+                                              ),
                                             ),
                                           ),
                                         ],

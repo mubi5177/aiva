@@ -42,7 +42,7 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
             const Gap(10.0),
             AppButton.primary(
                 onPressed: (){
-                  context.push(AppRoute.tabs);
+                  context.push(AppRoute.habits);
                 },
                 height: 50, width: 170, background: context.secondary, child: const Text("Next")),
           ],
