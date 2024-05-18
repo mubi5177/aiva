@@ -9,6 +9,16 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsGifGen {
+  const $AssetsGifGen();
+
+  /// File path: assets/gif/audio.gif
+  AssetGenImage get audio => const AssetGenImage('assets/gif/audio.gif');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [audio];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -112,9 +122,15 @@ class $AssetsImagesGen {
   AssetGenImage get notesFilled =>
       const AssetGenImage('assets/images/notes_filled.png');
 
+  /// File path: assets/images/profile.jpg
+  AssetGenImage get profile => const AssetGenImage('assets/images/profile.jpg');
+
   /// File path: assets/images/recording_demo.png
   AssetGenImage get recordingDemo =>
       const AssetGenImage('assets/images/recording_demo.png');
+
+  /// File path: assets/images/running.png
+  AssetGenImage get running => const AssetGenImage('assets/images/running.png');
 
   /// File path: assets/images/send.png
   AssetGenImage get send => const AssetGenImage('assets/images/send.png');
@@ -160,7 +176,9 @@ class $AssetsImagesGen {
         noTaskIcon,
         notes,
         notesFilled,
+        profile,
         recordingDemo,
+        running,
         send,
         task,
         taskFilled,
@@ -235,6 +253,7 @@ class $AssetsSvgsGen {
 class Assets {
   Assets._();
 
+  static const $AssetsGifGen gif = $AssetsGifGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsSvgsGen svgs = $AssetsSvgsGen();
 }

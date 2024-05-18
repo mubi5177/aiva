@@ -48,6 +48,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.7.0
   flutter_switch: ^0.3.2
   table_calendar: ^3.1.1
+  lottie: ^3.1.1
   flutter_bloc:
 
 dev_dependencies:
@@ -61,17 +62,18 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   flutter_launcher_icons: "^0.13.1"
+  change_app_package_name: ^1.1.0
   flutter_native_splash: ^2.4.0
   build_runner: ^2.4.7
   flutter_gen_runner:
-
+#dart run flutter_native_splash:create
 flutter_native_splash:
   color: "#071b5d"
   image: assets/images/logo.png
   android: true
   ios: true
 
-
+# flutter pub run flutter_launcher_icons
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
@@ -96,6 +98,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/svgs/
+    - assets/gif/audio.gif
 
   # To add assets to your application, add an assets section, like this:
   # assets:

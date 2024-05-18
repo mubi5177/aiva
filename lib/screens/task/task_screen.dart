@@ -91,10 +91,10 @@ class _TaskScreenState extends State<TaskScreen> with SingleTickerProviderStateM
       body: TabBarView(
         controller: _controller,
         children: [
-          StackOver(),
-          SizedBox(),
-          SizedBox(),
-          SizedBox(),
+          TodaySTaskBar(),
+          TodaySTaskBar(),
+          TodaySTaskBar(),
+          TodaySTaskBar(),
         ],
       ),
     );

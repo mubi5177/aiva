@@ -56,11 +56,10 @@ class _EditProfileState extends State<EditProfile> with Validator {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Gap(50),
-            const Center(
+            Center(
               child: CircleAvatar(
                 radius: 60,
-                backgroundImage: NetworkImage(
-                    AppStrings.dummyImage),
+                backgroundImage: AssetImage(Assets.images.profile.path),
               ),
             ),
             const Gap(20.0),

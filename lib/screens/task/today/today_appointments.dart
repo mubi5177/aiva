@@ -28,7 +28,7 @@ class _TodayAppointmentsState extends State<TodayAppointments> {
           const Gap(20),
           InkWell(
             onTap: () {
-              context.push(AppRoute.addNewTask);
+              context.push(AppRoute.addNewAppointment);
             },
             child: Container(
               alignment: Alignment.center,

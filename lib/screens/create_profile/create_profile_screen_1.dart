@@ -64,7 +64,7 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
           children: [
             const Gap(20),
             Text(
-              "Welcome Onboard,",
+              "Welcome Jegan, ",
               style: context.displayMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const Gap(10),

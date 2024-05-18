@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_button.dart';
@@ -8,7 +7,6 @@ import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';

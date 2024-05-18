@@ -1,4 +1,4 @@
-package com.example.aivi
+package com.jegan.aiva
 
 import io.flutter.embedding.android.FlutterActivity
 

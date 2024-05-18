@@ -26,6 +26,7 @@ class AppStrings {
   static const search = 'Search';
   static const addNewNote = 'Add New Note';
   static const addNewTask = 'Add New Task';
+  static const addNewAppointment = 'Add New Appointment';
   static const notesDetails = 'Notes Details';
   static const taskDetails = 'Tasks Details';
   static const letGetStarted = "Let’s Get Started";

@@ -4,6 +4,7 @@ import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -137,30 +138,30 @@ class _AddNotesState extends State<AddNotes> {
                 alignment: Alignment.center,
                 height: context.height * .5,
                 decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    const Gap(10),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                      child: TextField(
-                        maxLines: 15,
-                        // Set decoration to null to remove borders
-                        decoration: InputDecoration(
-                          hintText: "Describe in details",
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
+                    const Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                        child: TextField(
+                          maxLines: 15,
+                          // Set decoration to null to remove borders
+                          decoration: InputDecoration(
+                            hintText: "Describe in details",
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                          ),
                         ),
                       ),
                     ),
-                    Container(
-                      height: 60,
-                      decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.grey))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           AppImage.assets(
                             assetName: Assets.images.menuList.path,
@@ -186,10 +187,9 @@ class _AddNotesState extends State<AddNotes> {
                             width: 30,
                           ),
                           const Gap(30),
-
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               )

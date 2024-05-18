@@ -278,11 +278,11 @@ class HabitsItems {
 
 final List<HabitsItems> habitsItemsList = [
   HabitsItems(icon: Assets.images.dumbell.path, isCompleted: false, title: "Gym Session", time: "08 : 00 Pm"),
-  HabitsItems(icon: Assets.images.dumbell.path, isCompleted: false, title: "Read Book", time: "08 : 00 Pm"),
-  HabitsItems(icon: Assets.images.dumbell.path, isCompleted: false, title: "Running", time: "08 : 00 Pm")
+  HabitsItems(icon: Assets.images.book.path, isCompleted: false, title: "Read Book", time: "08 : 00 Pm"),
+  HabitsItems(icon: Assets.images.running.path, isCompleted: false, title: "Running", time: "08 : 00 Pm")
 ];
 final List<HabitsItems> habitsItemsListCompleted = [
   HabitsItems(icon: Assets.images.dumbell.path, isCompleted: true, title: "Gym Session", time: "08 : 00 Pm"),
-  HabitsItems(icon: Assets.images.dumbell.path, isCompleted: true, title: "Read Book", time: "08 : 00 Pm"),
-  HabitsItems(icon: Assets.images.dumbell.path, isCompleted: true, title: "Running", time: "08 : 00 Pm")
+  HabitsItems(icon: Assets.images.book.path, isCompleted: true, title: "Read Book", time: "08 : 00 Pm"),
+  HabitsItems(icon: Assets.images.running.path, isCompleted: true, title: "Running", time: "08 : 00 Pm")
 ];

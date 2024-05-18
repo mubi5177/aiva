@@ -12,6 +12,7 @@ import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +28,7 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ExpansionCubit _expansionCubit = ExpansionCubit();
   final ActionCubit _actionCubit = ActionCubit("At Habit Time");
+  TimeOfDay? pickedTime;
   bool sendReminder = false;
   @override
   Widget build(BuildContext context) {
@@ -120,36 +122,46 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                       ),
                       const Gap(12),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           AppButton.primary(
-                              onPressed: () {
-                                context.push(AppRoute.tabs);
+                              onPressed: () async {
+                                TimeOfDay initialTime = TimeOfDay.now();
+                                pickedTime = await showTimePicker(
+                                  context: context,
+                                  initialTime: initialTime,
+                                  builder: (BuildContext context, Widget? child) {
+                                    return Directionality(
+                                      textDirection: TextDirection.rtl,
+                                      child: child!,
+                                    );
+                                  },
+                                );
                               },
                               height: 40,
                               width: 180,
                               background: context.secondary,
-                              child: const Text("12 : 30 PM")),
-                          InkWell(
-                            onTap: () {
-                              context.push(AppRoute.createNewHabits);
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.symmetric(horizontal: 10),
-                              height: 40,
-                              width: 180,
-                              decoration: DottedDecoration(
-                                shape: Shape.box,
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(100), //remove this to get plane rectange
-                              ),
-                              child: Text(
-                                "+   Add",
-                                style: context.titleSmall?.copyWith(fontSize: 16, color: Colors.grey),
-                              ),
-                            ),
-                          ),
+                              child: Text(pickedTime?.period.name ?? "12 : 30 PM")),
+                          // InkWell(
+                          //   onTap: () {
+                          //     context.push(AppRoute.createNewHabits);
+                          //   },
+                          //   child: Container(
+                          //     alignment: Alignment.center,
+                          //     margin: const EdgeInsets.symmetric(horizontal: 10),
+                          //     height: 40,
+                          //     width: 180,
+                          //     decoration: DottedDecoration(
+                          //       shape: Shape.box,
+                          //       color: Colors.black,
+                          //       borderRadius: BorderRadius.circular(100), //remove this to get plane rectange
+                          //     ),
+                          //     child: Text(
+                          //       "+   Add",
+                          //       style: context.titleSmall?.copyWith(fontSize: 16, color: Colors.grey),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                       const Gap(20),
@@ -163,30 +175,31 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                         height: context.height * .36,
                         decoration:
                             BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                        child: Column(
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            const Gap(10),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                              child: TextField(
-                                maxLines: 10,
-                                // Set decoration to null to remove borders
-                                decoration: InputDecoration(
-                                  hintText: "Describe in details",
-                                  border: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
+                            // const Gap(10),
+                            const Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                                child: TextField(
+                                  maxLines: 10,
+                                  // Set decoration to null to remove borders
+                                  decoration: InputDecoration(
+                                    hintText: "Describe in details",
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                  ),
                                 ),
                               ),
                             ),
-                            Container(
-                              height: 60,
-                              decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.grey))),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   AppImage.assets(
                                     assetName: Assets.images.magicBrush.path,
@@ -209,6 +222,33 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                                 ],
                               ),
                             ),
+                            // Container(
+                            //   height: 60,
+                            //   decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.grey))),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.end,
+                            //     children: [
+                            //       AppImage.assets(
+                            //         assetName: Assets.images.magicBrush.path,
+                            //         height: 30,
+                            //         width: 30,
+                            //       ),
+                            //       const Gap(30),
+                            //       AppImage.assets(
+                            //         assetName: Assets.images.gallery.path,
+                            //         height: 30,
+                            //         width: 30,
+                            //       ),
+                            //       const Gap(30),
+                            //       AppImage.assets(
+                            //         assetName: Assets.images.mic.path,
+                            //         height: 30,
+                            //         width: 30,
+                            //       ),
+                            //       const Gap(30),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

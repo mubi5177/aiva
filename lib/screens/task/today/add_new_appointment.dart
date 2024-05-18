@@ -15,14 +15,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
-class AddNewTask extends StatefulWidget {
-  const AddNewTask({super.key});
+class AddNewAppointment extends StatefulWidget {
+  const AddNewAppointment({super.key});
 
   @override
-  State<AddNewTask> createState() => _AddNewTaskState();
+  State<AddNewAppointment> createState() => _AddNewAppointmentState();
 }
 
-class _AddNewTaskState extends State<AddNewTask> {
+class _AddNewAppointmentState extends State<AddNewAppointment> {
   final ExpansionCubit _expansionCubit = ExpansionCubit();
   final ActionCubit _actionCubit = ActionCubit("Tasks");
 
@@ -32,6 +32,7 @@ class _AddNewTaskState extends State<AddNewTask> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       bottomNavigationBar: Container(
         height: 100,
@@ -57,7 +58,7 @@ class _AddNewTaskState extends State<AddNewTask> {
         centerTitle: true,
         backgroundColor: Colors.grey.shade50,
         isIconBack: true,
-        title: AppStrings.addNewTask,
+        title: AppStrings.addNewAppointment,
         scaffoldKey: _scaffoldKey,
       ),
       body: BlocBuilder<ExpansionCubit, bool>(
@@ -92,17 +93,17 @@ class _AddNewTaskState extends State<AddNewTask> {
                           title: Text(action, style: context.titleLarge),
                           leading: action == "Tasks"
                               ? AppImage.assets(
-                                  assetName: Assets.images.taskWithoutBg.path,
-                                  height: 20,
-                                  width: 20,
-                                  fit: BoxFit.cover,
-                                  color: context.primary,
-                                )
+                            assetName: Assets.images.taskWithoutBg.path,
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.cover,
+                            color: context.primary,
+                          )
                               : AppImage.svg(
-                                  assetName: Assets.svgs.notificatons,
-                                  fit: BoxFit.cover,
-                                  color: context.primary,
-                                ),
+                            assetName: Assets.svgs.notificatons,
+                            fit: BoxFit.cover,
+                            color: context.primary,
+                          ),
                         ),
                       ),
                       if (expanded)
@@ -132,7 +133,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                     title: Text(
                                       "Tasks",
                                       style: context.labelLarge?.copyWith(
-                                        color: action == "Tasks" ? context.tertiary : context.primary,
+                                        color: action == "Tasks" ?  context.tertiary:context.primary ,
                                       ),
                                     ),
                                   ),
@@ -145,7 +146,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                     title: Text(
                                       "Appointments",
                                       style: context.labelLarge?.copyWith(
-                                        color: action == "Appointments" ? context.tertiary : context.primary,
+                                        color: action == "Appointments" ? context.tertiary:context.primary ,
                                       ),
                                     ),
                                   ),
@@ -163,7 +164,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                       Container(
                         height: 110,
                         decoration:
-                            BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                        BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
                         child: Column(
                           children: [
                             SizedBox(
@@ -200,17 +201,14 @@ class _AddNewTaskState extends State<AddNewTask> {
                                 },
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                              child: TextField(
-                                // Set decoration to null to remove borders
-                                decoration: InputDecoration(
-                                  hintText: "Search for Labels ",
-                                  errorBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-
-                                 ),
+                            TextField(
+                              // Set decoration to null to remove borders
+                              decoration: InputDecoration(
+                                hintText: "Search for Labels ",
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
                               ),
                             ),
                           ],
@@ -227,9 +225,9 @@ class _AddNewTaskState extends State<AddNewTask> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
                             enabledBorder:
-                                OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                            OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
                             focusedBorder:
-                                OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                            OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
                             hintText: AppStrings.whatNeedToBeDone),
                         keyboardType: TextInputType.name,
 
@@ -237,6 +235,38 @@ class _AddNewTaskState extends State<AddNewTask> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
                       const Gap(20),
+                      Text(
+                        "Location",
+                        style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                      ),
+                      const Gap(12),
+                      TextFormField(
+                        onTap: () async {},
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                            enabledBorder:
+                            OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                            focusedBorder:
+                            OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                            hintText: "Search for Area, Street name..."),
+                        keyboardType: TextInputType.name,
+
+                        // onSaved: (value) => _auth['email'] = value!,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                      ),
+                      const Gap(10),
+                      Row(
+                        children: [
+                          Icon(Icons.my_location_rounded,color: context.secondary,),
+                          const Gap(8),
+                          Text(
+                            "Use your Current Location",
+                            style: context.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: context.secondary),
+                          ),
+                        ],
+                      ),
+                      const Gap(20),
+
                       Text(
                         "Description",
                         style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
@@ -246,13 +276,14 @@ class _AddNewTaskState extends State<AddNewTask> {
                         alignment: Alignment.center,
                         height: context.height * .5,
                         decoration:
-                            BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                        BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            const Expanded(
-                              child: Padding(
+
+                            const  Expanded(
+                              child:  Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
                                 child: TextField(
                                   maxLines: 15,
@@ -268,7 +299,8 @@ class _AddNewTaskState extends State<AddNewTask> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0,vertical: 20),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -299,6 +331,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                 ],
                               ),
                             ),
+
                           ],
                         ),
                       ),

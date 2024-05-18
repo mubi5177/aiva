@@ -8,10 +8,13 @@ import 'package:aivi/screens/daily_habits/daily_habits.dart';
 import 'package:aivi/screens/dashboard/dashboard.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
 import 'package:aivi/screens/task/task_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 class TabsPage extends StatefulWidget {
   const TabsPage({super.key});
@@ -83,7 +86,11 @@ class _TabsPageState extends State<TabsPage> {
                                           fontSize: 32,
                                         ),
                                       ),
-                                      AppImage.assets(assetName: Assets.images.recordingDemo.path),
+                                      // AppImage.assets(assetName: Assets.images.recordingDemo.path),
+                                      AppImage.assets(
+                                        assetName: Assets.gif.audio.path,
+                                        color: context.secondary,
+                                      ),
                                       const Gap(30),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.center,

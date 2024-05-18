@@ -129,10 +129,10 @@ class ChatMessage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isSentByMe) // Show user avatar only for messages not sent by the current user
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(AppStrings.dummyImage),
+                backgroundImage: AssetImage(Assets.images.profile.path),
                 radius: 16,
               ),
             ),
@@ -251,10 +251,10 @@ class ChatMessage extends StatelessWidget {
                   ),
           ),
           if (isSentByMe) // Show user avatar only for messages not sent by the current user
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(AppStrings.dummyImage),
+                backgroundImage: AssetImage(Assets.images.profile.path),
                 radius: 16,
               ),
             ),

@@ -14,6 +14,7 @@ import 'package:aivi/screens/tab_bar/tab_bar.dart';
 import 'package:aivi/screens/task/add_new_task.dart';
 import 'package:aivi/screens/task/task_details.dart';
 import 'package:aivi/screens/task/task_screen.dart';
+import 'package:aivi/screens/task/today/add_new_appointment.dart';
 import 'package:aivi/screens/user/edit_profile.dart';
 import 'package:aivi/screens/welcome.dart';
 import 'package:flutter/cupertino.dart';
@@ -88,6 +89,9 @@ final router = GoRouter(
     GoRoute(
       path: AppRoute.saySomething,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: SaySomething()),
+    ),   GoRoute(
+      path: AppRoute.addNewAppointment,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const AddNewAppointment()),
     ),
   ],
 );
@@ -108,6 +112,7 @@ class AppRoute {
   static const String notesDetails = '/notes-details';
   static const String editProfile = '/edit-profile';
   static const String addNewTask = '/add-new-task';
+  static const String addNewAppointment = '/add-new-appointment';
   static const String taskDetails = '/task-details';
   static const String createProfileScreenOne = '/create-profile-screen-one';
 }

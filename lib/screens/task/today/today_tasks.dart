@@ -2,15 +2,16 @@ import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/task/today/today_appointments.dart';
+import 'package:aivi/screens/task/today/today_task_section.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class StackOver extends StatefulWidget {
+class TodaySTaskBar extends StatefulWidget {
   @override
-  _StackOverState createState() => _StackOverState();
+  _TodaySTaskBarState createState() => _TodaySTaskBarState();
 }
 
-class _StackOverState extends State<StackOver> with SingleTickerProviderStateMixin {
+class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -108,10 +109,10 @@ class _StackOverState extends State<StackOver> with SingleTickerProviderStateMix
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [
+                children: const [
                   // first tab bar view widget
                   TodayAppointments(),
-                  SizedBox(),
+                  TodayTaskSection()
                 ],
               ),
             ),
