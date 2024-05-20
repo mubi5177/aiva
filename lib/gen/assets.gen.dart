@@ -15,8 +15,11 @@ class $AssetsGifGen {
   /// File path: assets/gif/audio.gif
   AssetGenImage get audio => const AssetGenImage('assets/gif/audio.gif');
 
+  /// File path: assets/gif/success.gif
+  AssetGenImage get success => const AssetGenImage('assets/gif/success.gif');
+
   /// List of all assets
-  List<AssetGenImage> get values => [audio];
+  List<AssetGenImage> get values => [audio, success];
 }
 
 class $AssetsImagesGen {
@@ -146,6 +149,10 @@ class $AssetsImagesGen {
   AssetGenImage get taskWithoutBg =>
       const AssetGenImage('assets/images/task_without_bg.png');
 
+  /// File path: assets/images/white-logo.png
+  AssetGenImage get whiteLogo =>
+      const AssetGenImage('assets/images/white-logo.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
         google,
@@ -182,7 +189,8 @@ class $AssetsImagesGen {
         send,
         task,
         taskFilled,
-        taskWithoutBg
+        taskWithoutBg,
+        whiteLogo
       ];
 }
 

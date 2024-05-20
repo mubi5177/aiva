@@ -6,11 +6,15 @@ import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vibration/vibration.dart';
 
 class DailyHabits extends StatefulWidget {
   const DailyHabits({super.key});
@@ -22,13 +26,78 @@ class DailyHabits extends StatefulWidget {
 class _DailyHabitsState extends State<DailyHabits> {
   late DrawerCubit _drawerCubit;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final ScrollController _mainScrollController = ScrollController();
+  final ScrollController _listView1Controller = ScrollController();
+  final ScrollController _listView2Controller = ScrollController();
+  int? selectedIndex;
+
   @override
   void initState() {
     _drawerCubit = BlocProvider.of<DrawerCubit>(context);
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+
     super.initState();
+    _listView1Controller.addListener(_listView1Listener);
+    _listView2Controller.addListener(_listView2Listener);
   }
 
-  int? selectedIndex;
+  void _listView1Listener() {
+    if (_listView1Controller.position.atEdge) {
+      if (_listView1Controller.position.pixels == 0) {
+        // At the top of ListView1
+        _mainScrollController.animateTo(
+          _mainScrollController.position.minScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        // At the bottom of ListView1
+        _mainScrollController.animateTo(
+          _mainScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  void _listView2Listener() {
+    if (_listView2Controller.position.atEdge) {
+      if (_listView2Controller.position.pixels == 0) {
+        // At the top of ListView2
+        _mainScrollController.animateTo(
+          _mainScrollController.position.minScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        // At the bottom of ListView2
+        _mainScrollController.animateTo(
+          _mainScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _mainScrollController.dispose();
+    _listView1Controller.dispose();
+    _confettiController.dispose();
+
+    _listView2Controller.dispose();
+    super.dispose();
+  }
+
+  late ConfettiController _confettiController;
+
+  void _showConfetti() {
+    _confettiController.play();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +127,7 @@ class _DailyHabitsState extends State<DailyHabits> {
         ],
       ),
       body: SingleChildScrollView(
+        controller: _mainScrollController,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10),
           child: Column(
@@ -66,7 +136,8 @@ class _DailyHabitsState extends State<DailyHabits> {
               Container(
                 padding: const EdgeInsets.all(6),
                 height: 100,
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey.shade200)),
+                decoration:
+                    BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey.shade200)),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: weekList.length,
@@ -119,6 +190,8 @@ class _DailyHabitsState extends State<DailyHabits> {
                 height: context.height * .35,
                 // decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey)),
                 child: ListView.builder(
+                  controller: _listView1Controller,
+                  physics: const ClampingScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   itemCount: habitsItemsList.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -162,21 +235,57 @@ class _DailyHabitsState extends State<DailyHabits> {
                                     ),
                                   ],
                                 ))
-                            : AppButton.outlineShrink(
-                                borderColor: context.secondary,
-                                height: 35,
-                                width: 125,
-                                child: Text(
-                                  "Mark Complete",
-                                  maxLines: 1,
-                                  style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
-                                )),
+                            : Stack(
+                                children: [
+                                  AppButton.outlineShrink(
+                                      onPressed: () async {
+                                        if (await Vibration.hasVibrator() ?? false) {
+                                          Vibration.vibrate();
+                                          _confettiController.play();
+                                        }
+                                      },
+                                      borderColor: context.secondary,
+                                      height: 35,
+                                      width: 125,
+                                      child: Text(
+                                        "Mark Complete",
+                                        maxLines: 1,
+                                        style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
+                                      )),
+                                  // Positioned(left: 0, right: 0, top: 0, bottom: 0, child: AppImage.assets(assetName: Assets.gif.success.path,
+                                  // height: 100,
+                                  //   width: 100,
+                                  //
+                                  // )),
+                                  Positioned(
+                                    top: 0,
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: ConfettiWidget(
+                                      confettiController: _confettiController,
+                                      blastDirection: 0, // radial value - DOWN
+                                      particleDrag: 0.05, // apply drag to the confetti
+                                      emissionFrequency: 0.05, // how often it should emit
+                                      numberOfParticles: 20, // number of particles to emit
+                                      gravity: 0.05, // gravity - or fall speed
+                                      shouldLoop: false, // start again as soon as the animation is finished
+                                      colors: const [
+                                        Colors.green,
+                                        Colors.blue,
+                                        Colors.pink,
+                                        Colors.orange,
+                                        Colors.purple,
+                                      ], // manually specify the colors to be used
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ),
                     );
                   },
                 ),
               ),
-
               Text(
                 "Completed",
                 style: context.displayMedium?.copyWith(fontWeight: FontWeight.w700),
@@ -186,6 +295,8 @@ class _DailyHabitsState extends State<DailyHabits> {
                 height: context.height * .4,
                 // decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey)),
                 child: ListView.builder(
+                  controller: _listView2Controller,
+                  physics: const ClampingScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   itemCount: habitsItemsListCompleted.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -208,36 +319,36 @@ class _DailyHabitsState extends State<DailyHabits> {
                         ),
                         trailing: habitsItemsListCompleted[index].isCompleted
                             ? AppButton.primary(
-                            height: 35,
-                            width: 120,
-                            background: Color(0xFFE1F9E9),
-                            child: Row(
-                              children: [
-                                AppImage.assets(
-                                  assetName: Assets.images.doneCheck.path,
-                                  fit: BoxFit.cover,
-                                  height: 12,
-                                  width: 12,
-                                ),
-                                const Gap(8),
-                                Text(
-                                  "Completed",
-                                  style: context.titleSmall?.copyWith(
-                                    fontSize: 9,
-                                    color: Color(0xFF3DB65F),
-                                  ),
-                                ),
-                              ],
-                            ))
+                                height: 35,
+                                width: 120,
+                                background: Color(0xFFE1F9E9),
+                                child: Row(
+                                  children: [
+                                    AppImage.assets(
+                                      assetName: Assets.images.doneCheck.path,
+                                      fit: BoxFit.cover,
+                                      height: 12,
+                                      width: 12,
+                                    ),
+                                    const Gap(8),
+                                    Text(
+                                      "Completed",
+                                      style: context.titleSmall?.copyWith(
+                                        fontSize: 9,
+                                        color: Color(0xFF3DB65F),
+                                      ),
+                                    ),
+                                  ],
+                                ))
                             : AppButton.outlineShrink(
-                            borderColor: context.secondary,
-                            height: 35,
-                            width: 125,
-                            child: Text(
-                              "Mark Complete",
-                              maxLines: 1,
-                              style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
-                            )),
+                                borderColor: context.secondary,
+                                height: 35,
+                                width: 125,
+                                child: Text(
+                                  "Mark Complete",
+                                  maxLines: 1,
+                                  style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
+                                )),
                       ),
                     );
                   },

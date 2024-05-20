@@ -2,6 +2,7 @@ import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:confetti/confetti.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,76 @@ class TodayAppointments extends StatefulWidget {
 }
 
 class _TodayAppointmentsState extends State<TodayAppointments> {
+  late ConfettiController _confettiController;
+
+  final ScrollController _mainScrollController = ScrollController();
+  final ScrollController _listView1Controller = ScrollController();
+  final ScrollController _listView2Controller = ScrollController();
   int? selectedIndex;
+
+  @override
+  void initState() {
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+
+    super.initState();
+    _listView1Controller.addListener(_listView1Listener);
+    _listView2Controller.addListener(_listView2Listener);
+  }
+
+  void _listView1Listener() {
+    if (_listView1Controller.position.atEdge) {
+      if (_listView1Controller.position.pixels == 0) {
+        // At the top of ListView1
+        _mainScrollController.animateTo(
+          _mainScrollController.position.minScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        // At the bottom of ListView1
+        _mainScrollController.animateTo(
+          _mainScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  void _listView2Listener() {
+    if (_listView2Controller.position.atEdge) {
+      if (_listView2Controller.position.pixels == 0) {
+        // At the top of ListView2
+        _mainScrollController.animateTo(
+          _mainScrollController.position.minScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        // At the bottom of ListView2
+        _mainScrollController.animateTo(
+          _mainScrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+
+    _mainScrollController.dispose();
+    _listView1Controller.dispose();
+    _listView2Controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: _mainScrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -50,8 +117,10 @@ class _TodayAppointmentsState extends State<TodayAppointments> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: SizedBox(
-              height: context.height * .5,
+              height: context.height * .4,
               child: ListView.builder(
+                controller: _listView1Controller,
+                physics: const ClampingScrollPhysics(),
                 itemCount: appointmentList.length, // Number of list items
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
@@ -66,80 +135,107 @@ class _TodayAppointmentsState extends State<TodayAppointments> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        child: Stack(
                           children: [
-                            Radio(
-                              fillColor: MaterialStateColor.resolveWith((states) => context.secondary),
-                              activeColor: context.secondary,
-                              value: index,
-                              groupValue: selectedIndex,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  selectedIndex = value;
-                                });
-                              },
-                            ),
-                            Column(
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
                               children: [
-                                Text(appointmentList[index].title),
-                                const Gap(10),
-                                Row(
+                                Radio(
+                                  fillColor: MaterialStateColor.resolveWith((states) => context.secondary),
+                                  activeColor: context.secondary,
+                                  value: index,
+                                  groupValue: selectedIndex,
+                                  onChanged: (int? value) {
+                                    setState(() {
+                                      selectedIndex = value;
+                                    });
+                                    _confettiController.play();
+                                  },
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Row(
-                                      children: [
-                                        AppImage.assets(
-                                          assetName: Assets.images.clock.path,
-                                          height: 14,
-                                          width: 14,
-                                          color: context.secondary,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        const Gap(10),
-                                        Text(
-                                          appointmentList[index].timingText,
-                                          style: context.titleSmall?.copyWith(fontSize: 12, color: Colors.black.withOpacity(.7)),
-                                        ),
-                                      ],
-                                    ),
+                                    Text(appointmentList[index].title),
                                     const Gap(10),
                                     Row(
                                       children: [
-                                        AppImage.assets(
-                                          assetName: Assets.images.location.path,
-                                          height: 14,
-                                          width: 14,
-                                          color: context.secondary,
-                                          fit: BoxFit.cover,
+                                        Row(
+                                          children: [
+                                            AppImage.assets(
+                                              assetName: Assets.images.clock.path,
+                                              height: 14,
+                                              width: 14,
+                                              color: context.secondary,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            const Gap(10),
+                                            Text(
+                                              appointmentList[index].timingText,
+                                              style: context.titleSmall?.copyWith(fontSize: 12, color: Colors.black.withOpacity(.7)),
+                                            ),
+                                          ],
                                         ),
                                         const Gap(10),
-                                        Text(
-                                          appointmentList[index].streetName ?? '',
-                                          style: context.titleSmall?.copyWith(fontSize: 12, color: Colors.black.withOpacity(.7)),
+                                        Row(
+                                          children: [
+                                            AppImage.assets(
+                                              assetName: Assets.images.location.path,
+                                              height: 14,
+                                              width: 14,
+                                              color: context.secondary,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            const Gap(10),
+                                            Text(
+                                              appointmentList[index].streetName ?? '',
+                                              style: context.titleSmall?.copyWith(fontSize: 12, color: Colors.black.withOpacity(.7)),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
+                                    const Gap(14),
+                                    SizedBox(
+                                      width: context.width * .8,
+                                      child: Text(
+                                        textAlign: TextAlign.start,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        appointmentList[index].description ?? '',
+                                        style: context.titleSmall?.copyWith(
+                                          fontSize: 12,
+                                          color: Colors.black.withOpacity(.7),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                const Gap(14),
-                                SizedBox(
-                                  width: context.width * .8,
-                                  child: Text(
-                                    textAlign: TextAlign.start,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    appointmentList[index].description ?? '',
-                                    style: context.titleSmall?.copyWith(
-                                      fontSize: 12,
-                                      color: Colors.black.withOpacity(.7),
-                                    ),
-                                  ),
-                                ),
                               ],
+                            ),
+                            Positioned(
+                              top: 0,
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: ConfettiWidget(
+                                confettiController: _confettiController,
+                                blastDirection: 0, // radial value - DOWN
+                                particleDrag: 0.05, // apply drag to the confetti
+                                emissionFrequency: 0.05, // how often it should emit
+                                numberOfParticles: 20, // number of particles to emit
+                                gravity: 0.05, // gravity - or fall speed
+                                shouldLoop: false, // start again as soon as the animation is finished
+                                colors: const [
+                                  Colors.green,
+                                  Colors.blue,
+                                  Colors.pink,
+                                  Colors.orange,
+                                  Colors.purple,
+                                ], // manually specify the colors to be used
+                              ),
                             ),
                           ],
                         )),
@@ -159,6 +255,8 @@ class _TodayAppointmentsState extends State<TodayAppointments> {
             child: SizedBox(
               height: context.height * .5,
               child: ListView.builder(
+                controller: _listView2Controller,
+                physics: const ClampingScrollPhysics(),
                 itemCount: appointmentList.length, // Number of list items
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
@@ -249,6 +347,7 @@ class _TodayAppointmentsState extends State<TodayAppointments> {
               ),
             ),
           ),
+          const Gap(100),
         ],
       ),
     );

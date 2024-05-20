@@ -144,8 +144,10 @@ class _TabsPageState extends State<TabsPage> {
                 bottomNavigationBar: state == true
                     ? const SizedBox()
                     : Container(
+                        alignment: Alignment.topCenter,
+                        padding: const EdgeInsets.only(bottom: 20),
                         width: context.width,
-                        height: 64.0,
+                        height: 80.0,
                         decoration: BoxDecoration(
                           color: context.scaffoldBackgroundColor,
                         ),

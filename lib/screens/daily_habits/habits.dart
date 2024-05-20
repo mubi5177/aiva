@@ -11,6 +11,7 @@ import 'package:aivi/widgets/date_time_sheet.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -180,7 +181,9 @@ class _HabitsState extends State<Habits> {
                                             context.closeKeyboard();
                                             context.showBottomSheet(
                                               maxHeight: context.height * .9,
-                                              child: EndDateTimeSheet(dateTimeCubit: _endDateTimeCubit),
+                                              child: EndDateTimeSheet(
+                                                  dateName: "Start Date",
+                                                  dateTimeCubit: _endDateTimeCubit),
                                             );
                                           },
                                           // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
@@ -228,7 +231,9 @@ class _HabitsState extends State<Habits> {
                                             context.closeKeyboard();
                                             context.showBottomSheet(
                                               maxHeight: context.height * .9,
-                                              child: EndDateTimeSheet(dateTimeCubit: _endDateTimeCubit),
+                                              child: EndDateTimeSheet(
+                                                  dateName: "End Date",
+                                                  dateTimeCubit: _endDateTimeCubit),
                                             );
                                           },
                                           // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
@@ -254,22 +259,25 @@ class _HabitsState extends State<Habits> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-                      child: Wrap(
-                        spacing: 5.0, // horizontal space between the tags
-                        runSpacing: 10.0, // vertical space between the lines
-                        children: List<Widget>.generate(weekList.length, (int index) {
-                          return WeekWidget(
-                            tagName: weekList[index].name,
-                          );
-                        }),
-                      ),
+                    Expanded(
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+                          child: ListView.builder(
+                              itemCount: weekList.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (ind, i) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: WeekWidget(
+                                    tagName: weekList[i].name,
+                                  ),
+                                );
+                              })),
                     ),
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 height: context.height * .35,
                 // decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey)),
                 child: ListView.builder(

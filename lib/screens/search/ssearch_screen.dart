@@ -1,9 +1,12 @@
+import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/search/recent_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -86,13 +89,66 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
       ),
       body: TabBarView(
         controller: _controller,
-        children: [
+        children: const [
           RecentSearchTab(),
-          SizedBox(),
-          SizedBox(),
-          SizedBox(),
-          SizedBox(),
+          SearchEmptyScreen(
+            screen: "Task",
+          ),
+          SearchEmptyScreen(
+            screen: "Appointments",
+          ),
+          SearchEmptyScreen(
+            screen: "Notes",
+          ),
+          SearchEmptyScreen(
+            screen: "Habit",
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class SearchEmptyScreen extends StatelessWidget {
+  final String screen;
+  const SearchEmptyScreen({super.key, required this.screen});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Gap(200),
+            Center(
+              child: AppImage.assets(
+                assetName: Assets.images.noTaskIcon.path,
+                height: 80,
+                width: 80,
+              ),
+            ),
+            const Gap(20),
+            Center(
+              child: Text(
+                "No $screen Found",
+                style: context.titleSmall?.copyWith(color: context.primary, fontWeight: FontWeight.w500),
+              ),
+            ),
+            const Gap(10),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                  "It looks like there are no $screen available.",
+                  textAlign: TextAlign.center,
+                  style: context.titleSmall,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

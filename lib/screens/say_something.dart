@@ -25,84 +25,87 @@ class _SaySomethingState extends State<SaySomething> {
         title: "Say Something",
         scaffoldKey: _scaffoldKey,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              "You can ask me to add notes, input habit time, add food intake",
-              textAlign: TextAlign.center,
-              style: context.titleSmall?.copyWith(color: context.primary),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0,vertical: 10),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(
+                "You can ask me to add notes, input habit time, add food intake",
+                textAlign: TextAlign.center,
+                style: context.titleSmall?.copyWith(color: context.primary),
+              ),
             ),
-          ),
-          const Gap(10),
-          Expanded(
-            child: ListView(
-              children: const [
-                // Chat messages will be listed here
+            const Gap(10),
+            Expanded(
+              child: ListView(
+                children: const [
+                  // Chat messages will be listed here
 
-                ChatMessage(
-                  isMediaIncluded: false,
-                  message: 'Create a reminder to send files to Jegan tomorrow',
-                  isSentByMe: true,
-                ),
-
-                ChatMessage(
-                  isMediaIncluded: true,
-                  message: 'Sure, Here is reminder preview',
-                  isSentByMe: false,
-                ),
-                ChatMessage(
-                  isMediaIncluded: false,
-                  message: 'Also add a description that the files should be in pdf format',
-                  isSentByMe: true,
-                ),
-                // Add more chat messages as needed
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-            color: Colors.white,
-            child: Row(
-              children: [
-                AppImage.assets(
-                  assetName: Assets.images.logoBar.path,
-                  height: 50,
-                  width: 50,
-                  fit: BoxFit.cover,
-                ),
-                const Gap(10),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Type message',
-                          border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
-                          enabledBorder:
-                              OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
-                          focusedBorder:
-                              OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
-                        ),
-                        // Add controller and onChanged for message input handling
-                      ),
-                      Positioned(
-                        right: 10,
-                        bottom: 10,
-                        top: 10,
-                        child: AppImage.assets(
-                          assetName: Assets.images.send.path,
-                        ),
-                      ),
-                    ],
+                  ChatMessage(
+                    isMediaIncluded: false,
+                    message: 'Create a reminder to send files to Jegan tomorrow',
+                    isSentByMe: true,
                   ),
-                ),
-                const Gap(20),
-              ],
+
+                  ChatMessage(
+                    isMediaIncluded: true,
+                    message: 'Sure, Here is reminder preview',
+                    isSentByMe: false,
+                  ),
+                  ChatMessage(
+                    isMediaIncluded: false,
+                    message: 'Also add a description that the files should be in pdf format',
+                    isSentByMe: true,
+                  ),
+                  // Add more chat messages as needed
+                ],
+              ),
             ),
-          ),
-        ],
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+              color: Colors.white,
+              child: Row(
+                children: [
+                  AppImage.assets(
+                    assetName: Assets.images.logoBar.path,
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  ),
+                  const Gap(10),
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Type message',
+                            border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
+                            enabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
+                            focusedBorder:
+                                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
+                          ),
+                          // Add controller and onChanged for message input handling
+                        ),
+                        Positioned(
+                          right: 10,
+                          bottom: 10,
+                          top: 10,
+                          child: AppImage.assets(
+                            assetName: Assets.images.send.path,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Gap(20),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -137,7 +140,7 @@ class ChatMessage extends StatelessWidget {
               ),
             ),
           Container(
-            constraints: const BoxConstraints(maxWidth: 250),
+            constraints: const BoxConstraints(maxWidth: 300),
             margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
@@ -146,7 +149,7 @@ class ChatMessage extends StatelessWidget {
             ),
             child: isMediaIncluded
                 ? Container(
-                    constraints: const BoxConstraints(maxWidth: 200),
+                    constraints: const BoxConstraints(maxWidth: 250),
                     padding: const EdgeInsets.all(10),
                     child: Column(
                       children: [
@@ -158,14 +161,14 @@ class ChatMessage extends StatelessWidget {
                         ),
                         const Gap(10),
                         Container(
-                          width: 150,
-                          height: 120,
+                          width: 220,
+                          height: 150,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey.shade200), color: Colors.white),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Gap(10),
+                              const Gap(16),
                               Container(
                                 padding: const EdgeInsets.all(2),
                                 width: 120,
@@ -188,17 +191,17 @@ class ChatMessage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              const Gap(5),
+                              const Gap(10),
                               Text(
                                 "Send files to Jegan",
                                 style: context.titleSmall?.copyWith(color: context.primary),
                               ),
-                              const Gap(5),
+                              const Gap(10),
                               Text(
                                 "No Description",
                                 style: context.titleSmall?.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
                               ),
-                              const Gap(5),
+                              const Gap(10),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -207,7 +210,7 @@ class ChatMessage extends StatelessWidget {
                                     size: 16,
                                     color: context.secondary,
                                   ),
-                                  const Gap(5),
+                                  const Gap(10),
                                   Text(
                                     "30, April 2024",
                                     style: context.titleSmall?.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
@@ -217,26 +220,26 @@ class ChatMessage extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const Gap(10),
+                        const Gap(20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             AppButton.outlineShrink(
                                 borderColor: context.secondary,
                                 height: 30,
-                                width: 70,
+                                width: 100,
                                 child: Text(
                                   "Edit",
-                                  style: context.displaySmall?.copyWith(fontSize: 8, color: context.secondary, fontWeight: FontWeight.w600),
+                                  style: context.displaySmall?.copyWith(fontSize: 12, color: context.secondary, fontWeight: FontWeight.w600),
                                 )),
                             const Gap(10.0),
                             AppButton.primary(
                                 height: 30,
-                                width: 80,
+                                width: 100,
                                 background: context.secondary,
                                 child: Text(
                                   "Confirm",
-                                  style: context.displaySmall?.copyWith(fontSize: 8, color: Colors.white, fontWeight: FontWeight.w600),
+                                  style: context.displaySmall?.copyWith(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w600),
                                 )),
                           ],
                         ),

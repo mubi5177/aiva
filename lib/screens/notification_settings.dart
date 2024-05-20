@@ -93,7 +93,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                                 context.closeKeyboard();
                                 context.showBottomSheet(
                                   maxHeight: context.height * .9,
-                                  child: EndDateTimeSheet(dateTimeCubit: _endDateTimeCubit),
+                                  child: EndDateTimeSheet(
+                                      dateName: "End Time",
+                                      dateTimeCubit: _endDateTimeCubit),
                                 );
                               },
                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
@@ -137,7 +139,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                                 context.closeKeyboard();
                                 context.showBottomSheet(
                                   maxHeight: context.height * .9,
-                                  child: EndDateTimeSheet(dateTimeCubit: _endDateTimeCubit),
+                                  child: EndDateTimeSheet(dateName: "End Time", dateTimeCubit: _endDateTimeCubit),
                                 );
                               },
                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
@@ -204,7 +206,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                                 context.closeKeyboard();
                                 context.showBottomSheet(
                                   maxHeight: context.height * .9,
-                                  child: EndDateTimeSheet(dateTimeCubit: _endDateTimeCubit),
+                                  child: EndDateTimeSheet(dateName: "End Time", dateTimeCubit: _endDateTimeCubit),
                                 );
                               },
                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
@@ -221,7 +223,6 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                 ),
               ),
               const Gap(20),
-
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                 height: context.height * .07,

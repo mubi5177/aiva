@@ -138,7 +138,7 @@ class _AddNotesState extends State<AddNotes> {
                 alignment: Alignment.center,
                 height: context.height * .5,
                 decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                child: Row(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -158,10 +158,13 @@ class _AddNotesState extends State<AddNotes> {
                         ),
                       ),
                     ),
+                    Divider(
+                      color: Colors.black.withOpacity(.8),
+                    ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      padding: const EdgeInsets.only(bottom: 10, top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           AppImage.assets(
                             assetName: Assets.images.menuList.path,

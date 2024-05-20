@@ -22,23 +22,28 @@ class _RecentSearchTabState extends State<RecentSearchTab> {
         body: Column(
           children: [
             Container(
+              height: 70,
+              alignment: Alignment.center,
+              width: context.width,
               padding: const EdgeInsets.symmetric(
                 vertical: 10,
+
               ),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade200),
                 color: Colors.white,
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-                child: Wrap(
-                  spacing: 5.0, // horizontal space between the tags
-                  runSpacing: 10.0, // vertical space between the lines
-                  children: List<Widget>.generate(tagsList.length, (int index) {
-                    return TagWidget(
-                      tagName: tagsList[index].name,
-                    );
-                  }),
+              child: Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+                  child: ListView.builder(
+                      itemCount: tagsList.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (ind, i) {
+                        return TagWidget(
+                          tagName: tagsList[i].name,
+                        );
+                      }),
                 ),
               ),
             ),
@@ -107,7 +112,9 @@ class _TagWidgetState extends State<TagWidget> {
         });
       },
       child: Container(
+
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
           color: isSelected ? context.secondary : const Color(0xffE4EAF9),
           borderRadius: BorderRadius.circular(10),

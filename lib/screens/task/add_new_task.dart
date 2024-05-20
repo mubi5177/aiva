@@ -200,8 +200,8 @@ class _AddNewTaskState extends State<AddNewTask> {
                                 },
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5.0),
                               child: TextField(
                                 // Set decoration to null to remove borders
                                 decoration: InputDecoration(
@@ -209,8 +209,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                   errorBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
                                   enabledBorder: InputBorder.none,
-
-                                 ),
+                                ),
                               ),
                             ),
                           ],
@@ -247,7 +246,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                         height: context.height * .5,
                         decoration:
                             BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                        child: Row(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -267,10 +266,13 @@ class _AddNewTaskState extends State<AddNewTask> {
                                 ),
                               ),
                             ),
+                            Divider(
+                              color: Colors.black.withOpacity(.8),
+                            ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                              padding: const EdgeInsets.only(bottom: 10, top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   AppImage.assets(
                                     assetName: Assets.images.menuList.path,
@@ -323,7 +325,9 @@ class _AddNewTaskState extends State<AddNewTask> {
                                   context.closeKeyboard();
                                   context.showBottomSheet(
                                     maxHeight: context.height * .9,
-                                    child: EndDateTimeSheet(dateTimeCubit: _endDateTimeCubit),
+                                    child: EndDateTimeSheet(
+                                        dateName: "Start Name",
+                                        dateTimeCubit: _endDateTimeCubit),
                                   );
                                 },
                                 // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),

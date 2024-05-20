@@ -1,4 +1,3 @@
-
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
@@ -11,7 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class EndDateTimeSheet extends StatefulWidget {
-  const EndDateTimeSheet({required this.dateTimeCubit});
+  final String dateName;
+  const EndDateTimeSheet({required this.dateName, required this.dateTimeCubit});
 
   final DateTimeCubit dateTimeCubit;
 
@@ -34,7 +34,7 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
           children: [
             Align(
               alignment: Alignment.center,
-              child: Text("End Date", style: context.displayMedium),
+              child: Text(widget.dateName ?? '', style: context.displayMedium),
             ),
             TableCalendar(
               focusedDay: _today,
@@ -44,8 +44,8 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
               headerStyle: HeaderStyle(
                 formatButtonVisible: false,
                 titleCentered: true,
-                leftChevronIcon: Icon(Icons.chevron_left, color: context.primary),
-                rightChevronIcon: Icon(Icons.chevron_right, color: context.primary),
+                leftChevronIcon: Icon(Icons.chevron_left, color: context.secondary),
+                rightChevronIcon: Icon(Icons.chevron_right, color: context.secondary),
               ),
               formatAnimationDuration: const Duration(milliseconds: 500),
               startingDayOfWeek: StartingDayOfWeek.monday,
@@ -57,7 +57,7 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
               },
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
-                  color: context.primary,
+                  color: context.secondary,
                   shape: BoxShape.circle,
                 ),
                 todayDecoration: BoxDecoration(
@@ -84,12 +84,12 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
                 _today.formatTime(format: 'EEEE'),
                 style: context.displaySmall?.copyWith(color: context.tertiary),
               ),
-
             ),
             const Gap(40.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: AppButton(
+                background: context.secondary,
                 height: 50.0,
                 onPressed: () {
                   DateTime date1 = _selectedTime;

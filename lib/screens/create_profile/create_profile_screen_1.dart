@@ -52,7 +52,8 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
       appBar: AppBarWithDrawer(
         backgroundColor: Colors.grey.shade50,
         isIconBack: false,
-        title: "${AppStrings.createProfile} (1/2)",
+        centerTitle: true,
+        title: AppStrings.createProfile,
         scaffoldKey: _scaffoldKey,
       ),
       body: Padding(

@@ -4,11 +4,13 @@ import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/cubit/action_cubit.dart';
+import 'package:aivi/cubit/date_time_cubit.dart';
 import 'package:aivi/cubit/expansion_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/daily_habits/habits.dart';
 import 'package:aivi/widgets/app_switch.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:aivi/widgets/date_time_sheet.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,8 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ExpansionCubit _expansionCubit = ExpansionCubit();
   final ActionCubit _actionCubit = ActionCubit("At Habit Time");
+  final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
+
   TimeOfDay? pickedTime;
   bool sendReminder = false;
   @override
@@ -103,17 +107,22 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                         "Repeat",
                         style: context.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-                        child: Wrap(
-                          spacing: 5.0, // horizontal space between the tags
-                          runSpacing: 10.0, // vertical space between the lines
-                          children: List<Widget>.generate(weekList.length, (int index) {
-                            return WeekWidget(
-                              tagName: weekList[index].name,
-                            );
-                          }),
-                        ),
+                      SizedBox(
+                        height: 80,
+                        width: context.width,
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+                            child: ListView.builder(
+                                itemCount: weekList.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (ind, i) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                    child: WeekWidget(
+                                      tagName: weekList[i].name,
+                                    ),
+                                  );
+                                })),
                       ),
                       const Gap(20),
                       Text(
@@ -131,9 +140,26 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                                   context: context,
                                   initialTime: initialTime,
                                   builder: (BuildContext context, Widget? child) {
-                                    return Directionality(
-                                      textDirection: TextDirection.rtl,
-                                      child: child!,
+                                    return Theme(
+                                      data: ThemeData.light().copyWith(
+                                        colorScheme: ColorScheme.light(
+                                          // change the border color
+                                          primary: context.secondary,
+                                          secondary: context.secondary,
+                                          // change the text color
+                                          onSurface: Colors.black,
+                                        ),
+                                        // button colors
+                                        buttonTheme: const ButtonThemeData(
+                                          colorScheme: ColorScheme.light(
+                                            primary: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: child!,
+                                      ),
                                     );
                                   },
                                 );
@@ -165,6 +191,111 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                         ],
                       ),
                       const Gap(20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Start Date",
+                                  style: context.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: context.primary,
+                                  ),
+                                ),
+                                const Gap(10),
+                                BlocBuilder<DateTimeCubit, String>(
+                                  bloc: _endDateTimeCubit,
+                                  builder: (context, text) {
+                                    return SizedBox(
+                                      height: 50,
+                                      width: 160,
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        enableInteractiveSelection: false,
+                                        controller: TextEditingController(text: text),
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(14)),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(14)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(14)),
+                                          hintText: "When it needs to be end",
+                                          suffixIcon: InkWell(
+                                            onTap: () {
+                                              context.closeKeyboard();
+                                              context.showBottomSheet(
+                                                maxHeight: context.height * .9,
+                                                child: EndDateTimeSheet(dateName: "Start Date", dateTimeCubit: _endDateTimeCubit),
+                                              );
+                                            },
+                                            // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
+                                            child: const Icon(Icons.calendar_month),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "End Date",
+                                  style: context.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: context.primary,
+                                  ),
+                                ),
+                                const Gap(10),
+                                BlocBuilder<DateTimeCubit, String>(
+                                  bloc: _endDateTimeCubit,
+                                  builder: (context, text) {
+                                    return SizedBox(
+                                      height: 50,
+                                      width: 160,
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        enableInteractiveSelection: false,
+                                        controller: TextEditingController(text: text),
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(14)),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(14)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(14)),
+                                          hintText: "When it needs to be end",
+                                          suffixIcon: InkWell(
+                                            onTap: () {
+                                              context.closeKeyboard();
+                                              context.showBottomSheet(
+                                                maxHeight: context.height * .9,
+                                                child: EndDateTimeSheet(dateName: "End Date", dateTimeCubit: _endDateTimeCubit),
+                                              );
+                                            },
+                                            // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
+                                            child: const Icon(Icons.calendar_month),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Gap(20),
                       Text(
                         "Description",
                         style: context.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
@@ -175,7 +306,7 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                         height: context.height * .36,
                         decoration:
                             BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                        child: Row(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -196,10 +327,13 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                                 ),
                               ),
                             ),
+                            Divider(
+                              color: Colors.black.withOpacity(.8),
+                            ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                              padding: const EdgeInsets.only(bottom: 10, top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   AppImage.assets(
                                     assetName: Assets.images.magicBrush.path,
