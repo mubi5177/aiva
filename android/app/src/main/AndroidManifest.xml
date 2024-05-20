@@ -2,7 +2,7 @@
     package="com.jegan.aiva">
     <uses-permission android:name="android.permission.VIBRATE"/>
    <application
-        android:label="AIVI"
+        android:label="AIVA-Notes"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
