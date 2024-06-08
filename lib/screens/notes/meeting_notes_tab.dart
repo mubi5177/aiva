@@ -20,9 +20,8 @@ class MeetingNotesTab extends StatefulWidget {
 class _MeetingNotesTabState extends State<MeetingNotesTab> {
   @override
   Widget build(BuildContext context) {
-    final List<QueryDocumentSnapshot> documents = widget.snapshot.data!.docs;
-    final bool hasMeeting = documents.any((doc) => (doc.data() as Map<String, dynamic>)['type'] == 'Meeting');
-    if (hasMeeting) {
+    final List<QueryDocumentSnapshot> documents = widget.snapshot.data!.docs.where((element) => element['type'] == "Meeting").toList();
+    if (documents.isNotEmpty) {
       return Container(
         color: Colors.grey.shade50,
         child: Padding(
@@ -55,12 +54,15 @@ class _MeetingNotesTabState extends State<MeetingNotesTab> {
                   ),
                 );
               }
+
               int assetIndex = index - 1;
+
               final data = documents[assetIndex].data() as Map<String, dynamic>;
-              final docId= documents[assetIndex].id;
+              final docId = documents[assetIndex].id;
+              if (data['type'] == "Meeting") {
                 return InkWell(
                   onTap: () {
-                    context.push(AppRoute.notesDetails,extra: docId);
+                    context.push(AppRoute.notesDetails, extra: docId);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -111,16 +113,17 @@ class _MeetingNotesTabState extends State<MeetingNotesTab> {
                     ),
                   ),
                 );
+              } else {
+                return const SizedBox.shrink();
+              }
 
             },
           ),
         ),
       );
-    }else{
+    } else {
       return const EmptyScreen(screen: "Meeting");
-
     }
-
   }
 }
 

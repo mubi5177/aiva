@@ -65,9 +65,9 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AppButton.outlineShrink(
-              onPressed: (){
-                context.push(AppRoute.habits);
-              },
+                onPressed: () {
+                  context.push(AppRoute.habits);
+                },
                 height: 50,
                 width: 170,
                 child: Text(
@@ -78,25 +78,28 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
             AppButton.primary(
                 onPressed: () {
                   if (_profileFile != null) {
-
-                  }
-                  else{
-                    print('_CreateProfileScreenOneState.build');
-                  }
-                  // uploadImage(_profileFile!).then((value) {
+                    uploadImage(_profileFile!).then((value) {
+                      uploadUserData(
+                              name: name.text.trim(),
+                              profileUrl: value,
+                              email: email.text.trim(),
+                              phoneNumber: "${countryCode.text.trim()}${phone.text.trim()}",
+                              loginType: currentUser?.loginType ?? '')
+                          .then((value) {
+                        context.push(AppRoute.habits);
+                      });
+                    });
+                  } else {
                     uploadUserData(
-                        name: name.text.trim(),
-                        profileUrl: _profileFile != null ? _profileFile!.path : profile,
-                        email: email.text.trim(),
-                        phoneNumber: "${countryCode.text.trim()}${phone.text.trim()}",
-                        loginType: currentUser?.loginType ?? '')
+                            name: name.text.trim(),
+                            profileUrl: profile,
+                            email: email.text.trim(),
+                            phoneNumber: "${countryCode.text.trim()}${phone.text.trim()}",
+                            loginType: currentUser?.loginType ?? '')
                         .then((value) {
                       context.push(AppRoute.habits);
                     });
-                  // });
-
-
-
+                  }
                 },
                 height: 50,
                 width: 170,

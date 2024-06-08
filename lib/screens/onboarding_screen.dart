@@ -153,23 +153,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   textStyle: context.displaySmall?.copyWith(fontWeight: FontWeight.w600),
                 ),
               },
-              SocialCustomButton(
-                image: Assets.images.fb.path,
-                text: AppStrings.continueWithFb,
-                onPressed: () {
-                  // Add your onPressed logic here
-                  context.push(AppRoute.habits);
-                },
-                color: Colors.white,
-                // Change color as needed
-                width: context.width,
-                // Change width as needed
-                height: 60,
-                // Change height as needed
-                borderRadius: 30,
-                // Change border radius as needed
-                textStyle: context.displaySmall?.copyWith(fontWeight: FontWeight.w600),
-              ),
+              // SocialCustomButton(
+              //   image: Assets.images.fb.path,
+              //   text: AppStrings.continueWithFb,
+              //   onPressed: () {
+              //     // Add your onPressed logic here
+              //     context.push(AppRoute.habits);
+              //   },
+              //   color: Colors.white,
+              //   // Change color as needed
+              //   width: context.width,
+              //   // Change width as needed
+              //   height: 60,
+              //   // Change height as needed
+              //   borderRadius: 30,
+              //   // Change border radius as needed
+              //   textStyle: context.displaySmall?.copyWith(fontWeight: FontWeight.w600),
+              // ),
               const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

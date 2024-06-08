@@ -2,6 +2,7 @@ import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/model/user_model.dart';
 import 'package:aivi/widgets/custom_social_button.dart';
@@ -71,9 +72,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               image: '',
               boxShadow: const [],
               text: AppStrings.letGetStarted,
-              onPressed: () {
-                // Add your onPressed logic here
-                context.go(AppRoute.createProfileScreenOne);
+              onPressed: () async {
+                bool emailExists = await checkEmailExistence(currentUser?.email ?? "");
+                if (emailExists) {
+                  context.go(AppRoute.tabs);
+                } else {
+                  // Add your onPressed logic here
+                  context.go(AppRoute.createProfileScreenOne);
+                }
               },
               color: context.secondary, // Change color as needed
               width: context.width * .6, // Change width as needed

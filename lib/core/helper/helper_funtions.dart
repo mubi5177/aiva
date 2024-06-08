@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -119,14 +119,23 @@ String generateUserId() {
   return uuid.v4();
 }
 
-Future<String> uploadImage(File image) async {
-  final _firebaseStorage = FirebaseStorage.instance;
+// Function to upload image to Firebase Storage
+Future<String> uploadImage(File imageFile) async {
+  try {
+    // Upload image to Firebase Storage
+    final firebase_storage.Reference ref =
+        firebase_storage.FirebaseStorage.instance.ref().child('images').child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+    await ref.putFile(imageFile!);
 
-  //Upload to Firebase
-  var snapshot = await _firebaseStorage.ref().child('images/imageName').putFile(image);
-  var downloadUrl = await snapshot.ref.getDownloadURL();
+    // Get download URL of the uploaded image
+    final String downloadURL = await ref.getDownloadURL();
+    print('Image uploaded successfully. Download URL: $downloadURL');
 
-  return downloadUrl;
+    return downloadURL;
+  } catch (e) {
+    print('Error uploading image: $e');
+    return '';
+  }
 }
 
 Future<void> uploadDataToFirestore(String collectionName, Map<String, dynamic> data) async {
@@ -143,10 +152,10 @@ Future<void> uploadDataToFirestore(String collectionName, Map<String, dynamic> d
   }
 }
 
-Future<void> updateDataOnFirestore(String collectionName, Map<String, dynamic> data,String id) async {
+Future<void> updateDataOnFirestore(String collectionName, Map<String, dynamic> data, String id) async {
   try {
     // Update the data to Firestore
-      await FirebaseFirestore.instance.collection(collectionName).doc(id).update(data);
+    await FirebaseFirestore.instance.collection(collectionName).doc(id).update(data);
 
     print('Data updated on Firestore successfully!');
   } catch (e) {
@@ -162,5 +171,22 @@ String getCurrentUserId() {
   } else {
     // User is not signed in
     return '';
+  }
+}
+
+
+Future<bool> checkEmailExistence(String email) async {
+  try {
+    // Query the user collection for documents with the provided email
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    // If any document matches the email, return true
+    return querySnapshot.docs.isNotEmpty;
+  } catch (e) {
+    print('Error checking email existence: $e');
+    return false; // Return false in case of any error
   }
 }
