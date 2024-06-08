@@ -12,6 +12,7 @@ import 'package:aivi/widgets/date_time_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
@@ -72,13 +73,38 @@ class _AddNotesState extends State<AddNotes> {
                       setState(() {
                         isUploading = false;
                       });
+                      Fluttertoast.showToast(
+                        msg: "Uploaded!",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.SNACKBAR,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 14.0,
+                      );
+
                     }).onError((error, stackTrace) {
+                      Fluttertoast.showToast(
+                        msg: error.toString(),
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.SNACKBAR,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 14.0,
+                      );
                       setState(() {
                         isUploading = false;
                       });
                     });
                     context.pop();
                   } catch (e) {
+                    Fluttertoast.showToast(
+                      msg: e.toString(),
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 14.0,
+                    );
                     setState(() {
                       isUploading = false;
                     });
@@ -88,7 +114,15 @@ class _AddNotesState extends State<AddNotes> {
               height: 50,
               width: 170,
               background: context.secondary,
-              child: const Text("Save"),
+              child: isUploading
+                  ? const SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text("Save"),
             ),
           ],
         ),
