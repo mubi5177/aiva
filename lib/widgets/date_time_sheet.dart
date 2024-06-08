@@ -3,11 +3,14 @@ import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/core/extensions/e_date_time.dart';
 import 'package:aivi/cubit/date_time_cubit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 class EndDateTimeSheet extends StatefulWidget {
   final String dateName;
@@ -84,6 +87,25 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
                 _today.formatTime(format: 'EEEE'),
                 style: context.displaySmall?.copyWith(color: context.tertiary),
               ),
+              trailing: TimePickerSpinnerPopUp(
+                mode: CupertinoDatePickerMode.time,
+                initTime: _selectedTime,
+                minTime: _selectedTime.subtract(const Duration(days: 10)),
+                maxTime: _selectedTime.add(const Duration(days: 10)),
+                barrierColor: context.primary.withOpacity(.2),
+                //Barrier Color when pop up show
+                minuteInterval: 1,
+                textStyle: context.displaySmall,
+                cancelText: AppStrings.cancel,
+                confirmText: "Ok",
+                pressType: PressType.singlePress,
+                timeFormat: DateFormat.jm().pattern,
+                onChange: (dateTime) {
+                  setState(() {
+                    _selectedTime = dateTime;
+                  });
+                },
+              ),
             ),
             const Gap(40.0),
             Padding(
@@ -92,10 +114,13 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
                 background: context.secondary,
                 height: 50.0,
                 onPressed: () {
+                  widget.dateTimeCubit.update(DateTime.now());
                   DateTime date1 = _selectedTime;
                   DateTime date2 = _today;
                   DateTime mergedDate = _mergeEndDate(date1, date2);
                   widget.dateTimeCubit.update(mergedDate);
+
+
                   context.pop();
                 },
                 child: const Text("Done"),
@@ -104,6 +129,7 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
             const Gap(20.0),
           ],
         );
+
       },
     );
   }

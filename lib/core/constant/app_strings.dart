@@ -27,6 +27,7 @@ class AppStrings {
   static const notificationSettings = 'Notification Settings';
   static const search = 'Search';
   static const addNewNote = 'Add New Note';
+  static const editNote = 'Edit Note';
   static const addNewTask = 'Add New Task';
   static const addNewAppointment = 'Add New Appointment';
   static const notesDetails = 'Notes Details';

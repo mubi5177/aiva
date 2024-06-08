@@ -9,19 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
-class AllNotesTab extends StatefulWidget {
+class MeetingNotesTab extends StatefulWidget {
   final AsyncSnapshot<QuerySnapshot<Object?>> snapshot;
-  const AllNotesTab({super.key, required this.snapshot});
+  const MeetingNotesTab({super.key, required this.snapshot});
 
   @override
-  State<AllNotesTab> createState() => _AllNotesTabState();
+  State<MeetingNotesTab> createState() => _MeetingNotesTabState();
 }
 
-class _AllNotesTabState extends State<AllNotesTab> {
+class _MeetingNotesTabState extends State<MeetingNotesTab> {
   @override
   Widget build(BuildContext context) {
     final List<QueryDocumentSnapshot> documents = widget.snapshot.data!.docs;
-    if (documents.isNotEmpty) {
+    final bool hasMeeting = documents.any((doc) => (doc.data() as Map<String, dynamic>)['type'] == 'Meeting');
+    if (hasMeeting) {
       return Container(
         color: Colors.grey.shade50,
         child: Padding(
@@ -56,67 +57,70 @@ class _AllNotesTabState extends State<AllNotesTab> {
               }
               int assetIndex = index - 1;
               final data = documents[assetIndex].data() as Map<String, dynamic>;
-              final docId = documents[assetIndex].id;
-              return InkWell(
-                onTap: () {
-                  context.push(AppRoute.notesDetails,extra: docId);
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  height: 180,
-                  width: 180,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade200),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 0.0,
-                        color: Colors.black.withOpacity(0.1),
-                        offset: Offset.zero,
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        data['title'] ?? notesItemsList[assetIndex].title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: context.displaySmall,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: const Color(0xfffe4e1fc),
-                          borderRadius: BorderRadius.circular(6),
+              final docId= documents[assetIndex].id;
+                return InkWell(
+                  onTap: () {
+                    context.push(AppRoute.notesDetails,extra: docId);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    height: 180,
+                    width: 180,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade200),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 0.0,
+                          color: Colors.black.withOpacity(0.1),
+                          offset: Offset.zero,
+                          spreadRadius: 0,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          data['title'] ?? notesItemsList[assetIndex].title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: context.displaySmall,
                         ),
-                        child: Text(
-                          data['type'] ?? notesItemsList[assetIndex].tag,
-                          style: context.bodySmall?.copyWith(fontWeight: FontWeight.w500, color: Color(0xff405FBA)),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xfffe4e1fc),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            data['type'] ?? notesItemsList[assetIndex].tag,
+                            style: context.bodySmall?.copyWith(fontWeight: FontWeight.w500, color: Color(0xff405FBA)),
+                          ),
                         ),
-                      ),
-                      Text(
-                        data['description'] ?? notesItemsList[assetIndex].description,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 5,
-                        style: context.displaySmall?.copyWith(color: Color(0xff6C6B6B)),
-                      ),
-                    ],
+                        Text(
+                          data['description'] ?? notesItemsList[assetIndex].description,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 5,
+                          style: context.displaySmall?.copyWith(color: Color(0xff6C6B6B)),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
+                );
+
             },
           ),
         ),
       );
-    } else {
-      return const EmptyScreen(screen: "");
+    }else{
+      return const EmptyScreen(screen: "Meeting");
+
     }
+
   }
 }
 

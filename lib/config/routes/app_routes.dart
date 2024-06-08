@@ -4,6 +4,7 @@ import 'package:aivi/screens/daily_habits/habits.dart';
 import 'package:aivi/screens/dashboard/dashboard.dart';
 import 'package:aivi/screens/dashboard/dashboard_no_item.dart';
 import 'package:aivi/screens/notes/add_new_note.dart';
+import 'package:aivi/screens/notes/edit_notes.dart';
 import 'package:aivi/screens/notes/notes_details.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
 import 'package:aivi/screens/notification_settings.dart';
@@ -51,9 +52,25 @@ final router = GoRouter(
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const TabsPage()),
     ),
     GoRoute(
-      path: AppRoute.notesDetails,
-      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: NotesDetails()),
-    ),
+        path: AppRoute.notesDetails,
+        pageBuilder: (context, state) {
+          var data = state.extra as String;
+          return CupertinoPage(
+              key: state.pageKey,
+              child: NotesDetails(
+                noteId: data,
+              ));
+        }),
+    GoRoute(
+        path: AppRoute.editNotes,
+        pageBuilder: (context, state) {
+          var data = state.extra as String;
+          return CupertinoPage(
+              key: state.pageKey,
+              child: EditNotes(
+                noteId: data,
+              ));
+        }),
     GoRoute(
       path: AppRoute.addNewNotes,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const AddNotes()),
@@ -89,7 +106,8 @@ final router = GoRouter(
     GoRoute(
       path: AppRoute.saySomething,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: SaySomething()),
-    ),   GoRoute(
+    ),
+    GoRoute(
       path: AppRoute.addNewAppointment,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const AddNewAppointment()),
     ),
@@ -111,6 +129,7 @@ class AppRoute {
   static const String notes = '/notes';
   static const String notesDetails = '/notes-details';
   static const String editProfile = '/edit-profile';
+  static const String editNotes = '/edit-notes';
   static const String addNewTask = '/add-new-task';
   static const String addNewAppointment = '/add-new-appointment';
   static const String taskDetails = '/task-details';

@@ -9,19 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
-class AllNotesTab extends StatefulWidget {
+class ResearchNotesTab extends StatefulWidget {
   final AsyncSnapshot<QuerySnapshot<Object?>> snapshot;
-  const AllNotesTab({super.key, required this.snapshot});
+  const ResearchNotesTab({super.key, required this.snapshot});
 
   @override
-  State<AllNotesTab> createState() => _AllNotesTabState();
+  State<ResearchNotesTab> createState() => _ResearchNotesTabState();
 }
 
-class _AllNotesTabState extends State<AllNotesTab> {
+class _ResearchNotesTabState extends State<ResearchNotesTab> {
   @override
   Widget build(BuildContext context) {
     final List<QueryDocumentSnapshot> documents = widget.snapshot.data!.docs;
-    if (documents.isNotEmpty) {
+    final bool hasResearch = documents.any((doc) => (doc.data() as Map<String, dynamic>)['type'] == 'Research');
+    if (hasResearch) {
       return Container(
         color: Colors.grey.shade50,
         child: Padding(
@@ -56,7 +57,7 @@ class _AllNotesTabState extends State<AllNotesTab> {
               }
               int assetIndex = index - 1;
               final data = documents[assetIndex].data() as Map<String, dynamic>;
-              final docId = documents[assetIndex].id;
+              final docId= documents[assetIndex].id;
               return InkWell(
                 onTap: () {
                   context.push(AppRoute.notesDetails,extra: docId);
@@ -115,7 +116,7 @@ class _AllNotesTabState extends State<AllNotesTab> {
         ),
       );
     } else {
-      return const EmptyScreen(screen: "");
+      return const EmptyScreen(screen: "Research");
     }
   }
 }

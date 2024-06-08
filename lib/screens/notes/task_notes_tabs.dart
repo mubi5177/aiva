@@ -9,19 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
-class AllNotesTab extends StatefulWidget {
+class TaskNotesTab extends StatefulWidget {
   final AsyncSnapshot<QuerySnapshot<Object?>> snapshot;
-  const AllNotesTab({super.key, required this.snapshot});
+  const TaskNotesTab({super.key, required this.snapshot});
 
   @override
-  State<AllNotesTab> createState() => _AllNotesTabState();
+  State<TaskNotesTab> createState() => _TaskNotesTabState();
 }
 
-class _AllNotesTabState extends State<AllNotesTab> {
+class _TaskNotesTabState extends State<TaskNotesTab> {
   @override
   Widget build(BuildContext context) {
     final List<QueryDocumentSnapshot> documents = widget.snapshot.data!.docs;
-    if (documents.isNotEmpty) {
+
+    final bool hasTask = documents.any((doc) => (doc.data() as Map<String, dynamic>)['type'] == 'Tasks');
+    if (hasTask) {
       return Container(
         color: Colors.grey.shade50,
         child: Padding(
@@ -56,7 +58,8 @@ class _AllNotesTabState extends State<AllNotesTab> {
               }
               int assetIndex = index - 1;
               final data = documents[assetIndex].data() as Map<String, dynamic>;
-              final docId = documents[assetIndex].id;
+              final docId= documents[assetIndex].id;
+
               return InkWell(
                 onTap: () {
                   context.push(AppRoute.notesDetails,extra: docId);
@@ -114,9 +117,10 @@ class _AllNotesTabState extends State<AllNotesTab> {
           ),
         ),
       );
-    } else {
-      return const EmptyScreen(screen: "");
+    }else{
+      return const EmptyScreen(screen: "Task");
     }
+
   }
 }
 

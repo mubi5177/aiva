@@ -4,8 +4,14 @@ import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/notes/all_notes_tab.dart';
+import 'package:aivi/screens/notes/design_notes_tab.dart';
+import 'package:aivi/screens/notes/meeting_notes_tab.dart';
+import 'package:aivi/screens/notes/research_notes_tab.dart';
+import 'package:aivi/screens/notes/task_notes_tabs.dart';
+import 'package:aivi/screens/search/recent_tab.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -92,24 +98,37 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _controller,
-        children: const [
-          AllNotesTab(),
-          EmptyScreen(
-            screen: "Meeting",
-          ),
-          EmptyScreen(
-            screen: "Research",
-          ),
-          EmptyScreen(
-            screen: "Task",
-          ),
-          EmptyScreen(
-            screen: "Design",
-          ),
-        ],
-      ),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('notes').snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+
+            return TabBarView(
+              controller: _controller,
+              children: [
+                AllNotesTab(
+                  snapshot: snapshot,
+                ),
+                MeetingNotesTab(
+                  snapshot: snapshot,
+                ),
+                ResearchNotesTab(
+                  snapshot: snapshot,
+                ),
+                TaskNotesTab(
+                  snapshot: snapshot,
+                ),
+                DesignNotesTab(
+                  snapshot: snapshot,
+                ),
+              ],
+            );
+          }),
     );
   }
 }
@@ -129,7 +148,7 @@ class EmptyScreen extends StatelessWidget {
             const Gap(20),
             InkWell(
               onTap: () {
-                context.push(AppRoute.addNewTask);
+                context.push(AppRoute.addNewNotes);
               },
               child: Container(
                 alignment: Alignment.center,

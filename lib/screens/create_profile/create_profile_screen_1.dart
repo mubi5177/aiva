@@ -65,6 +65,9 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AppButton.outlineShrink(
+              onPressed: (){
+                context.push(AppRoute.habits);
+              },
                 height: 50,
                 width: 170,
                 child: Text(

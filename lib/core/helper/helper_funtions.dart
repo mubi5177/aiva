@@ -90,7 +90,7 @@ String getCurrentUserName() {
 Future<void> uploadUserData(
     {required String name, required String profileUrl, String? phoneNumber, required String email, required String loginType}) async {
   try {
-    String userId = generateUserId();
+    String userId = getCurrentUserId();
     // Access Firestore instance
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
@@ -138,6 +138,17 @@ Future<void> uploadDataToFirestore(String collectionName, Map<String, dynamic> d
     await collectionReference.add(data);
 
     print('Data uploaded to Firestore successfully!');
+  } catch (e) {
+    print('Error uploading data to Firestore: $e');
+  }
+}
+
+Future<void> updateDataOnFirestore(String collectionName, Map<String, dynamic> data,String id) async {
+  try {
+    // Update the data to Firestore
+      await FirebaseFirestore.instance.collection(collectionName).doc(id).update(data);
+
+    print('Data updated on Firestore successfully!');
   } catch (e) {
     print('Error uploading data to Firestore: $e');
   }
