@@ -87,7 +87,7 @@ String getCurrentUserName() {
   }
 }
 
-Future<void> uploadData(
+Future<void> uploadUserData(
     {required String name, required String profileUrl, String? phoneNumber, required String email, required String loginType}) async {
   try {
     String userId = generateUserId();
@@ -127,4 +127,29 @@ Future<String> uploadImage(File image) async {
   var downloadUrl = await snapshot.ref.getDownloadURL();
 
   return downloadUrl;
+}
+
+Future<void> uploadDataToFirestore(String collectionName, Map<String, dynamic> data) async {
+  try {
+    // Reference to the Firestore collection
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection(collectionName);
+
+    // Add the data to Firestore
+    await collectionReference.add(data);
+
+    print('Data uploaded to Firestore successfully!');
+  } catch (e) {
+    print('Error uploading data to Firestore: $e');
+  }
+}
+
+// Get the current user ID
+String getCurrentUserId() {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    return user.uid;
+  } else {
+    // User is not signed in
+    return '';
+  }
 }

@@ -75,19 +75,25 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
             AppButton.primary(
                 onPressed: () {
                   if (_profileFile != null) {
-                    uploadImage(_profileFile!).then((value) {
-                      print(value);
-                    });
+
                   }
-                  // uploadData(
-                  //         name: name.text.trim(),
-                  //         profileUrl: _profileFile != null ? _profileFile!.path : profile,
-                  //         email: email.text.trim(),
-                  //         phoneNumber: "${countryCode.text.trim()}${phone.text.trim()}",
-                  //         loginType: currentUser?.loginType ?? '')
-                  //     .then((value) {
-                  //   context.push(AppRoute.habits);
+                  else{
+                    print('_CreateProfileScreenOneState.build');
+                  }
+                  // uploadImage(_profileFile!).then((value) {
+                    uploadUserData(
+                        name: name.text.trim(),
+                        profileUrl: _profileFile != null ? _profileFile!.path : profile,
+                        email: email.text.trim(),
+                        phoneNumber: "${countryCode.text.trim()}${phone.text.trim()}",
+                        loginType: currentUser?.loginType ?? '')
+                        .then((value) {
+                      context.push(AppRoute.habits);
+                    });
                   // });
+
+
+
                 },
                 height: 50,
                 width: 170,

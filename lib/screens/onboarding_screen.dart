@@ -158,7 +158,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 text: AppStrings.continueWithFb,
                 onPressed: () {
                   // Add your onPressed logic here
-                  context.push(AppRoute.welcome);
+                  context.push(AppRoute.habits);
                 },
                 color: Colors.white,
                 // Change color as needed
