@@ -3,12 +3,32 @@ import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/model/user_model.dart';
 import 'package:aivi/widgets/custom_social_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  UserModel? currentUser;
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    currentUser = await getUserData();
+
+    setState(() {});
+    print('_WelcomeScreenState.initState: ${currentUser?.name}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +55,10 @@ class WelcomeScreen extends StatelessWidget {
                     colors: [Color(0xff2764FE), Color(0xffD16FFE), Color(0xffFFA5A5)],
                   ).createShader(bounds);
                 },
-                child: const Text(
-                  "Hi Jegan, I'm your personal AI that help get things done",
+                child: Text(
+                  "Hi ${currentUser?.name ?? ''}, I'm your personal AI that help get things done",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white, // This color will be replaced by the gradient
@@ -49,11 +69,11 @@ class WelcomeScreen extends StatelessWidget {
             const Spacer(),
             SocialCustomButton(
               image: '',
-              boxShadow: [],
+              boxShadow: const [],
               text: AppStrings.letGetStarted,
               onPressed: () {
                 // Add your onPressed logic here
-                context.push(AppRoute.createProfileScreenOne);
+                context.go(AppRoute.createProfileScreenOne);
               },
               color: context.secondary, // Change color as needed
               width: context.width * .6, // Change width as needed

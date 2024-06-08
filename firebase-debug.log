@@ -1,0 +1,24 @@
+[debug] [2024-06-01T08:57:32.943Z] ----------------------------------------------------------------------
+[debug] [2024-06-01T08:57:32.942Z] ----------------------------------------------------------------------
+[debug] [2024-06-01T08:57:32.944Z] Command:       /usr/local/bin/firebase /Users/sid/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase apps:sdkconfig ios 1:978412153928:ios:8462192bc366fe28f07c7d --json
+[debug] [2024-06-01T08:57:32.945Z] CLI Version:   13.10.2
+[debug] [2024-06-01T08:57:32.945Z] Platform:      darwin
+[debug] [2024-06-01T08:57:32.945Z] Node Version:  v18.5.0
+[debug] [2024-06-01T08:57:32.946Z] Time:          Sat Jun 01 2024 13:57:32 GMT+0500 (Pakistan Standard Time)
+[debug] [2024-06-01T08:57:32.946Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-06-01T08:57:33.000Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2024-06-01T08:57:33.003Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-06-01T08:57:33.003Z] > authorizing via signed-in user (notify.mubeen@gmail.com)
+[debug] [2024-06-01T08:57:33.006Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/iosApps/1:978412153928:ios:8462192bc366fe28f07c7d/config [none]
+[debug] [2024-06-01T08:57:32.944Z] Command:       /usr/local/bin/firebase /Users/sid/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase apps:sdkconfig android 1:978412153928:android:d0ef97d8b4a99ddef07c7d --json
+[debug] [2024-06-01T08:57:32.944Z] CLI Version:   13.10.2
+[debug] [2024-06-01T08:57:32.945Z] Platform:      darwin
+[debug] [2024-06-01T08:57:32.945Z] Node Version:  v18.5.0
+[debug] [2024-06-01T08:57:32.946Z] Time:          Sat Jun 01 2024 13:57:32 GMT+0500 (Pakistan Standard Time)
+[debug] [2024-06-01T08:57:32.946Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-06-01T08:57:33.000Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2024-06-01T08:57:33.003Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-06-01T08:57:33.003Z] > authorizing via signed-in user (notify.mubeen@gmail.com)
+[debug] [2024-06-01T08:57:33.006Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/androidApps/1:978412153928:android:d0ef97d8b4a99ddef07c7d/config [none]

@@ -7,6 +7,8 @@ class AppStrings {
   static const notes = 'Notes';
   static const dailyHabits = 'DailyHabits';
   static const labels = 'Labels';
+  static const gallery = 'Gallery';
+  static const camera = 'Camera';
   static const about = 'About';
   static const logout = 'Log Out';
   static const completelySafe = 'Your are completely safe';

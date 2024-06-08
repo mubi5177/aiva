@@ -14,11 +14,22 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: LightTheme().themeData,
-      routerConfig: router,
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
+      },
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: LightTheme().themeData,
+        routerConfig: router,
+      ),
     );
   }
 }
