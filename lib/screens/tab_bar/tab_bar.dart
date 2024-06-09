@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/cubit/tab_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
@@ -12,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
@@ -50,6 +54,7 @@ class _TabsPageState extends State<TabsPage> {
                 floatingActionButton: state == true
                     ? const SizedBox()
                     : InkWell(
+
                         onTap: () {
                           context.showBottomSheet(
                               showDragHandle: false,
@@ -124,6 +129,7 @@ class _TabsPageState extends State<TabsPage> {
                                   ),
                                 ),
                               ));
+
                         },
                         child: AppImage.assets(
                           assetName: Assets.images.logoBar.path,
@@ -211,3 +217,50 @@ class _TabsPageState extends State<TabsPage> {
     );
   }
 }
+
+
+
+
+// onTap: () async {
+// try {
+// var data = {
+// "title": "Running",
+// // "startDate":"",
+// // "endDate":"",
+// // "repeat":[],//week days in string
+// // "description":"",
+// // "habitTime":"",
+// "image": "",
+// // "sendRemainder":true,
+// // "sendRemainderTime":"10 min before" //at habit time
+// };
+// await uploadDataToFirestore("habits", data).then((value) {
+// Fluttertoast.showToast(
+// msg: "Uploaded!",
+// toastLength: Toast.LENGTH_LONG,
+// gravity: ToastGravity.SNACKBAR,
+// backgroundColor: Colors.black54,
+// textColor: Colors.white,
+// fontSize: 14.0,
+// );
+// }).onError((error, stackTrace) {
+// Fluttertoast.showToast(
+// msg: error.toString(),
+// toastLength: Toast.LENGTH_LONG,
+// gravity: ToastGravity.SNACKBAR,
+// backgroundColor: Colors.black54,
+// textColor: Colors.white,
+// fontSize: 14.0,
+// );
+// });
+// } catch (e) {
+// Fluttertoast.showToast(
+// msg: e.toString(),
+// toastLength: Toast.LENGTH_LONG,
+// gravity: ToastGravity.SNACKBAR,
+// backgroundColor: Colors.black54,
+// textColor: Colors.white,
+// fontSize: 14.0,
+// );
+// }
+// },
