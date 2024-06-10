@@ -10,37 +10,6 @@
 	<string>AIVA-Notes</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-    <key>FirebaseAppDelegateProxyEnabled</key>
-    <string>NO</string>
-    <key>FirebaseMessagingAutoInitEnabled</key>
-    <string>NO</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.jegan.aiva</string>
-            </array>
-        </dict>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.googleusercontent.apps.978412153928-0duqe4285ct8sd575aadmdggk4kgb6fe</string>
-            </array>
-        </dict>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>***Something here***</string>
-            </array>
-        </dict>
-    </array>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -53,25 +22,54 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.jegan.aiva</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.978412153928-0duqe4285ct8sd575aadmdggk4kgb6fe</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string></string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<string>NO</string>
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<string>NO</string>
 	<key>LSRequiresIPhoneOS</key>
-    <true/>
-    <key>NSCameraUsageDescription</key>
-    <string>In order to take a picture or video, this app requires permission to access the camera.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>To enable GPS location access for Exif data</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Used to capture audio for image picker plugin</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>In order to upload data, this app requires permission to access the photo library.</string>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>In order to take a picture or video, this app requires permission to access the camera.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>To enable GPS location access for Exif data</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to capture audio for image picker plugin</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>In order to upload data, this app requires permission to access the photo library.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
