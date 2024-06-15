@@ -2,16 +2,19 @@ import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:vibration/vibration.dart';
@@ -35,7 +38,6 @@ class _DailyHabitsState extends State<DailyHabits> {
   @override
   void initState() {
     _drawerCubit = BlocProvider.of<DrawerCubit>(context);
-    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
 
     super.initState();
     _listView1Controller.addListener(_listView1Listener);
@@ -86,16 +88,9 @@ class _DailyHabitsState extends State<DailyHabits> {
   void dispose() {
     _mainScrollController.dispose();
     _listView1Controller.dispose();
-    _confettiController.dispose();
 
     _listView2Controller.dispose();
     super.dispose();
-  }
-
-  late ConfettiController _confettiController;
-
-  void _showConfetti() {
-    _confettiController.play();
   }
 
   @override
@@ -189,102 +184,52 @@ class _DailyHabitsState extends State<DailyHabits> {
                 padding: const EdgeInsets.all(6),
                 height: context.height * .35,
                 // decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey)),
-                child: ListView.builder(
-                  controller: _listView1Controller,
-                  physics: const ClampingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: habitsItemsList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade200),
-                      ),
-                      child: ListTile(
-                        leading: AppImage.assets(assetName: habitsItemsList[index].icon),
-                        title: Text(
-                          habitsItemsList[index].title,
-                          style: context.titleSmall?.copyWith(color: context.primary),
-                        ),
-                        subtitle: Text(
-                          habitsItemsList[index].time,
-                          style: context.titleSmall?.copyWith(fontSize: 12),
-                        ),
-                        trailing: habitsItemsList[index].isCompleted
-                            ? AppButton.primary(
-                                height: 35,
-                                width: 120,
-                                background: Color(0xFFE1F9E9),
-                                child: Row(
-                                  children: [
-                                    AppImage.assets(
-                                      assetName: Assets.images.doneCheck.path,
-                                      fit: BoxFit.cover,
-                                      height: 12,
-                                      width: 12,
-                                    ),
-                                    const Gap(8),
-                                    Text(
-                                      "Completed",
-                                      style: context.titleSmall?.copyWith(
-                                        fontSize: 9,
-                                        color: Color(0xFF3DB65F),
-                                      ),
-                                    ),
-                                  ],
-                                ))
-                            : Stack(
-                                children: [
-                                  AppButton.outlineShrink(
-                                      onPressed: () async {
-                                        if (await Vibration.hasVibrator() ?? false) {
-                                          Vibration.vibrate();
-                                          _confettiController.play();
-                                        }
-                                      },
-                                      borderColor: context.secondary,
-                                      height: 35,
-                                      width: 125,
-                                      child: Text(
-                                        "Mark Complete",
-                                        maxLines: 1,
-                                        style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
-                                      )),
-                                  // Positioned(left: 0, right: 0, top: 0, bottom: 0, child: AppImage.assets(assetName: Assets.gif.success.path,
-                                  // height: 100,
-                                  //   width: 100,
-                                  //
-                                  // )),
-                                  Positioned(
-                                    top: 0,
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: ConfettiWidget(
-                                      confettiController: _confettiController,
-                                      blastDirection: 0, // radial value - DOWN
-                                      particleDrag: 0.05, // apply drag to the confetti
-                                      emissionFrequency: 0.05, // how often it should emit
-                                      numberOfParticles: 20, // number of particles to emit
-                                      gravity: 0.05, // gravity - or fall speed
-                                      shouldLoop: false, // start again as soon as the animation is finished
-                                      colors: const [
-                                        Colors.green,
-                                        Colors.blue,
-                                        Colors.pink,
-                                        Colors.orange,
-                                        Colors.purple,
-                                      ], // manually specify the colors to be used
-                                    ),
-                                  ),
-                                ],
-                              ),
-                      ),
-                    );
-                  },
-                ),
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance.collection('userHabits').snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }
+                      // Retrieve the current user ID (assuming you have it stored somewhere)
+
+                      String currentUserId = getCurrentUserId();
+
+                      final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+                      List<QueryDocumentSnapshot> currentUserDocuments = [];
+
+                      for (var document in documents) {
+                        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                        String userId = data['userId']; // Assuming 'userId' is the field name for user ID in Firestore
+                        bool isCompleted = data['isCompleted'];
+
+                        // Check if the document's user ID matches the current user ID
+                        if (userId == currentUserId && isCompleted == false) {
+                          currentUserDocuments.add(document);
+                        }
+                      }
+
+                      if (currentUserDocuments.isEmpty) {
+                        return const Center(child: Text('No documents found for the current user'));
+                      }
+                      return ListView.builder(
+                        controller: _listView1Controller,
+                        physics: const ClampingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: currentUserDocuments.length,
+                        // itemCount: habitsItemsList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final data = documents[index].data() as Map<String, dynamic>;
+                          final docId = documents[index].id;
+                          return _YourHabits(
+                            data: data,
+                            docId: docId,
+                          );
+                        },
+                      );
+                    }),
               ),
               Text(
                 "Completed",
@@ -294,68 +239,238 @@ class _DailyHabitsState extends State<DailyHabits> {
                 padding: const EdgeInsets.all(6),
                 height: context.height * .4,
                 // decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey)),
-                child: ListView.builder(
-                  controller: _listView2Controller,
-                  physics: const ClampingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: habitsItemsListCompleted.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade200),
-                      ),
-                      child: ListTile(
-                        leading: AppImage.assets(assetName: habitsItemsListCompleted[index].icon),
-                        title: Text(
-                          habitsItemsListCompleted[index].title,
-                          style: context.titleSmall?.copyWith(color: context.primary),
-                        ),
-                        subtitle: Text(
-                          habitsItemsListCompleted[index].time,
-                          style: context.titleSmall?.copyWith(fontSize: 12),
-                        ),
-                        trailing: habitsItemsListCompleted[index].isCompleted
-                            ? AppButton.primary(
-                                height: 35,
-                                width: 120,
-                                background: Color(0xFFE1F9E9),
-                                child: Row(
-                                  children: [
-                                    AppImage.assets(
-                                      assetName: Assets.images.doneCheck.path,
-                                      fit: BoxFit.cover,
-                                      height: 12,
-                                      width: 12,
-                                    ),
-                                    const Gap(8),
-                                    Text(
-                                      "Completed",
-                                      style: context.titleSmall?.copyWith(
-                                        fontSize: 9,
-                                        color: Color(0xFF3DB65F),
-                                      ),
-                                    ),
-                                  ],
-                                ))
-                            : AppButton.outlineShrink(
-                                borderColor: context.secondary,
-                                height: 35,
-                                width: 125,
-                                child: Text(
-                                  "Mark Complete",
-                                  maxLines: 1,
-                                  style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
-                                )),
-                      ),
-                    );
-                  },
-                ),
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance.collection('userHabits').snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }
+                      // Retrieve the current user ID (assuming you have it stored somewhere)
+
+                      String currentUserId = getCurrentUserId();
+
+                      final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+                      List<QueryDocumentSnapshot> currentUserDocuments = [];
+
+                      for (var document in documents) {
+                        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                        String userId = data['userId']; // Assuming 'userId' is the field name for user ID in Firestore
+                        bool isCompleted = data['isCompleted'];
+
+                        // Check if the document's user ID matches the current user ID
+                        if (userId == currentUserId && isCompleted) {
+                          currentUserDocuments.add(document);
+                        }
+                      }
+
+                      if (currentUserDocuments.isEmpty) {
+                        return const Center(child: Text('No documents found for the current user'));
+                      }
+                      return ListView.builder(
+                        controller: _listView2Controller,
+                        physics: const ClampingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: currentUserDocuments.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final data = documents[index].data() as Map<String, dynamic>;
+                          return Container(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey.shade200),
+                            ),
+                            child: ListTile(
+                              leading: AppImage.network(
+                                  imageUrl: data['image'].toString().isEmpty
+                                      ? "https://firebasestorage.googleapis.com/v0/b/aiva-e74f3.appspot.com/o/habits%2Fdumbell.png?alt=media&token=f985b21f-5aac-4067-a145-7a5b90be4625"
+                                      : data['image']),
+                              title: Text(
+                                data['title'] ?? "",
+                                style: context.titleSmall?.copyWith(color: context.primary),
+                              ),
+                              subtitle: Text(
+                                habitsItemsListCompleted[index].time,
+                                style: context.titleSmall?.copyWith(fontSize: 12),
+                              ),
+                              trailing: data['isCompleted']
+                                  ? AppButton.primary(
+                                      height: 35,
+                                      width: 120,
+                                      background: Color(0xFFE1F9E9),
+                                      child: Row(
+                                        children: [
+                                          AppImage.assets(
+                                            assetName: Assets.images.doneCheck.path,
+                                            fit: BoxFit.cover,
+                                            height: 12,
+                                            width: 12,
+                                          ),
+                                          const Gap(8),
+                                          Text(
+                                            "Completed",
+                                            style: context.titleSmall?.copyWith(
+                                              fontSize: 9,
+                                              color: Color(0xFF3DB65F),
+                                            ),
+                                          ),
+                                        ],
+                                      ))
+                                  : AppButton.outlineShrink(
+                                      borderColor: context.secondary,
+                                      height: 35,
+                                      width: 125,
+                                      child: Text(
+                                        "Mark Complete",
+                                        maxLines: 1,
+                                        style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
+                                      )),
+                            ),
+                          );
+                        },
+                      );
+                    }),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _YourHabits extends StatefulWidget {
+  final Map<String, dynamic> data;
+  final String docId;
+
+  const _YourHabits({super.key, required this.data, required this.docId});
+
+  @override
+  State<_YourHabits> createState() => _YourHabitsState();
+}
+
+class _YourHabitsState extends State<_YourHabits> {
+  late ConfettiController _confettiController;
+  @override
+  void initState() {
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: ListTile(
+        leading: AppImage.network(imageUrl: widget.data['image']),
+        title: Text(
+          widget.data['title'],
+          style: context.titleSmall?.copyWith(color: context.primary),
+        ),
+        subtitle: Text(
+          widget.data['pickedTime'],
+          style: context.titleSmall?.copyWith(fontSize: 12),
+        ),
+        trailing: Stack(
+          children: [
+            AppButton.outlineShrink(
+                onPressed: () async {
+                  Vibration.vibrate();
+                  _confettiController.play();
+                  await Future.delayed(const Duration(seconds: 1));
+
+                  try {
+                    // Get reference to the document
+                    DocumentReference documentReference = FirebaseFirestore.instance
+                        .collection('userHabits')
+                        .doc(widget.docId.toString()); // Provide the document ID you want to update
+
+                    // Update the field
+                    documentReference.update({
+                      'isCompleted': true,
+                    }).then((value) {
+                      Fluttertoast.showToast(
+                        msg: "Completed!",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.SNACKBAR,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 14.0,
+                      );
+                    }).onError((error, stackTrace) {
+                      Fluttertoast.showToast(
+                        msg: error.toString(),
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.SNACKBAR,
+                        backgroundColor: Colors.black54,
+                        textColor: Colors.white,
+                        fontSize: 14.0,
+                      );
+                    });
+
+                    // context.pop();
+                  } catch (e) {
+                    Fluttertoast.showToast(
+                      msg: e.toString(),
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 14.0,
+                    );
+                  }
+                },
+                borderColor: context.secondary,
+                height: 35,
+                width: 125,
+                child: Text(
+                  "Mark Complete",
+                  maxLines: 1,
+                  style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
+                )),
+            // Positioned(left: 0, right: 0, top: 0, bottom: 0, child: AppImage.assets(assetName: Assets.gif.success.path,
+            // height: 100,
+            //   width: 100,
+            //
+            // )),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirection: 0, // radial value - DOWN
+                particleDrag: 0.05, // apply drag to the confetti
+                emissionFrequency: 0.05, // how often it should emit
+                numberOfParticles: 20, // number of particles to emit
+                gravity: 0.05, // gravity - or fall speed
+                shouldLoop: false, // start again as soon as the animation is finished
+                colors: const [
+                  Colors.green,
+                  Colors.blue,
+                  Colors.pink,
+                  Colors.orange,
+                  Colors.purple,
+                ], // manually specify the colors to be used
+              ),
+            ),
+          ],
         ),
       ),
     );

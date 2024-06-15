@@ -8,6 +8,7 @@ import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/daily_habits/daily_habits.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:aivi/widgets/date_time_sheet.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+
+List<String> repeatDays = [];
 
 class Habits extends StatefulWidget {
   const Habits({super.key});
@@ -100,38 +103,54 @@ class _HabitsState extends State<Habits> {
             ),
             const Gap(10),
             Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: habitsItemsList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ExpandedTile() ??
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child: ListTile(
-                          leading: AppImage.assets(assetName: habitsItemsList[index].icon),
-                          title: Text(
-                            habitsItemsList[index].title,
-                            style: context.titleSmall?.copyWith(color: context.primary),
-                          ),
-                          trailing: AppButton.outlineShrink(
-                              borderColor: context.secondary,
-                              height: 30,
-                              width: 100,
-                              child: Text(
-                                "Select",
-                                maxLines: 1,
-                                style: context.titleSmall?.copyWith(fontSize: 12, fontWeight: FontWeight.w500, color: context.secondary),
-                              )),
-                        ),
-                      );
-                },
-              ),
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance.collection('habits').snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: documents.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        QueryDocumentSnapshot doc = documents[index];
+                        final data = documents[index].data() as Map<String, dynamic>;
+
+                        return ExpandedTile(
+                              documents: data,
+                            ) ??
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: Colors.white,
+                                border: Border.all(color: Colors.grey.shade200),
+                              ),
+                              child: ListTile(
+                                leading: AppImage.assets(assetName: habitsItemsList[index].icon),
+                                title: Text(
+                                  habitsItemsList[index].title,
+                                  style: context.titleSmall?.copyWith(color: context.primary),
+                                ),
+                                trailing: AppButton.outlineShrink(
+                                    borderColor: context.secondary,
+                                    height: 30,
+                                    width: 100,
+                                    child: Text(
+                                      "Select",
+                                      maxLines: 1,
+                                      style: context.titleSmall?.copyWith(fontSize: 12, fontWeight: FontWeight.w500, color: context.secondary),
+                                    )),
+                              ),
+                            );
+                      },
+                    );
+                  }),
             ),
           ],
         ),
@@ -159,6 +178,14 @@ class _WeekWidgetState extends State<WeekWidget> {
         setState(() {
           isSelected = !isSelected;
         });
+        if (isSelected) {
+          repeatDays.add(widget.tagName);
+          print('_WeekWidgetState.build before ${repeatDays.toString()}');
+        } else {
+          repeatDays.removeWhere((element) => element == widget.tagName);
+          print('_WeekWidgetState.build after ${repeatDays.toString()}');
+
+        }
       },
       child: Container(
         alignment: Alignment.center,
@@ -179,7 +206,9 @@ class _WeekWidgetState extends State<WeekWidget> {
 }
 
 class ExpandedTile extends StatefulWidget {
-  const ExpandedTile({super.key});
+  final Map<String, dynamic> documents;
+
+  const ExpandedTile({super.key, required this.documents});
 
   @override
   State<ExpandedTile> createState() => _ExpandedTileState();
@@ -193,7 +222,7 @@ class _ExpandedTileState extends State<ExpandedTile> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       width: context.width,
       height: boxHeight,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -207,15 +236,15 @@ class _ExpandedTileState extends State<ExpandedTile> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Row(
               children: [
-                AppImage.assets(
-                  assetName: Assets.images.dumbell.path,
+                AppImage.network(
+                  imageUrl: widget.documents['image'] ?? Assets.images.dumbell.path,
                   height: 50,
                   width: 50,
                 ),
                 const Gap(10),
                 Expanded(
                   child: Text(
-                    "Gym Session",
+                    widget.documents['title'] ?? "Gym Session",
                     style: context.titleSmall?.copyWith(color: context.primary),
                   ),
                 ),

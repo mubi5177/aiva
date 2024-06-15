@@ -66,7 +66,8 @@ class _EditNotesState extends State<EditNotes> {
                       AppButton.primary(
                         onPressed: () async {
                           if (_formKey.currentState!.validate() && (tagsList.isNotEmpty && _endDateTimeCubit.state.isNotEmpty)) {
-                            try {
+                            try
+                            {
                               setState(() {
                                 isUploading = true;
                               });
