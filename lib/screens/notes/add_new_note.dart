@@ -24,7 +24,12 @@ class AddNotes extends StatefulWidget {
 }
 
 class _AddNotesState extends State<AddNotes> {
-  final List<String> tagsList = [ "Meeting", "Task", "Urgent", "Design"]; // Example list of tags
+  final List<String> tagsList = [
+    "Meeting",
+    "Task",
+    "Urgent",
+    "Design"
+  ]; // Example list of tags
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -37,6 +42,7 @@ class _AddNotesState extends State<AddNotes> {
   final ExpansionCubit _expansionCubit = ExpansionCubit();
   final ActionCubit _actionCubit = ActionCubit("Tasks");
   TextEditingController description = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ExpansionCubit, bool>(
@@ -58,12 +64,15 @@ class _AddNotesState extends State<AddNotes> {
                         width: 170,
                         child: Text(
                           "Cancel",
-                          style: context.displaySmall?.copyWith(color: context.secondary),
+                          style: context.displaySmall
+                              ?.copyWith(color: context.secondary),
                         )),
                     const Gap(10.0),
                     AppButton.primary(
                       onPressed: () async {
-                        if (_formKey.currentState!.validate() && (tagsList.isNotEmpty && _endDateTimeCubit.state.isNotEmpty)) {
+                        if (_formKey.currentState!.validate() &&
+                            (tagsList.isNotEmpty &&
+                                _endDateTimeCubit.state.isNotEmpty)) {
                           try {
                             setState(() {
                               isUploading = true;
@@ -77,7 +86,8 @@ class _AddNotesState extends State<AddNotes> {
                               "date": _endDateTimeCubit.state,
                               "userId": userId,
                             };
-                            await uploadDataToFirestore("notes", data).then((value) {
+                            await uploadDataToFirestore("notes", data)
+                                .then((value) {
                               setState(() {
                                 isUploading = false;
                               });
@@ -123,12 +133,12 @@ class _AddNotesState extends State<AddNotes> {
                       background: context.secondary,
                       child: isUploading
                           ? const SizedBox(
-                        height: 25,
-                        width: 25,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      )
+                              height: 25,
+                              width: 25,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
                           : const Text("Save"),
                     ),
                   ],
@@ -146,13 +156,16 @@ class _AddNotesState extends State<AddNotes> {
                 key: _formKey,
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 14),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Type",
-                          style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                          style: context.displayMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: context.primary),
                         ),
                         const Gap(12),
                         Container(
@@ -161,10 +174,14 @@ class _AddNotesState extends State<AddNotes> {
                             border: Border.all(color: Colors.grey),
                           ),
                           child: ExpansionTile(
-                            onExpansionChanged: (value) => _expansionCubit.onChanged(),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                            onExpansionChanged: (value) =>
+                                _expansionCubit.onChanged(),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
                             trailing: Icon(
-                              expanded ? CupertinoIcons.chevron_up : CupertinoIcons.chevron_down,
+                              expanded
+                                  ? CupertinoIcons.chevron_up
+                                  : CupertinoIcons.chevron_down,
                               size: 15,
                             ),
                             title: Text(action, style: context.titleLarge),
@@ -174,7 +191,8 @@ class _AddNotesState extends State<AddNotes> {
                           Container(
                             decoration: ShapeDecoration(
                               color: context.onPrimary,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
                               shadows: [
                                 BoxShadow(
                                   color: context.primary.withOpacity(.1),
@@ -197,7 +215,9 @@ class _AddNotesState extends State<AddNotes> {
                                       title: Text(
                                         "Tasks",
                                         style: context.labelLarge?.copyWith(
-                                          color: action == "Tasks" ? context.tertiary : context.primary,
+                                          color: action == "Tasks"
+                                              ? context.tertiary
+                                              : context.primary,
                                         ),
                                       ),
                                     ),
@@ -210,11 +230,12 @@ class _AddNotesState extends State<AddNotes> {
                                       title: Text(
                                         "Meeting",
                                         style: context.labelLarge?.copyWith(
-                                          color: action == "Meeting" ? context.tertiary : context.primary,
+                                          color: action == "Meeting"
+                                              ? context.tertiary
+                                              : context.primary,
                                         ),
                                       ),
                                     ),
-
                                     const Divider(),
                                     ListTile(
                                       onTap: () {
@@ -224,7 +245,9 @@ class _AddNotesState extends State<AddNotes> {
                                       title: Text(
                                         "Design",
                                         style: context.labelLarge?.copyWith(
-                                          color: action == "Design" ? context.tertiary : context.primary,
+                                          color: action == "Design"
+                                              ? context.tertiary
+                                              : context.primary,
                                         ),
                                       ),
                                     ),
@@ -237,7 +260,9 @@ class _AddNotesState extends State<AddNotes> {
                                       title: Text(
                                         "Research",
                                         style: context.labelLarge?.copyWith(
-                                          color: action == "Research" ? context.tertiary : context.primary,
+                                          color: action == "Research"
+                                              ? context.tertiary
+                                              : context.primary,
                                         ),
                                       ),
                                     ),
@@ -249,7 +274,9 @@ class _AddNotesState extends State<AddNotes> {
                         const Gap(22),
                         Text(
                           "Title",
-                          style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                          style: context.displayMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: context.primary),
                         ),
                         const Gap(12),
                         TextFormField(
@@ -263,11 +290,18 @@ class _AddNotesState extends State<AddNotes> {
                             return null;
                           },
                           decoration: InputDecoration(
-                              border: OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                              enabledBorder:
-                              OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                              focusedBorder:
-                              OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              border: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(14)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(14)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(14)),
                               hintText: AppStrings.whatNeedToBeDone),
                           keyboardType: TextInputType.name,
 
@@ -277,13 +311,17 @@ class _AddNotesState extends State<AddNotes> {
                         const Gap(20),
                         Text(
                           "Label",
-                          style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                          style: context.displayMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: context.primary),
                         ),
                         const Gap(12),
                         Container(
                           height: 110,
-                          decoration:
-                          BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(14)),
                           child: Column(
                             children: [
                               SizedBox(
@@ -292,27 +330,38 @@ class _AddNotesState extends State<AddNotes> {
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: tagsList.length,
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     return Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 2),
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                        margin: const EdgeInsets.symmetric(vertical: 10),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 10),
                                         decoration: BoxDecoration(
                                           color: const Color(0xffE4EAF9),
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Row(
                                           children: [
                                             Text(
                                               tagsList[index],
-                                              style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
+                                              style: context.labelLarge
+                                                  ?.copyWith(
+                                                      color: Colors.black
+                                                          .withOpacity(.8)),
                                             ),
                                             const Gap(5),
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  tagsList.removeWhere((element) => element == tagsList[index]);
+                                                  tagsList.removeWhere(
+                                                      (element) =>
+                                                          element ==
+                                                          tagsList[index]);
                                                 });
                                               },
                                               child: const Icon(
@@ -328,7 +377,8 @@ class _AddNotesState extends State<AddNotes> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: TextField(
                                   controller: label,
 
@@ -355,21 +405,26 @@ class _AddNotesState extends State<AddNotes> {
                         const Gap(20),
                         Text(
                           "Description",
-                          style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                          style: context.displayMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: context.primary),
                         ),
                         const Gap(12),
                         Container(
                           alignment: Alignment.center,
                           height: context.height * .5,
-                          decoration:
-                          BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(14)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 10),
                                   child: TextFormField(
                                     controller: description,
                                     maxLines: 15,
@@ -395,7 +450,8 @@ class _AddNotesState extends State<AddNotes> {
                                 color: Colors.black.withOpacity(.8),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 10, top: 10),
+                                padding:
+                                    const EdgeInsets.only(bottom: 10, top: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -435,7 +491,8 @@ class _AddNotesState extends State<AddNotes> {
                           builder: (context, text) {
                             return TextFormField(
                               readOnly: true,
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               enableInteractiveSelection: false,
                               controller: TextEditingController(text: text),
                               // The validator receives the text that the user has entered.
@@ -447,17 +504,26 @@ class _AddNotesState extends State<AddNotes> {
                               },
                               decoration: InputDecoration(
                                 hintText: "Date & Time ",
-                                border: OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                enabledBorder:
-                                OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                focusedBorder:
-                                OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(14)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(14)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(14)),
                                 suffixIcon: InkWell(
                                   onTap: () {
                                     context.closeKeyboard();
                                     context.showBottomSheet(
                                       maxHeight: context.height * .9,
-                                      child: EndDateTimeSheet(dateName: "Date", dateTimeCubit: _endDateTimeCubit),
+                                      child: EndDateTimeSheet(
+                                          dateName: "Date",
+                                          dateTimeCubit: _endDateTimeCubit),
                                     );
                                   },
                                   // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),

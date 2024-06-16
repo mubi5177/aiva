@@ -44,6 +44,7 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
     _controller.dispose();
     super.dispose();
   }
+
   UserModel? currentUser;
 
   getData() async {
@@ -67,7 +68,7 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
         isDrawerIcon: true,
         backgroundColor: Colors.grey.shade50,
         isIconBack: false,
-        title: "Good Morning, ${currentUser?.name??'---'}",
+        title: "Good Morning, ${currentUser?.name ?? '---'}",
         scaffoldKey: _scaffoldKey,
         actions: [
           AppImage.svg(assetName: Assets.svgs.notificatons),
@@ -117,7 +118,6 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
               return Center(child: Text('Error: ${snapshot.error}'));
             }
 
-
             return TabBarView(
               controller: _controller,
               children: [
@@ -145,6 +145,7 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
 
 class EmptyScreen extends StatelessWidget {
   final String screen;
+
   const EmptyScreen({super.key, required this.screen});
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
@@ -50,108 +52,123 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               const Gap(22),
               Text(
                 AppStrings.welcomeScreenText,
-                style: context.displaySmall?.copyWith(fontSize: 20, fontWeight: FontWeight.w600),
+                style: context.displaySmall?.copyWith(
+                    fontSize: 20, fontWeight: FontWeight.w600),
               ),
               const Gap(20),
               if (isGoogleLoading) ...{
                 Center(
-                  child: Container(margin: const EdgeInsets.symmetric(vertical: 10), height: 20, width: 20, child: const CircularProgressIndicator()),
+                  child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      height: 20,
+                      width: 20,
+                      child: const CircularProgressIndicator()),
                 )
-              } else ...{
-                SocialCustomButton(
-                  image: Assets.images.google.path,
-                  text: AppStrings.continueWithGoogle,
-                  onPressed: () async {
-                    try {
-                      setState(() {
-                        isGoogleLoading = true;
-                      });
+              } else
+                ...{
+                  SocialCustomButton(
+                    image: Assets.images.google.path,
+                    text: AppStrings.continueWithGoogle,
+                    onPressed: () async {
+                      try {
+                        setState(() {
+                          isGoogleLoading = true;
+                        });
 
-                      // Add your onPressed logic here
-                      cred = await signInWithGoogle();
-                      saveUserData(UserModel(
-                        email: cred?.user?.email ?? '',
-                        phone: cred?.user?.phoneNumber ?? '',
-                        profile: cred?.user?.photoURL ?? '',
-                        name: cred?.user?.displayName ?? '',
-                        loginType: 'google',
-                      ));
-                      Future.delayed(const Duration(seconds: 1));
-                      setState(() {
-                        isGoogleLoading = false;
-                      });
-                      context.go(AppRoute.welcome);
-                    } catch (e) {
-                      // Handle errors here
-                      print('Error occurred: $e');
-                      setState(() {
-                        isGoogleLoading = false;
-                      });
-                    }
-                  },
-                  color: Colors.white,
-                  // Change color as needed
-                  width: context.width,
-                  // Change width as needed
-                  height: 60,
-                  // Change height as needed
-                  borderRadius: 30,
-                  // Change border radius as needed
-                  textStyle: context.displaySmall?.copyWith(fontWeight: FontWeight.w600),
-                ),
-              },
-              if (isAppleLoading) ...{
-                Center(
-                  child: Container(margin: const EdgeInsets.symmetric(vertical: 10), height: 20, width: 20, child: const CircularProgressIndicator()),
-                )
-              } else ...{
-                SocialCustomButton(
-                  image: Assets.images.apple.path,
-                  text: AppStrings.continueWithApple,
-                  onPressed: () async {
-                    setState(() {
-                      isAppleLoading = true;
-                    });
+                        // Add your onPressed logic here
+                        cred = await signInWithGoogle();
+                        saveUserData(UserModel(
+                          email: cred?.user?.email ?? '',
+                          phone: cred?.user?.phoneNumber ?? '',
+                          profile: cred?.user?.photoURL ?? '',
+                          name: cred?.user?.displayName ?? '',
+                          loginType: 'google',
+                        ));
+                        Future.delayed(const Duration(seconds: 1));
+                        setState(() {
+                          isGoogleLoading = false;
+                        });
+                        context.go(AppRoute.welcome);
+                      } catch (e) {
+                        // Handle errors here
+                        print('Error occurred: $e');
+                        setState(() {
+                          isGoogleLoading = false;
+                        });
+                      }
+                    },
+                    color: Colors.white,
+                    // Change color as needed
+                    width: context.width,
+                    // Change width as needed
+                    height: 60,
+                    // Change height as needed
+                    borderRadius: 30,
+                    // Change border radius as needed
+                    textStyle: context.displaySmall?.copyWith(
+                        fontWeight: FontWeight.w600),
+                  ),
+                },
+              if(Platform.isIOS)...{
+                if (isAppleLoading) ...{
+                  Center(
+                    child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        height: 20,
+                        width: 20,
+                        child: const CircularProgressIndicator()),
+                  )
+                } else
+                  ...{
+                    SocialCustomButton(
+                      image: Assets.images.apple.path,
+                      text: AppStrings.continueWithApple,
+                      onPressed: () async {
+                        setState(() {
+                          isAppleLoading = true;
+                        });
 
-                    try {
-                      // Add your onPressed logic here
-                      cred = await signInWithApple();
+                        try {
+                          // Add your onPressed logic here
+                          cred = await signInWithApple();
 
-                      saveUserData(UserModel(
-                        email: cred?.user?.email ?? '',
-                        phone: cred?.user?.phoneNumber ?? '',
-                        profile: cred?.user?.photoURL ?? '',
-                        name: cred?.user?.displayName ?? 'Apple User',
-                        loginType: 'apple',
-                      ));
+                          saveUserData(UserModel(
+                            email: cred?.user?.email ?? '',
+                            phone: cred?.user?.phoneNumber ?? '',
+                            profile: cred?.user?.photoURL ?? '',
+                            name: cred?.user?.displayName ?? 'Apple User',
+                            loginType: 'apple',
+                          ));
 
-                      // Simulate a delay for demonstration purposes
-                      await Future.delayed(const Duration(seconds: 1));
+                          // Simulate a delay for demonstration purposes
+                          await Future.delayed(const Duration(seconds: 1));
 
-                      setState(() {
-                        isAppleLoading = false;
-                      });
+                          setState(() {
+                            isAppleLoading = false;
+                          });
 
-                      context.go(AppRoute.welcome);
-                    } catch (e) {
-                      // Handle errors here
-                      print('Error occurred: $e');
-                      setState(() {
-                        isAppleLoading = false;
-                      });
-                    }
-                  },
+                          context.go(AppRoute.welcome);
+                        } catch (e) {
+                          // Handle errors here
+                          print('Error occurred: $e');
+                          setState(() {
+                            isAppleLoading = false;
+                          });
+                        }
+                      },
 
-                  color: Colors.white,
-                  // Change color as needed
-                  width: context.width,
-                  // Change width as needed
-                  height: 60,
-                  // Change height as needed
-                  borderRadius: 30,
-                  // Change border radius as needed
-                  textStyle: context.displaySmall?.copyWith(fontWeight: FontWeight.w600),
-                ),
+                      color: Colors.white,
+                      // Change color as needed
+                      width: context.width,
+                      // Change width as needed
+                      height: 60,
+                      // Change height as needed
+                      borderRadius: 30,
+                      // Change border radius as needed
+                      textStyle: context.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w600),
+                    ),
+                  }
               },
               // SocialCustomButton(
               //   image: Assets.images.fb.path,
@@ -205,7 +222,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 onTap: () {},
                 child: Text(
                   AppStrings.continueWithEmail,
-                  style: context.displaySmall?.copyWith(color: context.secondary, fontWeight: FontWeight.bold),
+                  style: context.displaySmall?.copyWith(
+                      color: context.secondary, fontWeight: FontWeight.bold),
                 ),
               ),
               const Spacer(),
@@ -223,7 +241,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     ),
                     TextSpan(
                       text: AppStrings.termCondition,
-                      style: context.displaySmall?.copyWith(color: context.secondary, fontWeight: FontWeight.w600),
+                      style: context.displaySmall?.copyWith(
+                          color: context.secondary,
+                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
