@@ -3,6 +3,7 @@ import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/model/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -16,6 +17,20 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
+  UserModel? currentUser;
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    currentUser = await getUserData();
+
+    setState(() {});
+    print('_WelcomeScreenState.initState: ${currentUser?.name}');
+  }
+
   @override
   Widget build(BuildContext context) {
     // final SelectedTileCubit selectedTileCubit = SelectedTileCubit();
@@ -31,7 +46,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 child: SizedBox.fromSize(
                   size: const Size.fromRadius(26.0),
                   child: AppImage.network(
-                    imageUrl: AppStrings.dummyImage,
+                    imageUrl: currentUser?.profile ?? AppStrings.dummyImage,
                     fit: BoxFit.cover,
                     borderRadius: BorderRadius.circular(20.0),
                     placeholder: (_, __) => CircleAvatar(backgroundColor: context.primary.withOpacity(.2)),
@@ -39,7 +54,10 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                 ),
               ),
-              title:   Text('John Wick',style: context.displayMedium,),
+              title: Text(
+                currentUser?.name ?? 'John Wick',
+                style: context.displayMedium,
+              ),
               subtitle: const Text('Member Since : Jun 2024'),
             ),
           ),
@@ -67,11 +85,9 @@ class _AppDrawerState extends State<AppDrawer> {
                 onTap: () {
                   switch (index) {
                     case 0:
-
                       context.push(AppRoute.editProfile);
                       break;
                     case 3:
-
                       context.push(AppRoute.notificationSettings);
                       break;
 
@@ -125,9 +141,7 @@ class _AppDrawerState extends State<AppDrawer> {
             // selectedTileColor: selectedIndex == index ? context.primary : null,
             contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
             // trailing: Icon(CupertinoIcons.chevron_right, color: context.primary),
-            onTap: () {
-
-            },
+            onTap: () {},
           ))
         ],
       ),

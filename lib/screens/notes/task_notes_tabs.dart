@@ -1,6 +1,7 @@
 import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,17 +19,36 @@ class TaskNotesTab extends StatefulWidget {
 }
 
 class _TaskNotesTabState extends State<TaskNotesTab> {
+  List<QueryDocumentSnapshot> currentUserDocumentsCompleted = [];
+  @override
+  void initState() {
+    String currentUserId = getCurrentUserId();
+
+    final List<QueryDocumentSnapshot> documents = widget.snapshot.data!.docs;
+
+    for (var document in documents) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      String userId = data['userId']; // Assuming 'userId' is the field name for user ID in Firestore
+      String type = data['type'];
+
+      // Check if the document's user ID matches the current user ID
+      if (userId == currentUserId &&  type == "Tasks") {
+        currentUserDocumentsCompleted.add(document);
+        print('_DailyHabitsState.build document $document');
+      }
+    }
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    final List<QueryDocumentSnapshot> documents = widget.snapshot.data!.docs.where((element) => element['type'] == "Tasks").toList();
-    if (documents.isNotEmpty) {
+    if (currentUserDocumentsCompleted.isNotEmpty) {
       return Container(
         color: Colors.grey.shade50,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
           child: MasonryGridView.count(
             crossAxisCount: 2,
-            itemCount: documents.length + 1,
+            itemCount: currentUserDocumentsCompleted.length + 1,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
             itemBuilder: (context, index) {
@@ -55,8 +75,8 @@ class _TaskNotesTabState extends State<TaskNotesTab> {
                 );
               }
               int assetIndex = index - 1;
-              final data = documents[assetIndex].data() as Map<String, dynamic>;
-              final docId = documents[assetIndex].id;
+              final data = currentUserDocumentsCompleted[assetIndex].data() as Map<String, dynamic>;
+              final docId = currentUserDocumentsCompleted[assetIndex].id;
               if (data['type'] == "Tasks") {
                 return InkWell(
                   onTap: () {

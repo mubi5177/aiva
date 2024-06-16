@@ -20,6 +20,8 @@ class _NotificationSettingsState extends State<NotificationSettings> {
   bool dailyReview = false;
   bool weeklyReview = false;
   bool habit = false;
+  TimeOfDay? pickedTimeMorning;
+  TimeOfDay? pickedTimeEvening;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,22 @@ class _NotificationSettingsState extends State<NotificationSettings> {
         centerTitle: true,
         title: AppStrings.notificationSettings,
         scaffoldKey: _scaffoldKey,
+        actions: [
+          InkWell(onTap: (){
+            print('_NotificationSettingsState.build dailyReview: $dailyReview');
+            print('_NotificationSettingsState.build weeklyReview: $weeklyReview');
+            print('_NotificationSettingsState.build habit: $habit');
+            print('_NotificationSettingsState.build pickedTimeMorning:  "${pickedTimeMorning?.hour ?? "12"} : ${pickedTimeMorning?.minute ?? "20"} ${pickedTimeMorning?.period.name ?? "am"}"),');
+            print('_NotificationSettingsState.build pickedTimeEvening:  "${pickedTimeEvening?.hour ?? "12"} : ${pickedTimeEvening?.minute ?? "20"} ${pickedTimeEvening?.period.name ?? "am"}"),');
+            print('_NotificationSettingsState.build pickedTimeEvening:  "${pickedTimeEvening?.hour ?? "12"} : ${pickedTimeEvening?.minute ?? "20"} ${pickedTimeEvening?.period.name ?? "am"}"),');
+            },
+            child: Text(
+              "Save",
+              style: context.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+            ),
+          ),
+          const Gap(30),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -80,7 +98,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                           readOnly: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           enableInteractiveSelection: false,
-                          controller: TextEditingController(text: text),
+                          controller: TextEditingController(
+                              text:
+                                  "${pickedTimeMorning?.hour ?? "12"} : ${pickedTimeMorning?.minute ?? "20"} ${pickedTimeMorning?.period.name ?? "am"}"),
                           decoration: InputDecoration(
                             border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
                             enabledBorder:
@@ -89,14 +109,37 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
                             hintText: "",
                             suffixIcon: InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 context.closeKeyboard();
-                                context.showBottomSheet(
-                                  maxHeight: context.height * .9,
-                                  child: EndDateTimeSheet(
-                                      dateName: "End Time",
-                                      dateTimeCubit: _endDateTimeCubit),
+                                TimeOfDay initialTime = TimeOfDay.now();
+                                pickedTimeMorning = await showTimePicker(
+                                  context: context,
+                                  initialTime: initialTime,
+                                  builder: (BuildContext context, Widget? child) {
+                                    return Theme(
+                                      data: ThemeData.light().copyWith(
+                                        colorScheme: ColorScheme.light(
+                                          // change the border color
+                                          primary: context.secondary,
+                                          secondary: context.secondary,
+                                          // change the text color
+                                          onSurface: Colors.black,
+                                        ),
+                                        // button colors
+                                        buttonTheme: const ButtonThemeData(
+                                          colorScheme: ColorScheme.light(
+                                            primary: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: child!,
+                                      ),
+                                    );
+                                  },
                                 );
+                                setState(() {});
                               },
                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
                               child: Icon(
@@ -126,7 +169,9 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                           readOnly: true,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           enableInteractiveSelection: false,
-                          controller: TextEditingController(text: text),
+                          controller: TextEditingController(
+                              text:
+                                  "${pickedTimeEvening?.hour ?? "12"} : ${pickedTimeEvening?.minute ?? "20"} ${pickedTimeEvening?.period.name ?? "am"}"),
                           decoration: InputDecoration(
                             border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
                             enabledBorder:
@@ -135,12 +180,37 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                                 OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(14)),
                             hintText: "",
                             suffixIcon: InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 context.closeKeyboard();
-                                context.showBottomSheet(
-                                  maxHeight: context.height * .9,
-                                  child: EndDateTimeSheet(dateName: "End Time", dateTimeCubit: _endDateTimeCubit),
+                                TimeOfDay initialTime = TimeOfDay.now();
+                                pickedTimeEvening = await showTimePicker(
+                                  context: context,
+                                  initialTime: initialTime,
+                                  builder: (BuildContext context, Widget? child) {
+                                    return Theme(
+                                      data: ThemeData.light().copyWith(
+                                        colorScheme: ColorScheme.light(
+                                          // change the border color
+                                          primary: context.secondary,
+                                          secondary: context.secondary,
+                                          // change the text color
+                                          onSurface: Colors.black,
+                                        ),
+                                        // button colors
+                                        buttonTheme: const ButtonThemeData(
+                                          colorScheme: ColorScheme.light(
+                                            primary: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: child!,
+                                      ),
+                                    );
+                                  },
                                 );
+                                setState(() {});
                               },
                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
                               child: Icon(
@@ -211,8 +281,8 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                               },
                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
                               child: Icon(
-                                Icons.keyboard_arrow_down_outlined,
-                                color: Colors.grey.shade700,
+                                Icons.watch_later_outlined,
+                                color: Colors.grey.shade400,
                               ),
                             ),
                           ),
@@ -254,3 +324,12 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
   final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
 }
+
+var data = {
+  "dailyReviewEnabled": true, //false,
+  "dailyReviewMorningTime": "",
+  "dailyReviewEveningTime": "",
+  "weeklyReviewEnabled": true, //false,
+  "weeKlyDayAndTime": "",
+  "habitRemainderEnabled": true, //false,
+};

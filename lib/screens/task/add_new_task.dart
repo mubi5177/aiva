@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
 class AddNewTask extends StatefulWidget {
@@ -29,7 +28,9 @@ class _AddNewTaskState extends State<AddNewTask> {
   final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+TextEditingController label = TextEditingController();
+TextEditingController title = TextEditingController();
+TextEditingController description = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,12 +84,14 @@ class _AddNewTaskState extends State<AddNewTask> {
                           border: Border.all(color: Colors.grey),
                         ),
                         child: ExpansionTile(
-                          onExpansionChanged: (value) => _expansionCubit.onChanged(),
+                          enabled: false,
+                          onExpansionChanged: null,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                          trailing: Icon(
-                            expanded ? CupertinoIcons.chevron_up : CupertinoIcons.chevron_down,
-                            size: 15,
-                          ),
+                          trailing: const SizedBox.shrink(),
+                          // trailing: Icon(
+                          //   expanded ? CupertinoIcons.chevron_up : CupertinoIcons.chevron_down,
+                          //   size: 15,
+                          // ),
                           title: Text(action, style: context.titleLarge),
                           leading: action == "Tasks"
                               ? AppImage.assets(
@@ -189,9 +192,16 @@ class _AddNewTaskState extends State<AddNewTask> {
                                             style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
                                           ),
                                           const Gap(5),
-                                          Icon(
-                                            Icons.close,
-                                            size: 14,
+                                          InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                tagsList.removeWhere((element) => element == tagsList[index]);
+                                              });
+                                            },
+                                            child: const Icon(
+                                              Icons.close,
+                                              size: 14,
+                                            ),
                                           )
                                         ],
                                       ),
@@ -200,11 +210,20 @@ class _AddNewTaskState extends State<AddNewTask> {
                                 },
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.0),
+                              Padding(
+                              padding:const  EdgeInsets.symmetric(horizontal: 5.0),
                               child: TextField(
+                                controller: label,
+
                                 // Set decoration to null to remove borders
-                                decoration: InputDecoration(
+                                onSubmitted: (val) {
+                                  tagsList.add(val.trim());
+                                  setState(() {
+                                    label.clear();
+                                    // label.text=''
+                                  });
+                                },
+                                decoration:const InputDecoration(
                                   hintText: "Search for Labels ",
                                   errorBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
@@ -217,11 +236,18 @@ class _AddNewTaskState extends State<AddNewTask> {
                       ),
                       const Gap(20),
                       Text(
-                        "Type",
+                        "Title",
                         style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
                       ),
                       const Gap(12),
                       TextFormField(
+                        controller: title,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Title required!';
+                          }
+                          return null;
+                        },
                         onTap: () async {},
                         decoration: InputDecoration(
                             border: OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
@@ -250,13 +276,20 @@ class _AddNewTaskState extends State<AddNewTask> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            const Expanded(
+                              Expanded(
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                                child: TextField(
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                                child: TextFormField(
+                                  controller: description,
                                   maxLines: 15,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Title required!';
+                                    }
+                                    return null;
+                                  },
                                   // Set decoration to null to remove borders
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText: "Describe in details",
                                     border: InputBorder.none,
                                     enabledBorder: InputBorder.none,
@@ -325,9 +358,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                   context.closeKeyboard();
                                   context.showBottomSheet(
                                     maxHeight: context.height * .9,
-                                    child: EndDateTimeSheet(
-                                        dateName: "Start Name",
-                                        dateTimeCubit: _endDateTimeCubit),
+                                    child: EndDateTimeSheet(dateName: "Due Date", dateTimeCubit: _endDateTimeCubit),
                                   );
                                 },
                                 // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),

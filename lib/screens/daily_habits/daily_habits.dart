@@ -5,8 +5,11 @@ import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/model/user_model.dart';
+import 'package:aivi/screens/search/ssearch_screen.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:aivi/widgets/empty_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,7 +41,7 @@ class _DailyHabitsState extends State<DailyHabits> {
   @override
   void initState() {
     _drawerCubit = BlocProvider.of<DrawerCubit>(context);
-
+    getData();
     super.initState();
     _listView1Controller.addListener(_listView1Listener);
     _listView2Controller.addListener(_listView2Listener);
@@ -93,6 +96,14 @@ class _DailyHabitsState extends State<DailyHabits> {
     super.dispose();
   }
 
+  UserModel? currentUser;
+
+  getData() async {
+    currentUser = await getUserData();
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +119,7 @@ class _DailyHabitsState extends State<DailyHabits> {
         isDrawerIcon: true,
         backgroundColor: Colors.grey.shade50,
         isIconBack: false,
-        title: "Good Morning, Jegan",
+        title: "Good Morning, ${currentUser?.name ?? '---'}",
         scaffoldKey: _scaffoldKey,
         actions: [
           AppImage.svg(assetName: Assets.svgs.notificatons),
@@ -212,7 +223,14 @@ class _DailyHabitsState extends State<DailyHabits> {
                       }
 
                       if (currentUserDocuments.isEmpty) {
-                        return const Center(child: Text('No documents found for the current user'));
+                        return const Column(
+                          children: [
+                            Gap(60),
+                            EmptyScreen(
+                              screen: 'Habits',
+                            ),
+                          ],
+                        );
                       }
                       return ListView.builder(
                         controller: _listView1Controller,
@@ -221,8 +239,8 @@ class _DailyHabitsState extends State<DailyHabits> {
                         itemCount: currentUserDocuments.length,
                         // itemCount: habitsItemsList.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final data = documents[index].data() as Map<String, dynamic>;
-                          final docId = documents[index].id;
+                          final data = currentUserDocuments[index].data() as Map<String, dynamic>;
+                          final docId = currentUserDocuments[index].id;
                           return _YourHabits(
                             data: data,
                             docId: docId,
@@ -253,29 +271,37 @@ class _DailyHabitsState extends State<DailyHabits> {
                       String currentUserId = getCurrentUserId();
 
                       final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
-                      List<QueryDocumentSnapshot> currentUserDocuments = [];
+                      List<QueryDocumentSnapshot> currentUserDocumentsCompleted = [];
 
                       for (var document in documents) {
                         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
                         String userId = data['userId']; // Assuming 'userId' is the field name for user ID in Firestore
-                        bool isCompleted = data['isCompleted'];
+                        bool isCompleted = data['isCompleted'] as bool;
 
                         // Check if the document's user ID matches the current user ID
-                        if (userId == currentUserId && isCompleted) {
-                          currentUserDocuments.add(document);
+                        if (userId == currentUserId && isCompleted == true) {
+                          currentUserDocumentsCompleted.add(document);
+                          print('_DailyHabitsState.build document $document');
                         }
                       }
 
-                      if (currentUserDocuments.isEmpty) {
-                        return const Center(child: Text('No documents found for the current user'));
+                      if (currentUserDocumentsCompleted.isEmpty) {
+                        return const Column(
+                          children: [
+                            Gap(60),
+                            EmptyScreen(
+                              screen: 'Completed Habits',
+                            ),
+                          ],
+                        );
                       }
                       return ListView.builder(
                         controller: _listView2Controller,
                         physics: const ClampingScrollPhysics(),
                         scrollDirection: Axis.vertical,
-                        itemCount: currentUserDocuments.length,
+                        itemCount: currentUserDocumentsCompleted.length,
                         itemBuilder: (BuildContext context, int index) {
-                          final data = documents[index].data() as Map<String, dynamic>;
+                          final data = currentUserDocumentsCompleted[index].data() as Map<String, dynamic>;
                           return Container(
                             margin: const EdgeInsets.symmetric(vertical: 8),
                             decoration: BoxDecoration(
@@ -284,51 +310,40 @@ class _DailyHabitsState extends State<DailyHabits> {
                               border: Border.all(color: Colors.grey.shade200),
                             ),
                             child: ListTile(
-                              leading: AppImage.network(
-                                  imageUrl: data['image'].toString().isEmpty
-                                      ? "https://firebasestorage.googleapis.com/v0/b/aiva-e74f3.appspot.com/o/habits%2Fdumbell.png?alt=media&token=f985b21f-5aac-4067-a145-7a5b90be4625"
-                                      : data['image']),
-                              title: Text(
-                                data['title'] ?? "",
-                                style: context.titleSmall?.copyWith(color: context.primary),
-                              ),
-                              subtitle: Text(
-                                habitsItemsListCompleted[index].time,
-                                style: context.titleSmall?.copyWith(fontSize: 12),
-                              ),
-                              trailing: data['isCompleted']
-                                  ? AppButton.primary(
-                                      height: 35,
-                                      width: 120,
-                                      background: Color(0xFFE1F9E9),
-                                      child: Row(
-                                        children: [
-                                          AppImage.assets(
-                                            assetName: Assets.images.doneCheck.path,
-                                            fit: BoxFit.cover,
-                                            height: 12,
-                                            width: 12,
+                                leading: AppImage.network(
+                                    imageUrl: data['image'].toString().isEmpty
+                                        ? "https://firebasestorage.googleapis.com/v0/b/aiva-e74f3.appspot.com/o/habits%2Fdumbell.png?alt=media&token=f985b21f-5aac-4067-a145-7a5b90be4625"
+                                        : data['image']),
+                                title: Text(
+                                  data['title'] ?? "",
+                                  style: context.titleSmall?.copyWith(color: context.primary),
+                                ),
+                                subtitle: Text(
+                                  habitsItemsListCompleted[index].time,
+                                  style: context.titleSmall?.copyWith(fontSize: 12),
+                                ),
+                                trailing: AppButton.primary(
+                                    height: 35,
+                                    width: 120,
+                                    background: Color(0xFFE1F9E9),
+                                    child: Row(
+                                      children: [
+                                        AppImage.assets(
+                                          assetName: Assets.images.doneCheck.path,
+                                          fit: BoxFit.cover,
+                                          height: 12,
+                                          width: 12,
+                                        ),
+                                        const Gap(8),
+                                        Text(
+                                          "Completed",
+                                          style: context.titleSmall?.copyWith(
+                                            fontSize: 9,
+                                            color: Color(0xFF3DB65F),
                                           ),
-                                          const Gap(8),
-                                          Text(
-                                            "Completed",
-                                            style: context.titleSmall?.copyWith(
-                                              fontSize: 9,
-                                              color: Color(0xFF3DB65F),
-                                            ),
-                                          ),
-                                        ],
-                                      ))
-                                  : AppButton.outlineShrink(
-                                      borderColor: context.secondary,
-                                      height: 35,
-                                      width: 125,
-                                      child: Text(
-                                        "Mark Complete",
-                                        maxLines: 1,
-                                        style: context.titleSmall?.copyWith(fontSize: 10, color: context.secondary),
-                                      )),
-                            ),
+                                        ),
+                                      ],
+                                    ))),
                           );
                         },
                       );

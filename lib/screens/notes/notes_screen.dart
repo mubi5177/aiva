@@ -3,6 +3,7 @@ import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/model/user_model.dart';
 import 'package:aivi/screens/notes/all_notes_tab.dart';
 import 'package:aivi/screens/notes/design_notes_tab.dart';
 import 'package:aivi/screens/notes/meeting_notes_tab.dart';
@@ -32,6 +33,7 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
 
   @override
   void initState() {
+    getData();
     _drawerCubit = BlocProvider.of<DrawerCubit>(context);
     super.initState();
     _controller = TabController(length: 5, vsync: this);
@@ -41,6 +43,13 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+  UserModel? currentUser;
+
+  getData() async {
+    currentUser = await getUserData();
+
+    setState(() {});
   }
 
 //A
@@ -58,7 +67,7 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
         isDrawerIcon: true,
         backgroundColor: Colors.grey.shade50,
         isIconBack: false,
-        title: "Good Morning, Jegan",
+        title: "Good Morning, ${currentUser?.name??'---'}",
         scaffoldKey: _scaffoldKey,
         actions: [
           AppImage.svg(assetName: Assets.svgs.notificatons),
@@ -107,6 +116,7 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
+
 
             return TabBarView(
               controller: _controller,

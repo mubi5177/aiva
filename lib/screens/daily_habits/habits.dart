@@ -121,33 +121,8 @@ class _HabitsState extends State<Habits> {
                         final data = documents[index].data() as Map<String, dynamic>;
 
                         return ExpandedTile(
-                              documents: data,
-                            ) ??
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 8),
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: Colors.white,
-                                border: Border.all(color: Colors.grey.shade200),
-                              ),
-                              child: ListTile(
-                                leading: AppImage.assets(assetName: habitsItemsList[index].icon),
-                                title: Text(
-                                  habitsItemsList[index].title,
-                                  style: context.titleSmall?.copyWith(color: context.primary),
-                                ),
-                                trailing: AppButton.outlineShrink(
-                                    borderColor: context.secondary,
-                                    height: 30,
-                                    width: 100,
-                                    child: Text(
-                                      "Select",
-                                      maxLines: 1,
-                                      style: context.titleSmall?.copyWith(fontSize: 12, fontWeight: FontWeight.w500, color: context.secondary),
-                                    )),
-                              ),
-                            );
+                          documents: data,
+                        );
                       },
                     );
                   }),
@@ -184,7 +159,6 @@ class _WeekWidgetState extends State<WeekWidget> {
         } else {
           repeatDays.removeWhere((element) => element == widget.tagName);
           print('_WeekWidgetState.build after ${repeatDays.toString()}');
-
         }
       },
       child: Container(
@@ -205,6 +179,8 @@ class _WeekWidgetState extends State<WeekWidget> {
   }
 }
 
+
+///-----------------------------------------------------------------------------------------------------------------------------
 class ExpandedTile extends StatefulWidget {
   final Map<String, dynamic> documents;
 
@@ -218,6 +194,7 @@ class _ExpandedTileState extends State<ExpandedTile> {
   bool _expanded = false;
   double boxHeight = 76;
   final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
+  final DateTimeCubit _startDateTimeCubit = DateTimeCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -291,8 +268,9 @@ class _ExpandedTileState extends State<ExpandedTile> {
                       ),
                       const Gap(10),
                       BlocBuilder<DateTimeCubit, String>(
-                        bloc: _endDateTimeCubit,
+                        bloc: _startDateTimeCubit,
                         builder: (context, text) {
+                          print('_ExpandedTileState.build: text $text');
                           return SizedBox(
                             height: 50,
                             width: 160,
@@ -300,7 +278,7 @@ class _ExpandedTileState extends State<ExpandedTile> {
                               readOnly: true,
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               enableInteractiveSelection: false,
-                              controller: TextEditingController(text: text),
+                              controller: TextEditingController(text: text.split(" ")[0]),
                               decoration: InputDecoration(
                                 border:
                                     OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(14)),
@@ -314,7 +292,7 @@ class _ExpandedTileState extends State<ExpandedTile> {
                                     context.closeKeyboard();
                                     context.showBottomSheet(
                                       maxHeight: context.height * .9,
-                                      child: EndDateTimeSheet(dateName: "Start Date", dateTimeCubit: _endDateTimeCubit),
+                                      child: EndDateTimeSheet(dateName: "Start Date", dateTimeCubit: _startDateTimeCubit),
                                     );
                                   },
                                   // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
@@ -348,7 +326,7 @@ class _ExpandedTileState extends State<ExpandedTile> {
                               readOnly: true,
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               enableInteractiveSelection: false,
-                              controller: TextEditingController(text: text),
+                              controller: TextEditingController(text: text.split(" ")[0]),
                               decoration: InputDecoration(
                                 border:
                                     OutlineInputBorder(borderSide: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(14)),
@@ -410,6 +388,8 @@ class _ExpandedTileState extends State<ExpandedTile> {
   }
 }
 
+List<HabitModel> selectedHabitList = [];
+
 class WeekModel {
   String name;
   WeekModel({required this.name});
@@ -424,3 +404,30 @@ List<WeekModel> weekList = [
   WeekModel(name: "Sat"),
   WeekModel(name: "Sun"),
 ];
+
+class HabitModel {
+  final String title;
+  final List<String> repeatDays;
+  final String pickedTime;
+  final String description;
+  final String startDate;
+  final String endDate;
+  final bool sendReminder;
+  final String sendReminderAction;
+  final String userId;
+  final String image;
+  final bool isCompleted;
+  HabitModel(
+      {required this.title,
+      required this.repeatDays,
+      required this.pickedTime,
+      required this.description,
+      required this.startDate,
+      required this.endDate,
+      required this.sendReminder,
+      required this.sendReminderAction,
+      required this.userId,
+      this.image =
+          "https://firebasestorage.googleapis.com/v0/b/aiva-e74f3.appspot.com/o/habits%2Fdumbell.png?alt=media&token=f985b21f-5aac-4067-a145-7a5b90be4625",
+      this.isCompleted = false});
+}
