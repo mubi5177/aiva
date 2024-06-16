@@ -6,6 +6,7 @@ import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/task/today/today_tasks.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -18,7 +19,8 @@ class TaskScreen extends StatefulWidget {
   State<TaskScreen> createState() => _TaskScreenState();
 }
 
-class _TaskScreenState extends State<TaskScreen> with SingleTickerProviderStateMixin {
+class _TaskScreenState extends State<TaskScreen>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _controller;
   late DrawerCubit _drawerCubit;
@@ -88,15 +90,50 @@ class _TaskScreenState extends State<TaskScreen> with SingleTickerProviderStateM
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _controller,
-        children: [
-          TodaySTaskBar(),
-          TodaySTaskBar(),
-          TodaySTaskBar(),
-          TodaySTaskBar(),
-        ],
-      ),
+      body: StreamBuilder(
+          stream:
+              FirebaseFirestore.instance.collection('appointments').snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> appointmentSnapshot) {
+            if (appointmentSnapshot.connectionState ==
+                ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (appointmentSnapshot.hasError) {
+              return Center(child: Text('Error: ${appointmentSnapshot.error}'));
+            }
+            return StreamBuilder(
+                stream:
+                    FirebaseFirestore.instance.collection('tasks').snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> taskSnapshot) {
+                  if (taskSnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (taskSnapshot.hasError) {
+                    return Center(child: Text('Error: ${taskSnapshot.error}'));
+                  }
+                  return TabBarView(
+                    controller: _controller,
+                    children: [
+                      TodaySTaskBar(
+                        appointmentSnapshot: appointmentSnapshot,
+                        taskSnapshot: taskSnapshot,
+                      ),
+                      TodaySTaskBar(
+                        appointmentSnapshot: appointmentSnapshot,
+                        taskSnapshot: taskSnapshot,
+                      ),
+                      TodaySTaskBar(
+                        appointmentSnapshot: appointmentSnapshot,
+                        taskSnapshot: taskSnapshot,
+                      ),
+                      TodaySTaskBar(
+                        appointmentSnapshot: appointmentSnapshot,
+                        taskSnapshot: taskSnapshot,
+                      ),
+                    ],
+                  );
+                });
+          }),
     );
   }
 }

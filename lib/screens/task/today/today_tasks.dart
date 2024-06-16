@@ -1,23 +1,51 @@
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/task/today/today_appointments.dart';
 import 'package:aivi/screens/task/today/today_task_section.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class TodaySTaskBar extends StatefulWidget {
+  final AsyncSnapshot<QuerySnapshot<Object?>> appointmentSnapshot;
+  final AsyncSnapshot<QuerySnapshot<Object?>> taskSnapshot;
+
+  const TodaySTaskBar({super.key, required this.appointmentSnapshot, required this.taskSnapshot});
+
   @override
   _TodaySTaskBarState createState() => _TodaySTaskBarState();
 }
 
 class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<QueryDocumentSnapshot> currentUserDocumentsTask = [];
+  List<QueryDocumentSnapshot> currentUserDocumentsAppointment = [];
 
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabChange);
+
+    String currentUserId = getCurrentUserId();
+    final List<QueryDocumentSnapshot> appointmentDocuments = widget.appointmentSnapshot.data!.docs;
+    for (var document in appointmentDocuments) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      String userId = data['userId'];
+      if (userId == currentUserId) {
+        currentUserDocumentsAppointment.add(document);
+      }
+    }
+    final List<QueryDocumentSnapshot> taskDocuments = widget.taskSnapshot.data!.docs;
+    for (var document in taskDocuments) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      String userId = data['userId'];
+      if (userId == currentUserId) {
+        currentUserDocumentsTask.add(document);
+      }
+    }
+
     super.initState();
   }
 
@@ -30,8 +58,6 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
   }
 
   void _handleTabChange() {
-    // This function will be called whenever the current index of the tab controller changes
-    print("Current tab index: ${_tabController.index}");
     setState(() {
       currentIndex = _tabController.index;
     });
@@ -45,13 +71,12 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            // give the tab bar a height [can change hheight to preferred height]
-
+            // give the tab bar a height [can change height to preferred height]
             const Gap(10),
             Container(
               height: 42,
               decoration: BoxDecoration(
-                color: Color(0xFFE4EAF9),
+                color: const Color(0xFFE4EAF9),
                 borderRadius: BorderRadius.circular(
                   25.0,
                 ),
@@ -80,12 +105,11 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
                           assetName: Assets.svgs.notificatons,
                           color: currentIndex == 0 ? Colors.white : context.secondary,
                         ),
-                        const Gap(10),
-                        const Text('Appointments (41)'),
+                        const Gap(7),
+                        Text('Appointments (${currentUserDocumentsAppointment.length})'),
                       ],
                     ),
                   ),
-
                   // second tab [you can add an icon using the icon property]
                   Tab(
                     child: Row(
@@ -98,7 +122,7 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
                           color: currentIndex == 1 ? Colors.white : context.secondary,
                         ),
                         const Gap(10),
-                        const Text('Tasks (20)'),
+                        Text('Tasks (${currentUserDocumentsTask.length})'),
                       ],
                     ),
                   ),
@@ -109,10 +133,14 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: const [
+                children: [
                   // first tab bar view widget
-                  TodayAppointments(),
-                  TodayTaskSection()
+                  TodayAppointments(
+                    appointmentDocuments: currentUserDocumentsAppointment,
+                  ),
+                  TodayTaskSection(
+                    taskDocuments: currentUserDocumentsTask,
+                  )
                 ],
               ),
             ),

@@ -151,7 +151,6 @@ Future<void> uploadDataToFirestore(String collectionName, Map<String, dynamic> d
     print('Error uploading data to Firestore: $e');
   }
 }
-
 Future<void> updateDataOnFirestore(String collectionName, Map<String, dynamic> data, String id) async {
   try {
     // Update the data to Firestore

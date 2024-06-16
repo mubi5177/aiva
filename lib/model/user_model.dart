@@ -35,13 +35,13 @@ class UserModel {
 
 // Save user model data
 void saveUserData(UserModel user) async {
-  final storage = FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   await storage.write(key: 'user', value: jsonEncode(user.toJson()));
 }
 
 // Retrieve user model data
 Future<UserModel?> getUserData() async {
-  final storage = new FlutterSecureStorage();
+  const storage = FlutterSecureStorage();
   String? userDataString = await storage.read(key: 'user');
   if (userDataString != null) {
     Map<String, dynamic> userDataJson = jsonDecode(userDataString);
