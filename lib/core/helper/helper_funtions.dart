@@ -174,19 +174,75 @@ String getCurrentUserId() {
   }
 }
 
-
 Future<bool> checkEmailExistence(String email) async {
   try {
     // Query the user collection for documents with the provided email
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: email).get();
 
     // If any document matches the email, return true
     return querySnapshot.docs.isNotEmpty;
   } catch (e) {
     print('Error checking email existence: $e');
     return false; // Return false in case of any error
+  }
+}
+
+Future<bool> checkAndAddNotificationSettings() async {
+  try {
+    // Reference to the user's document in 'notificationSetting' collection
+    String userId = getCurrentUserId();
+    print('checkAndAddNotificationSettings: $userId');
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('notificationsSettings').where('userId', isEqualTo: userId).get();
+
+    // Check if the document exists
+    if (querySnapshot.docs.isNotEmpty) {
+      // Document already exists, settings are already added
+      return true;
+    } else {
+      // Document does not exist, add a new document for this user
+      return false;
+    }
+  } catch (e) {
+    print('Error checking/notification settings: $e');
+    return false; // Return false if there's any error
+  }
+}
+
+// Function to get data from Firestore collection based on a field and its value
+Future<Map<String, dynamic>> getDataByField() async {
+  List<Map<String, dynamic>> dataList = [];
+  String userId = getCurrentUserId();
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance.collection("notificationsSettings").where("userId", isEqualTo: userId).get();
+
+    for (var doc in querySnapshot.docs) {
+      dataList.add(doc.data());
+    }
+
+    return dataList[0];
+  } catch (e) {
+    print('Error getting data: $e');
+    return {};
+  }
+}
+
+Future<String> getNotificationDocumentId() async {
+  String userId = getCurrentUserId(); // Assuming you have a function to get current user ID
+
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance.collection("notificationsSettings").where("userId", isEqualTo: userId).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Return the first document found (assuming userId is unique)
+      var doc = querySnapshot.docs[0];
+      return doc.id.toString();
+    } else {
+      return ""; // Return empty map if no documents found
+    }
+  } catch (e) {
+    print('Error getting data: $e');
+    return ""; // Return empty map on error
   }
 }

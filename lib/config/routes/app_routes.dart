@@ -101,7 +101,11 @@ final router = GoRouter(
     ),
     GoRoute(
       path: AppRoute.notificationSettings,
-      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const NotificationSettings()),
+      pageBuilder: (context, state) => CupertinoPage(
+          key: state.pageKey,
+          child: NotificationSettings(
+            settingsExists: state.extra as bool,
+          )),
     ),
     GoRoute(
       path: AppRoute.saySomething,

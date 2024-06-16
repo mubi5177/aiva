@@ -2,6 +2,7 @@ import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/model/user_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -82,13 +83,16 @@ class _AppDrawerState extends State<AppDrawer> {
                 // selectedTileColor: selectedIndex == index ? context.primary : null,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
                 // trailing: Icon(CupertinoIcons.chevron_right, color: context.primary),
-                onTap: () {
+                onTap: () async{
                   switch (index) {
                     case 0:
                       context.push(AppRoute.editProfile);
                       break;
                     case 3:
-                      context.push(AppRoute.notificationSettings);
+                      bool exists = await checkAndAddNotificationSettings();
+
+                      print('_AppDrawerState.build exists: $exists');
+                      context.push(AppRoute.notificationSettings,extra: exists);
                       break;
 
                     // case 2:
