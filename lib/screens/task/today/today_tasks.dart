@@ -33,7 +33,8 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
     for (var document in appointmentDocuments) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
       String userId = data['userId'];
-      if (userId == currentUserId) {
+      bool isCompleted = data['isCompleted'];
+      if (userId == currentUserId && isCompleted==false) {
         currentUserDocumentsAppointment.add(document);
       }
     }
@@ -41,7 +42,8 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
     for (var document in taskDocuments) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
       String userId = data['userId'];
-      if (userId == currentUserId) {
+      bool isCompleted = data['isCompleted'];
+      if (userId == currentUserId && isCompleted==false) {
         currentUserDocumentsTask.add(document);
       }
     }

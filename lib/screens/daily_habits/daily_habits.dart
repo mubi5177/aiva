@@ -179,7 +179,7 @@ class _DailyHabitsState extends State<DailyHabits> {
                   ),
                   AppButton.primary(
                     onPressed: () {
-                      context.push(AppRoute.habits);
+                      context.push(AppRoute.createNewHabits);
                     },
                     height: 35,
                     width: 130,

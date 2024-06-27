@@ -66,6 +66,7 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
           children: [
             AppButton.outlineShrink(
                 onPressed: () {
+                  saveUserJoinedDate();
                   context.push(AppRoute.habits);
                 },
                 height: 50,

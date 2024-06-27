@@ -3,7 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 @pragma('vm:entry-point')
 Future<void> backgroundNotificationHandler(NotificationResponse notificationResponse) async {
   try {
@@ -42,6 +43,7 @@ class FirebaseMessagingHandler {
         notification.title,
         notification.body,
         NotificationDetails(
+          iOS: DarwinNotificationDetails(),
           android: AndroidNotificationDetails(
             channel.id,
             channel.name,
@@ -130,6 +132,17 @@ class FirebaseMessagingHandler {
     );
   }
 
+  notificationDetails() {
+    return NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channelDescription: channel.description,
+          importance: Importance.max,
+        ),
+        iOS: const DarwinNotificationDetails());
+  }
+
   Future<void> sendLocalNotification(String? title, String? body, String? payload) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       channel.id, // Change this to your channel ID
@@ -151,6 +164,21 @@ class FirebaseMessagingHandler {
       platformChannelSpecifics,
       payload: payload,
     );
+  }
+
+  Future<void> scheduleNotification(
+      {int id = 0, String? title, String? body, String? payLoad, required DateTime scheduledNotificationDateTime}) async {
+    return flutterLocalNotificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(
+          scheduledNotificationDateTime,
+          tz.local,
+        ),
+        await notificationDetails(),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
   }
 }
 

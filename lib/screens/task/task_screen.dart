@@ -3,6 +3,7 @@ import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/model/user_model.dart';
 import 'package:aivi/screens/task/today/today_tasks.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
@@ -19,14 +20,14 @@ class TaskScreen extends StatefulWidget {
   State<TaskScreen> createState() => _TaskScreenState();
 }
 
-class _TaskScreenState extends State<TaskScreen>
-    with SingleTickerProviderStateMixin {
+class _TaskScreenState extends State<TaskScreen> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _controller;
   late DrawerCubit _drawerCubit;
 
   @override
   void initState() {
+    getData();
     _drawerCubit = BlocProvider.of<DrawerCubit>(context);
     super.initState();
     _controller = TabController(length: 4, vsync: this);
@@ -38,7 +39,14 @@ class _TaskScreenState extends State<TaskScreen>
     super.dispose();
   }
 
-//A
+  UserModel? currentUser;
+
+  getData() async {
+    currentUser = await getUserData();
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +61,7 @@ class _TaskScreenState extends State<TaskScreen>
         isDrawerIcon: true,
         backgroundColor: Colors.grey.shade50,
         isIconBack: false,
-        title: "Good Morning, Jegan",
+        title: "Good Morning, ${currentUser?.name ?? '---'}",
         scaffoldKey: _scaffoldKey,
         actions: [
           AppImage.svg(assetName: Assets.svgs.notificatons),
@@ -91,19 +99,16 @@ class _TaskScreenState extends State<TaskScreen>
         ),
       ),
       body: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection('appointments').snapshots(),
+          stream: FirebaseFirestore.instance.collection('appointments').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> appointmentSnapshot) {
-            if (appointmentSnapshot.connectionState ==
-                ConnectionState.waiting) {
+            if (appointmentSnapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
             if (appointmentSnapshot.hasError) {
               return Center(child: Text('Error: ${appointmentSnapshot.error}'));
             }
             return StreamBuilder(
-                stream:
-                    FirebaseFirestore.instance.collection('tasks').snapshots(),
+                stream: FirebaseFirestore.instance.collection('tasks').snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> taskSnapshot) {
                   if (taskSnapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

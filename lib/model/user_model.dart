@@ -2,15 +2,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
 class UserModel {
- final String name;
- final String phone;
- final String email;
- final String profile;
- final String loginType;
-
+  final String name;
+  final String phone;
+  final String email;
+  final String profile;
+  final String loginType;
 
   // Constructor
-  UserModel({this.name = '', this.phone = '', this.email = '', this.profile = '',this.loginType=''});
+  UserModel({ this.name = '', this.phone = '', this.email = '', this.profile = '', this.loginType = ''});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -19,6 +18,7 @@ class UserModel {
       email: json['email'],
       profile: json['profile'],
       loginType: json['loginType'],
+
     );
   }
 
@@ -37,6 +37,22 @@ class UserModel {
 void saveUserData(UserModel user) async {
   const storage = FlutterSecureStorage();
   await storage.write(key: 'user', value: jsonEncode(user.toJson()));
+}
+
+// Save user joinedSince data
+void saveUserJoinedDate() async {
+  const storage = FlutterSecureStorage();
+  await storage.write(key: 'joinedSince', value: DateTime.now().toString());
+}
+
+// Retrieve user joinedSince data
+Future<String?> getJoinedSince() async {
+  const storage = FlutterSecureStorage();
+  String? joinedSince = await storage.read(key: 'joinedSince');
+  if (joinedSince != null) {
+    return joinedSince;
+  }
+  return null;
 }
 
 // Retrieve user model data

@@ -1,13 +1,22 @@
+import 'dart:io';
+
+import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
+import 'package:aivi/core/components/file_picker.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/core/mixins/validations.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/model/user_model.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -18,7 +27,30 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> with Validator {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  File? _profileFile;
+  String profile = '';
+  final ImagePicker _picker = ImagePicker();
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
 
+  UserModel? currentUser;
+  TextEditingController name = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController countryCode = TextEditingController();
+  getData() async {
+    currentUser = await getUserData();
+    name.text = currentUser?.name ?? '';
+    profile = currentUser?.profile ?? '';
+    email.text = currentUser?.email ?? '';
+    phone.text = currentUser?.phone ?? '';
+    setState(() {});
+  }
+
+  bool isUpdating = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +69,65 @@ class _EditProfileState extends State<EditProfile> with Validator {
                   style: context.displaySmall?.copyWith(color: context.secondary),
                 )),
             const Gap(10.0),
-            AppButton.primary(height: 50, width: 170, background: context.secondary, child: const Text("Save")),
+            AppButton.primary(
+              onPressed: () async {
+                if (_profileFile != null) {
+                  setState(() {
+                    isUpdating = true;
+                  });
+                  uploadImage(_profileFile!).then((image) {
+                    updateUserData(
+                      name: name.text.trim(),
+                      profileUrl: image,
+                      email: email.text.trim(),
+                      phoneNumber: "${countryCode.text.trim()}${phone.text.trim()}",
+                    ).then((value) {
+                      saveUserData(UserModel(
+                        name: name.text.trim(),
+                        profile: image,
+                        email: email.text.trim(),
+                        phone: "${countryCode.text.trim()}${phone.text.trim()}",
+                        loginType: currentUser?.loginType ?? "",
+                      ));
+                      setState(() {
+                        isUpdating = false;
+                      });
+                      context.showSnackBar(text: "Profile Updated!");
+                    });
+                  });
+                } else {
+                  setState(() {
+                    isUpdating = true;
+                  });
+                  updateUserData(
+                    name: name.text.trim(),
+                    profileUrl: profile,
+                    email: email.text.trim(),
+                    phoneNumber: "${countryCode.text.trim()}${phone.text.trim()}",
+                  ).then((value) {
+                    saveUserData(UserModel(
+                      name: name.text.trim(),
+                      profile: profile,
+                      email: email.text.trim(),
+                      phone: "${countryCode.text.trim()}${phone.text.trim()}",
+                      loginType: currentUser?.loginType ?? "",
+                    ));
+                    setState(() {
+                      isUpdating = false;
+                    });
+                    context.showSnackBar(text: "Profile Updated!");
+                  });
+                }
+              },
+              height: 50,
+              width: 170,
+              background: context.secondary,
+              child: isUpdating
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : const Text("Save"),
+            ),
           ],
         ),
       ),
@@ -56,17 +146,23 @@ class _EditProfileState extends State<EditProfile> with Validator {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Gap(50),
-            Center(
-              child: CircleAvatar(
-                radius: 60,
-                backgroundImage: AssetImage(Assets.images.profile.path),
+            if (_profileFile != null) ...{
+              Center(
+                child: CircleAvatar(radius: 60, backgroundImage: FileImage(_profileFile ?? File(currentUser?.profile ?? ''))),
               ),
-            ),
+            } else ...{
+              Center(
+                child: CircleAvatar(radius: 60, backgroundImage: NetworkImage(profile)),
+              ),
+            },
             const Gap(20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AppButton.primary(
+                    onPressed: () {
+                      _showPicker(context: context);
+                    },
                     height: 30,
                     width: 160,
                     background: context.secondary,
@@ -86,6 +182,12 @@ class _EditProfileState extends State<EditProfile> with Validator {
                     )),
                 const Gap(10.0),
                 AppButton.outlineShrink(
+                    onPressed: () {
+                      setState(() {
+                        _profileFile = null;
+                        profile = "";
+                      });
+                    },
                     height: 30,
                     width: 130,
                     child: Row(
@@ -111,6 +213,7 @@ class _EditProfileState extends State<EditProfile> with Validator {
             ),
             const Gap(10.0),
             TextFormField(
+              controller: name,
               onTap: () async {},
               decoration: InputDecoration(
                   border: OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
@@ -135,8 +238,10 @@ class _EditProfileState extends State<EditProfile> with Validator {
                   decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
                   width: 70,
                   height: 50,
-                  child: const CountryCodePicker(
-                    onChanged: print,
+                  child: CountryCodePicker(
+                    onChanged: (code) {
+                      countryCode.text = code.dialCode.toString();
+                    },
                     showFlag: false,
                     // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
                     initialSelection: 'IT',
@@ -148,6 +253,7 @@ class _EditProfileState extends State<EditProfile> with Validator {
                 const Gap(12),
                 Expanded(
                   child: TextFormField(
+                    controller: phone,
                     onTap: () async {},
                     decoration: InputDecoration(
                         border: OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
@@ -169,6 +275,8 @@ class _EditProfileState extends State<EditProfile> with Validator {
             ),
             const Gap(10.0),
             TextFormField(
+              controller: email,
+              enabled: false,
               onTap: () async {},
               decoration: InputDecoration(
                   border: OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
@@ -182,6 +290,54 @@ class _EditProfileState extends State<EditProfile> with Validator {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> _pickProfileFile({
+    bool isCamera = false,
+  }) async {
+    if (isCamera) {
+      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+      if (photo != null) {
+        File? compressedFile = await File(photo.path);
+
+        setState(() {
+          _profileFile = File(compressedFile!.path);
+          profile = '';
+        });
+      }
+    } else {
+      // Use file_picker for selecting from gallery
+      FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        File? compressedFile = file;
+
+        setState(() {
+          _profileFile = compressedFile;
+          profile = '';
+        });
+      }
+    }
+  }
+
+  void _showPicker({
+    required BuildContext context,
+  }) {
+    context.showBottomSheet(
+      child: AppImagePicker(
+        galleryOnTap: () {
+          _pickProfileFile();
+          context.pop();
+        },
+        cameraOnTap: () {
+          _pickProfileFile(
+            isCamera: true,
+          );
+          context.pop();
+        },
       ),
     );
   }

@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
-
+import 'package:aivi/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
+import 'package:rxdart/rxdart.dart';
 
 Future<dynamic> signInWithGoogle() async {
   try {
@@ -94,17 +97,17 @@ Future<void> uploadUserData(
     // Access Firestore instance
     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-    return users
-        .add({
-          'userId': userId,
-          'name': name,
-          'profileUrl': profileUrl,
-          'phoneNumber': phoneNumber,
-          'email': email,
-          "loginType": loginType,
-        })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    return users.add({
+      'userId': userId,
+      'name': name,
+      'profileUrl': profileUrl,
+      'phoneNumber': phoneNumber,
+      'email': email,
+      "loginType": loginType,
+      "joinedSince": DateTime.now(),
+    }).then((value) {
+      saveUserJoinedDate();
+    }).catchError((error) => print("Failed to add user: $error"));
   } catch (error) {
     print('Error uploading data: $error');
   }
@@ -151,6 +154,7 @@ Future<void> uploadDataToFirestore(String collectionName, Map<String, dynamic> d
     print('Error uploading data to Firestore: $e');
   }
 }
+
 Future<void> updateDataOnFirestore(String collectionName, Map<String, dynamic> data, String id) async {
   try {
     // Update the data to Firestore
@@ -221,7 +225,9 @@ Future<Map<String, dynamic>> getDataByField() async {
 
     return dataList[0];
   } catch (e) {
-    print('Error getting data: $e');
+    if (kDebugMode) {
+      print('Error getting data: $e');
+    }
     return {};
   }
 }
@@ -245,3 +251,210 @@ Future<String> getNotificationDocumentId() async {
     return ""; // Return empty map on error
   }
 }
+
+Future<void> deleteDocument(String docId, String collection) async {
+  try {
+    // Get the Firestore instance
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Delete the document from the collection
+    await firestore.collection(collection).doc(docId).delete();
+
+    // Document successfully deleted
+    print('Document $docId successfully deleted.');
+  } catch (e) {
+    // Error deleting document
+    print('Error deleting document: $e');
+  }
+}
+
+Stream<List<Map<String, dynamic>>> fetchDataFromFirestore() {
+  // Reference to Firestore collections
+  final collection1Ref = FirebaseFirestore.instance.collection('appointments');
+  final collection2Ref = FirebaseFirestore.instance.collection('tasks');
+  String userId = getCurrentUserId();
+  // Function to fetch snapshots from Firestore
+  Stream<QuerySnapshot<Map<String, dynamic>>> snapshots1 = collection1Ref.where('userId', isEqualTo: userId).snapshots();
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> snapshots2 = collection2Ref.where('userId', isEqualTo: userId).snapshots();
+
+  // Combine snapshots from both collections
+  Stream<List<Map<String, dynamic>>> combinedStream =
+      Rx.combineLatest2(snapshots1, snapshots2, (QuerySnapshot<Map<String, dynamic>> snapshot1, QuerySnapshot<Map<String, dynamic>> snapshot2) {
+    List<Map<String, dynamic>> mergedData = [];
+
+    // Add documents from collection1
+    mergedData.addAll(snapshot1.docs.map((doc) => {
+          'id': doc.id,
+          ...doc.data(),
+        }));
+
+    // Add documents from collection2
+    mergedData.addAll(snapshot2.docs.map((doc) => {
+          'id': doc.id,
+          ...doc.data(),
+        }));
+
+    return mergedData;
+  });
+
+  return combinedStream;
+}
+
+Future<List<Map<String, dynamic>>> fetchDataFromTwoCollections() async {
+  // Reference to Firestore collections
+  final collection1Ref = FirebaseFirestore.instance.collection('appointments');
+  final collection2Ref = FirebaseFirestore.instance.collection('tasks');
+  String userId = getCurrentUserId();
+  // Fetch data from both collections concurrently
+  final List<Future<QuerySnapshot>> futures = [
+    collection1Ref.where('userId', isEqualTo: userId).get(),
+    collection2Ref.where('userId', isEqualTo: userId).get(),
+  ];
+
+  // Wait for both requests to complete
+  final results = await Future.wait(futures);
+
+  // Merge the results into a single list
+  List<Map<String, dynamic>> mergedData = [];
+  for (var result in results) {
+    mergedData.addAll(result.docs.map((doc) => {
+          'id': doc.id, // Include the document ID
+          ...doc.data()! as Map<String, dynamic>, // Include all other document data
+        }));
+  }
+
+  return mergedData;
+}
+
+Future<void> updateUserData({
+  required String name,
+  required String profileUrl,
+  String? phoneNumber,
+  required String email,
+}) async {
+  try {
+    String userId = getCurrentUserId();
+    // Access Firestore instance
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').where("userId", isEqualTo: userId).get();
+
+    // Check if there are any documents that match the query
+    if (querySnapshot.docs.isNotEmpty) {
+      // Update the document
+      DocumentSnapshot docSnapshot = querySnapshot.docs.first;
+      await docSnapshot.reference.update({
+        'userId': userId,
+        'name': name,
+        'profileUrl': profileUrl,
+        'phoneNumber': phoneNumber,
+        'email': email,
+      });
+      print('Document updated successfully');
+    } else {
+      print('No matching documents');
+    }
+  } catch (error) {
+    print('Error uploading data: $error');
+  }
+}
+
+///----------------------------------------------------------\
+
+Future<Map<String, List<Map<String, dynamic>>>> fetchData(String searchText) async {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String userId = getCurrentUserId();
+  Map<String, List<Map<String, dynamic>>> fetchedData = {
+    'users': [],
+    'products': [],
+    // Add more collections as needed
+  };
+
+  try {
+    // Define your collection references
+    CollectionReference usersCollection = firestore.collection('tasks');
+    CollectionReference productsCollection = firestore.collection('appointments');
+    CollectionReference notesCollection = firestore.collection('notes');
+    CollectionReference habitsCollection = firestore.collection('habits');
+
+    // Fetch data from users collection
+    QuerySnapshot usersSnapshot = await usersCollection.where('userId', isEqualTo: userId).where("field", isEqualTo: searchText).get();
+
+    // Process users collection documents
+    fetchedData['users'] = usersSnapshot.docs.map((doc) {
+      return {
+        'id': doc.id,
+        'data': doc.data(),
+      };
+    }).toList();
+
+    // Fetch data from products collection
+    QuerySnapshot productsSnapshot = await productsCollection.where('userId', isEqualTo: userId).where("field", isEqualTo: searchText).get();
+
+    // Process products collection documents
+    fetchedData['products'] = productsSnapshot.docs.map((doc) {
+      return {
+        'id': doc.id,
+        'data': doc.data(),
+      };
+    }).toList();
+  } catch (e) {
+    // Error handling
+    print('Error fetching data: $e');
+  }
+
+  return fetchedData;
+}
+
+
+Future<Map<String, dynamic>> searchDataFromCollections( String searchData) async {
+  Map<String, dynamic> result = {
+    'tasks': [],
+    'notes': [],
+    'appointments': [],
+    'userHabits': [],
+  };
+String userId= getCurrentUserId();
+  try {
+    // Query tasks collection
+    var taskSnapshot = await FirebaseFirestore.instance
+        .collection('tasks')
+        .where("userId", isEqualTo: userId)
+        .where('type_desc', isEqualTo: searchData)
+        .get();
+
+    result['tasks'] = taskSnapshot.docs.map((doc) => doc.data()).toList();
+
+    // Query notes collection
+    var notesSnapshot = await FirebaseFirestore.instance
+        .collection('notes')
+        .where("userId", isEqualTo: userId)
+        .where('title', isEqualTo: searchData)
+        .get();
+
+    result['notes'] = notesSnapshot.docs.map((doc) => doc.data()).toList();
+
+    // Query appointments collection
+    var appointmentsSnapshot = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where("userId", isEqualTo: userId)
+        .where('type_desc', isEqualTo: searchData)
+        .get();
+
+    result['appointments'] = appointmentsSnapshot.docs.map((doc) => doc.data()).toList();
+
+    // Query userHabits collection
+    var userHabitsSnapshot = await FirebaseFirestore.instance
+        .collection('userHabits')
+        .where("userId", isEqualTo: userId)
+        .where('title', isEqualTo: searchData)
+        .get();
+
+    result['userHabits'] = userHabitsSnapshot.docs.map((doc) => doc.data()).toList();
+    print('the data is $result');
+    return result;
+  } catch (e) {
+    print('Error retrieving data: $e');
+    return result; // Return the partially filled result in case of error
+  }
+}
+

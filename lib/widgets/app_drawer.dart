@@ -2,6 +2,7 @@ import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/extensions/e_date_to_month.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/model/user_model.dart';
@@ -25,11 +26,20 @@ class _AppDrawerState extends State<AppDrawer> {
     getData();
   }
 
+  String? joinedSince;
+
   getData() async {
     currentUser = await getUserData();
+    String? date = await getJoinedSince();
+    // Step 1: Parse the date string into a DateTime object
+    DateTime dateTime = DateTime.parse(date ?? DateTime.now().toString());
+
+    // Step 2: Use the extension method to format as "Month Year"
+    joinedSince = dateTime.toMonthYearString();
 
     setState(() {});
     print('_WelcomeScreenState.initState: ${currentUser?.name}');
+    print('_WelcomeScreenState.initState: ${currentUser?.profile}');
   }
 
   @override
@@ -59,7 +69,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 currentUser?.name ?? 'John Wick',
                 style: context.displayMedium,
               ),
-              subtitle: const Text('Member Since : Jun 2024'),
+              subtitle: Text('Member Since : $joinedSince'),
             ),
           ),
           SliverList.builder(
@@ -83,16 +93,16 @@ class _AppDrawerState extends State<AppDrawer> {
                 // selectedTileColor: selectedIndex == index ? context.primary : null,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
                 // trailing: Icon(CupertinoIcons.chevron_right, color: context.primary),
-                onTap: () async{
+                onTap: () async {
                   switch (index) {
                     case 0:
+                      context.pop();
                       context.push(AppRoute.editProfile);
                       break;
                     case 3:
                       bool exists = await checkAndAddNotificationSettings();
 
-                      print('_AppDrawerState.build exists: $exists');
-                      context.push(AppRoute.notificationSettings,extra: exists);
+                      context.push(AppRoute.notificationSettings, extra: exists);
                       break;
 
                     // case 2:

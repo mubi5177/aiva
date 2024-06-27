@@ -80,6 +80,7 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                     "location": location.text.trim(),
                                     "date": _endDateTimeCubit.state,
                                     "userId": userId,
+                                    "isCompleted":false
                                   };
                                   await uploadDataToFirestore(action.trim().toLowerCase(), data).then((value) {
                                     setState(() {

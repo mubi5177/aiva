@@ -6,6 +6,7 @@ import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/model/user_model.dart';
+import 'package:aivi/utils/services/firebase_messaging_handler.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,16 +33,15 @@ class _DashboardState extends State<Dashboard> {
   final ScrollController _mainScrollController = ScrollController();
   final ScrollController _listView1Controller = ScrollController();
   final ScrollController _listView2Controller = ScrollController();
-  int? selectedIndex;
+
   int? selectedIndexCompleted;
-  late ConfettiController _confettiController;
+  List<Map<String, dynamic>> todayAgendaList = [];
 
   @override
   void initState() {
     getData();
 
     _drawerCubit = BlocProvider.of<DrawerCubit>(context);
-    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
 
     super.initState();
     _listView1Controller.addListener(_listView1Listener);
@@ -90,7 +90,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void dispose() {
-    _confettiController.dispose();
     _mainScrollController.dispose();
     _listView1Controller.dispose();
     _listView2Controller.dispose();
@@ -124,7 +123,14 @@ class _DashboardState extends State<Dashboard> {
         title: "Good Morning, ${currentUser?.name ?? '---'}",
         scaffoldKey: _scaffoldKey,
         actions: [
-          AppImage.svg(assetName: Assets.svgs.notificatons),
+          InkWell(
+              onTap: () {
+                FirebaseMessagingHandler().scheduleNotification(
+                    title: 'Scheduled Notification',
+                    body: '${DateTime.now().add(const Duration(minutes: 1))}',
+                    scheduledNotificationDateTime: DateTime.now().add(const Duration(seconds: 5)));
+              },
+              child: AppImage.svg(assetName: Assets.svgs.notificatons)),
           const Gap(10),
           InkWell(
               onTap: () {
@@ -165,110 +171,81 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
               const Gap(10),
-              SizedBox(
-                height: context.height * .4,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  controller: _listView1Controller,
-                  physics: const ClampingScrollPhysics(),
+              StreamBuilder<List<Map<String, dynamic>>>(
+                stream: fetchDataFromFirestore(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                  itemCount: agendaList.length, // Number of list items
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: agendaList[index].isCompleted ? CupertinoColors.systemGreen : Colors.grey.shade200),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Stack(
-                        children: [
-                          ListTile(
-                            onTap: () {
-                              setState(() {
-                                selectedIndex = index;
-                              });
-                              if (agendaList[index].isCompleted) {
-                              } else {
-                                _confettiController.play();
-                              }
-                            },
-                            dense: true,
-                            // isThreeLine: agendaList[index].timingText != null ? true : false,
-                            contentPadding: const EdgeInsets.only(right: 20),
-                            tileColor: Colors.transparent,
-                            leading: agendaList[index].isCompleted
-                                ? const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Icon(
-                                      Icons.check_circle,
-                                      color: CupertinoColors.systemGreen,
-                                      size: 18,
-                                    ),
-                                  )
-                                : Radio(
-                                    fillColor: MaterialStateColor.resolveWith((states) => context.secondary),
-                                    activeColor: context.secondary,
-                                    value: index,
-                                    groupValue: selectedIndex,
-                                    onChanged: (int? value) {
-                                      setState(() {
-                                        selectedIndex = value;
-                                      });
-                                      _confettiController.play();
-                                    },
-                                  ),
-                            subtitle: agendaList[index].timingText != null
-                                ? Row(
-                                    children: [
-                                      AppImage.assets(
-                                        assetName: Assets.images.clock.path,
-                                        height: 14,
-                                        width: 14,
-                                        color: context.tertiary,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      const Gap(10),
-                                      Text(agendaList[index].timingText ?? ""),
-                                    ],
-                                  )
-                                : const SizedBox.shrink(),
-                            title: Text(agendaList[index].title),
-                            trailing: AppImage.assets(
-                              assetName: agendaList[index].trailingIcon,
-                              height: 30,
-                              fit: BoxFit.cover,
-                              width: 30,
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+
+                  todayAgendaList = snapshot.data ?? [];
+
+                  if (todayAgendaList.isEmpty) {
+                    return Column(
+                      children: [
+                        const Gap(40),
+                        Center(
+                          child: AppImage.assets(
+                            assetName: Assets.images.noTaskIcon.path,
+                            height: 80,
+                            width: 80,
+                          ),
+                        ),
+                        const Gap(20),
+                        Center(
+                          child: Text(
+                            "No Tasks or Reminder Found",
+                            style: context.titleSmall?.copyWith(color: context.primary, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Gap(10),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text(
+                              "It looks like there are no tasks added for today. Try adding some tasks",
+                              textAlign: TextAlign.center,
+                              style: context.titleSmall,
                             ),
                           ),
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: ConfettiWidget(
-                              confettiController: _confettiController,
-                              blastDirection: 0, // radial value - DOWN
-                              particleDrag: 0.05, // apply drag to the confetti
-                              emissionFrequency: 0.05, // how often it should emit
-                              numberOfParticles: 20, // number of particles to emit
-                              gravity: 0.05, // gravity - or fall speed
-                              shouldLoop: false, // start again as soon as the animation is finished
-                              colors: const [
-                                Colors.green,
-                                Colors.blue,
-                                Colors.pink,
-                                Colors.orange,
-                                Colors.purple,
-                              ], // manually specify the colors to be used
-                            ),
+                        ),
+                        const Gap(20),
+                        Center(
+                          child: AppButton.primary(
+                            height: 50,
+                            width: 250,
+                            background: context.secondary,
+                            child: const Text("+   Add New"),
                           ),
-                        ],
-                      ),
+                        ),
+                        const Gap(60),
+                      ],
                     );
-                  },
-                ),
+                  }
+                  return SizedBox(
+                    height: context.height * .4,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      controller: _listView1Controller,
+                      physics: const ClampingScrollPhysics(),
+
+                      itemCount: todayAgendaList.length, // Number of list items
+                      itemBuilder: (BuildContext context, int index) {
+                        final data = todayAgendaList[index];
+                        final docId = todayAgendaList[index]['id'];
+                        return _AgendaListItem(
+                          index: index,
+                          docId: docId,
+                          data: data,
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
               const Gap(20),
               Text(
@@ -305,7 +282,34 @@ class _DashboardState extends State<Dashboard> {
                     }
 
                     if (currentUserDocuments.isEmpty) {
-                      return const Center(child: Text('No documents found for the current user'));
+                      return Column(
+                        children: [
+                          const Gap(40),
+                          Center(
+                            child: AppImage.assets(
+                              assetName: Assets.images.noHabbitIcon.path,
+                              height: 80,
+                              width: 80,
+                            ),
+                          ),
+                          const Gap(20),
+                          Center(
+                            child: Text(
+                              "No Habits Added",
+                              style: context.titleSmall?.copyWith(color: context.primary, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          const Gap(10),
+                          Center(
+                            child: AppButton.primary(
+                              height: 50,
+                              width: 250,
+                              background: context.secondary,
+                              child: const Text("+   Add Habits"),
+                            ),
+                          ),
+                        ],
+                      );
                     }
                     return ListView.builder(
                       controller: _listView2Controller,
@@ -438,20 +442,20 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-final List<AgendaItems> agendaList = [
-  AgendaItems(isCompleted: false, title: "Attend Jay’s School Event", trailingIcon: Assets.images.bgMenu.path),
-  AgendaItems(isCompleted: false, title: "Remind me to send the files", trailingIcon: Assets.images.bgBell.path, timingText: "12:00 PM - 02:00 PM"),
-  AgendaItems(isCompleted: false, title: "Create logo for team", trailingIcon: Assets.images.bgMenu.path),
-  AgendaItems(isCompleted: false, title: "Drop Jay to school", trailingIcon: Assets.images.bgMenu.path),
-  AgendaItems(isCompleted: false, title: "Talk to the lawyer about case", trailingIcon: Assets.images.bgBell.path, timingText: "06:00 PM - 08:00 PM"),
-  AgendaItems(isCompleted: false, title: "Meeting for new launch", trailingIcon: Assets.images.bgBell.path, timingText: "08:00 PM - 09:00 PM"),
-  AgendaItems(isCompleted: true, title: "Attend Jay’s School Event", trailingIcon: Assets.images.bgMenu.path),
-  AgendaItems(isCompleted: true, title: "Remind me to send the files", trailingIcon: Assets.images.bgBell.path, timingText: "12:00 PM - 02:00 PM"),
-  AgendaItems(isCompleted: true, title: "Create logo for team", trailingIcon: Assets.images.bgMenu.path),
-  AgendaItems(isCompleted: true, title: "Drop Jay to school", trailingIcon: Assets.images.bgMenu.path),
-  AgendaItems(isCompleted: true, title: "Talk to the lawyer about case", trailingIcon: Assets.images.bgBell.path, timingText: "06:00 PM - 08:00 PM"),
-  AgendaItems(isCompleted: true, title: "Meeting for new launch", trailingIcon: Assets.images.bgBell.path, timingText: "08:00 PM - 09:00 PM"),
-];
+// final List<AgendaItems> agendaList = [
+//   AgendaItems(isCompleted: false, title: "Attend Jay’s School Event", trailingIcon: Assets.images.bgMenu.path),
+//   AgendaItems(isCompleted: false, title: "Remind me to send the files", trailingIcon: Assets.images.bgBell.path, timingText: "12:00 PM - 02:00 PM"),
+//   AgendaItems(isCompleted: false, title: "Create logo for team", trailingIcon: Assets.images.bgMenu.path),
+//   AgendaItems(isCompleted: false, title: "Drop Jay to school", trailingIcon: Assets.images.bgMenu.path),
+//   AgendaItems(isCompleted: false, title: "Talk to the lawyer about case", trailingIcon: Assets.images.bgBell.path, timingText: "06:00 PM - 08:00 PM"),
+//   AgendaItems(isCompleted: false, title: "Meeting for new launch", trailingIcon: Assets.images.bgBell.path, timingText: "08:00 PM - 09:00 PM"),
+//   AgendaItems(isCompleted: true, title: "Attend Jay’s School Event", trailingIcon: Assets.images.bgMenu.path),
+//   AgendaItems(isCompleted: true, title: "Remind me to send the files", trailingIcon: Assets.images.bgBell.path, timingText: "12:00 PM - 02:00 PM"),
+//   AgendaItems(isCompleted: true, title: "Create logo for team", trailingIcon: Assets.images.bgMenu.path),
+//   AgendaItems(isCompleted: true, title: "Drop Jay to school", trailingIcon: Assets.images.bgMenu.path),
+//   AgendaItems(isCompleted: true, title: "Talk to the lawyer about case", trailingIcon: Assets.images.bgBell.path, timingText: "06:00 PM - 08:00 PM"),
+//   AgendaItems(isCompleted: true, title: "Meeting for new launch", trailingIcon: Assets.images.bgBell.path, timingText: "08:00 PM - 09:00 PM"),
+// ];
 
 class AgendaItems {
   final String title;
@@ -474,3 +478,214 @@ final List<HabitsItems> habitsList = [
   HabitsItems(title: "Read Books", logo: Assets.images.book.path, isCompleted: false),
   HabitsItems(title: "Running", logo: Assets.images.dumbell.path, isCompleted: true),
 ];
+
+class _AgendaListItem extends StatefulWidget {
+  final Map<String, dynamic> data;
+  final String docId;
+  final int index;
+
+  const _AgendaListItem({super.key, required this.data, required this.docId, required this.index});
+
+  @override
+  State<_AgendaListItem> createState() => _AgendaListItemState();
+}
+
+class _AgendaListItemState extends State<_AgendaListItem> {
+  late ConfettiController _confettiController;
+  @override
+  void initState() {
+    _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+
+    super.dispose();
+  }
+
+  int? selectedIndex;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: widget.data['isCompleted'] ? CupertinoColors.systemGreen : Colors.grey.shade200),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Stack(
+        children: [
+          ListTile(
+            onTap: () async {
+              setState(() {
+                selectedIndex = widget.index;
+              });
+              if (widget.data['isCompleted']) {
+              } else {
+                Vibration.vibrate();
+                _confettiController.play();
+                await Future.delayed(const Duration(seconds: 1));
+
+                try {
+                  // Get reference to the document
+                  DocumentReference documentReference = FirebaseFirestore.instance
+                      .collection(widget.data['type'] == "tasks" ? 'tasks' : "appointments")
+                      .doc(widget.docId.toString()); // Provide the document ID you want to update
+
+                  // Update the field
+                  documentReference.update({
+                    'isCompleted': true,
+                  }).then((value) {
+                    Fluttertoast.showToast(
+                      msg: "Completed!",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 14.0,
+                    );
+                  }).onError((error, stackTrace) {
+                    Fluttertoast.showToast(
+                      msg: error.toString(),
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                      fontSize: 14.0,
+                    );
+                  });
+
+                  // context.pop();
+                } catch (e) {
+                  Fluttertoast.showToast(
+                    msg: e.toString(),
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.SNACKBAR,
+                    backgroundColor: Colors.black54,
+                    textColor: Colors.white,
+                    fontSize: 14.0,
+                  );
+                }
+              }
+            },
+            dense: true,
+            // isThreeLine: agendaList[index].timingText != null ? true : false,
+            contentPadding: const EdgeInsets.only(right: 20),
+            tileColor: Colors.transparent,
+            leading: widget.data['isCompleted']
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(
+                      Icons.check_circle,
+                      color: CupertinoColors.systemGreen,
+                      size: 18,
+                    ),
+                  )
+                : Radio(
+                    fillColor: MaterialStateColor.resolveWith((states) => context.secondary),
+                    activeColor: context.secondary,
+                    value: widget.index,
+                    groupValue: selectedIndex,
+                    onChanged: (int? value) async {
+                      setState(() {
+                        selectedIndex = value;
+                      });
+                      Vibration.vibrate();
+                      _confettiController.play();
+                      await Future.delayed(const Duration(seconds: 1));
+
+                      try {
+                        // Get reference to the document
+                        DocumentReference documentReference = FirebaseFirestore.instance
+                            .collection(widget.data['type'] == "tasks" ? 'tasks' : "appointments")
+                            .doc(widget.docId.toString()); // Provide the document ID you want to update
+
+                        // Update the field
+                        documentReference.update({
+                          'isCompleted': true,
+                        }).then((value) {
+                          Fluttertoast.showToast(
+                            msg: "Completed!",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.SNACKBAR,
+                            backgroundColor: Colors.black54,
+                            textColor: Colors.white,
+                            fontSize: 14.0,
+                          );
+                        }).onError((error, stackTrace) {
+                          Fluttertoast.showToast(
+                            msg: error.toString(),
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.SNACKBAR,
+                            backgroundColor: Colors.black54,
+                            textColor: Colors.white,
+                            fontSize: 14.0,
+                          );
+                        });
+
+                        // context.pop();
+                      } catch (e) {
+                        Fluttertoast.showToast(
+                          msg: e.toString(),
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.SNACKBAR,
+                          backgroundColor: Colors.black54,
+                          textColor: Colors.white,
+                          fontSize: 14.0,
+                        );
+                      }
+                    },
+                  ),
+            subtitle: widget.data['date'] != null
+                ? Row(
+                    children: [
+                      AppImage.assets(
+                        assetName: Assets.images.clock.path,
+                        height: 14,
+                        width: 14,
+                        color: context.tertiary,
+                        fit: BoxFit.cover,
+                      ),
+                      const Gap(10),
+                      Text(widget.data['date'] ?? ""),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+            title: Text((widget.data['type_desc'] ?? "")),
+            trailing: AppImage.assets(
+              assetName: Assets.images.bgMenu.path,
+              height: 30,
+              fit: BoxFit.cover,
+              width: 30,
+            ),
+          ),
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: 0, // radial value - DOWN
+              particleDrag: 0.05, // apply drag to the confetti
+              emissionFrequency: 0.05, // how often it should emit
+              numberOfParticles: 20, // number of particles to emit
+              gravity: 0.05, // gravity - or fall speed
+              shouldLoop: false, // start again as soon as the animation is finished
+              colors: const [
+                Colors.green,
+                Colors.blue,
+                Colors.pink,
+                Colors.orange,
+                Colors.purple,
+              ], // manually specify the colors to be used
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

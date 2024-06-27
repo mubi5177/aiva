@@ -5,6 +5,7 @@ import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:aivi/widgets/delete_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +30,9 @@ class NotesDetails extends StatelessWidget {
         alignment: Alignment.center,
         height: 70,
         child: AppButton.outlineShrink(
-          onPressed: (){
-            context.push(AppRoute.editNotes,extra: noteId);
-          },
+            onPressed: () {
+              context.push(AppRoute.editNotes, extra: noteId);
+            },
             borderColor: context.secondary,
             height: 50,
             width: context.width * .9,
@@ -57,10 +58,19 @@ class NotesDetails extends StatelessWidget {
         centerTitle: true,
         title: AppStrings.notesDetails,
         scaffoldKey: _scaffoldKey,
-        actions: const [
-          Icon(
-            Icons.more_horiz,
-            size: 30,
+        actions: [
+          InkWell(
+            onTap: () {
+              context.showBottomSheet(
+                  child: DeleteSheet(
+                    docId: noteId,
+                    collection: "notes",
+                  ));
+            },
+            child: const Icon(
+              Icons.more_horiz,
+              size: 30,
+            ),
           ),
           Gap(12),
         ],
@@ -93,13 +103,13 @@ class NotesDetails extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                   data['type']?? "Meeting",
+                    data['type'] ?? "Meeting",
                     style: context.labelLarge?.copyWith(color: const Color(0xff405FBA)),
                   ),
                 ),
                 const Gap(10),
                 Text(
-                  data['title']??   "Meeting Agenda",
+                  data['title'] ?? "Meeting Agenda",
                   style: context.displayLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const Gap(14),
@@ -113,7 +123,7 @@ class NotesDetails extends StatelessWidget {
                     ),
                     const Gap(10),
                     Text(
-                      data['date']??   "6:00 PM",
+                      data['date'] ?? "6:00 PM",
                       style: context.titleSmall?.copyWith(fontWeight: FontWeight.w500, color: Colors.black.withOpacity(.6)),
                     )
                   ],
@@ -123,7 +133,7 @@ class NotesDetails extends StatelessWidget {
                   height: 55,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: data['labels'].length??tagsList.length,
+                    itemCount: data['labels'].length ?? tagsList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -147,7 +157,7 @@ class NotesDetails extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: data['description'].length??notesPointList.length,
+                    itemCount: data['description'].length ?? notesPointList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -159,7 +169,7 @@ class NotesDetails extends StatelessWidget {
                             size: 10,
                           ),
                           title: Text(
-                            data['description']??[index],
+                            data['description'] ?? [index],
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),

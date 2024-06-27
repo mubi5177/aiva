@@ -144,9 +144,10 @@ class _NotesScreenState extends State<NotesScreen> with SingleTickerProviderStat
 }
 
 class EmptyScreen extends StatelessWidget {
+  final bool isAddButton;
   final String screen;
 
-  const EmptyScreen({super.key, required this.screen});
+  const EmptyScreen({super.key, required this.screen, this.isAddButton = true});
 
   @override
   Widget build(BuildContext context) {
@@ -157,27 +158,29 @@ class EmptyScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(20),
-            InkWell(
-              onTap: () {
-                context.push(AppRoute.addNewNotes);
-              },
-              child: Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                height: 60,
-                width: context.width,
-                decoration: DottedDecoration(
-                  shape: Shape.box,
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10), //remove this to get plane rectange
-                ),
-                child: Text(
-                  "+ Add New",
-                  style: context.titleSmall?.copyWith(fontSize: 16, color: Colors.grey),
+            if (isAddButton) ...{
+              InkWell(
+                onTap: () {
+                  context.push(AppRoute.addNewNotes);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  height: 60,
+                  width: context.width,
+                  decoration: DottedDecoration(
+                    shape: Shape.box,
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10), //remove this to get plane rectange
+                  ),
+                  child: Text(
+                    "+ Add New",
+                    style: context.titleSmall?.copyWith(fontSize: 16, color: Colors.grey),
+                  ),
                 ),
               ),
-            ),
-            const Gap(40),
+              const Gap(40),
+            },
             Center(
               child: AppImage.assets(
                 assetName: Assets.images.noTaskIcon.path,

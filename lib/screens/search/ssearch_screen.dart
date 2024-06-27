@@ -1,12 +1,12 @@
-import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/search/recent_tab.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -18,10 +18,17 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _controller;
-
+  String searchText = '';
+  Map<String, dynamic> searchDataResult = {
+    'tasks': [],
+    'notes': [],
+    'appointments': [],
+    'userHabits': [],
+  };
   @override
   void initState() {
     super.initState();
+    searchDataFromCollections("This is Task");
     _controller = TabController(length: 5, vsync: this);
   }
 
@@ -41,6 +48,13 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
         backgroundColor: Colors.grey.shade50,
         title: TextFormField(
           onTap: () async {},
+          onChanged: (value) {
+            setState(() {
+              searchText = value;
+            });
+            // Call function to search Firestore collections
+            searchData();
+          },
           decoration: InputDecoration(
               prefixIcon: AppImage.svg(
                 assetName: Assets.svgs.search,
@@ -107,6 +121,46 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
       ),
     );
   }
+
+  Future<void> searchData() async {
+    String userId = getCurrentUserId(); // Replace with actual user ID
+    String searchData = searchText.trim();
+
+    try {
+      // Query tasks collection
+      var taskSnapshot =
+          await FirebaseFirestore.instance.collection('tasks').where("userId", isEqualTo: userId).where('type_desc', isEqualTo: searchData).get();
+      searchDataResult['tasks'] = taskSnapshot.docs.map((doc) => doc.data()).toList();
+
+      // Query notes collection
+      var notesSnapshot =
+          await FirebaseFirestore.instance.collection('notes').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
+      searchDataResult['notes'] = notesSnapshot.docs.map((doc) => doc.data()).toList();
+
+      // Query appointments collection
+      var appointmentsSnapshot = await FirebaseFirestore.instance
+          .collection('appointments')
+          .where("userId", isEqualTo: userId)
+          .where('type_desc', isEqualTo: searchData)
+          .get();
+      searchDataResult['appointments'] = appointmentsSnapshot.docs.map((doc) => doc.data()).toList();
+
+      // Query userHabits collection
+      var userHabitsSnapshot =
+          await FirebaseFirestore.instance.collection('userHabits').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
+      searchDataResult['userHabits'] = userHabitsSnapshot.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      print('Error retrieving data: $e');
+      // Handle error as needed
+    }
+
+    setState(() {
+      // Update UI with search results
+
+      searchDataResult = searchDataResult;
+
+    });
+  }
 }
 
 class SearchEmptyScreen extends StatelessWidget {
@@ -153,3 +207,5 @@ class SearchEmptyScreen extends StatelessWidget {
     );
   }
 }
+
+///--------------

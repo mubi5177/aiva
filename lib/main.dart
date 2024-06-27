@@ -4,7 +4,7 @@ import 'package:aivi/config/theme/light_theme.dart';
 import 'package:aivi/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'package:timezone/data/latest.dart' as tz;
 import 'utils/services/firebase_messaging_handler.dart';
 part 'app_view.dart';
 
@@ -14,6 +14,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseMessagingHandler().initialize();
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 

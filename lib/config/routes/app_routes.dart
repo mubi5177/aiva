@@ -11,6 +11,7 @@ import 'package:aivi/screens/notification_settings.dart';
 import 'package:aivi/screens/onboarding_screen.dart';
 import 'package:aivi/screens/say_something.dart';
 import 'package:aivi/screens/search/ssearch_screen.dart';
+import 'package:aivi/screens/splash.dart';
 import 'package:aivi/screens/tab_bar/tab_bar.dart';
 import 'package:aivi/screens/task/add_new_task.dart';
 import 'package:aivi/screens/task/edit_task.dart';
@@ -27,11 +28,14 @@ final router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const OnBoardingScreen()),
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const SplashScreen()),
     ),
     GoRoute(
       path: AppRoute.welcome,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const WelcomeScreen()),
+    ),    GoRoute(
+      path: AppRoute.onBoarding,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const OnBoardingScreen()),
     ),
     GoRoute(
       path: AppRoute.createProfileScreenOne,
@@ -164,5 +168,6 @@ class AppRoute {
   static const String addNewTask = '/add-new-task';
   static const String addNewAppointment = '/add-new-appointment';
   static const String taskDetails = '/task-details';
+  static const String onBoarding = '/onBoarding';
   static const String createProfileScreenOne = '/create-profile-screen-one';
 }

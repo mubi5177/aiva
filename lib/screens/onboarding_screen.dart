@@ -17,6 +17,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({
@@ -32,6 +33,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   FlutterSecureStorage _secureStorage = FlutterSecureStorage();
   bool isGoogleLoading = false;
   bool isAppleLoading = false;
+  // Store login status in SharedPreferences
 
   @override
   Widget build(BuildContext context) {
@@ -83,11 +85,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           profile: cred?.user?.photoURL ?? '',
                           name: cred?.user?.displayName ?? '',
                           loginType: 'google',
+
                         ));
                         Future.delayed(const Duration(seconds: 1));
                         setState(() {
                           isGoogleLoading = false;
                         });
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool('isLoggedIn', true);
                         context.go(AppRoute.welcome);
                       } catch (e) {
                         // Handle errors here
@@ -146,7 +151,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           setState(() {
                             isAppleLoading = false;
                           });
-
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          await prefs.setBool('isLoggedIn', true);
                           context.go(AppRoute.welcome);
                         } catch (e) {
                           // Handle errors here
@@ -188,44 +194,44 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               //   textStyle: context.displaySmall?.copyWith(fontWeight: FontWeight.w600),
               // ),
               const Gap(10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 100,
-                      height: 1,
-                      color: Colors.grey.withOpacity(.2),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      'OR',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey.withOpacity(.2),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      width: 100,
-                      height: 1,
-                      color: Colors.grey.withOpacity(.1),
-                    ),
-                  ),
-                ],
-              ),
-              const Gap(10),
-              InkWell(
-                onTap: () {},
-                child: Text(
-                  AppStrings.continueWithEmail,
-                  style: context.displaySmall?.copyWith(
-                      color: context.secondary, fontWeight: FontWeight.bold),
-                ),
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: [
+              //     Expanded(
+              //       child: Container(
+              //         width: 100,
+              //         height: 1,
+              //         color: Colors.grey.withOpacity(.2),
+              //       ),
+              //     ),
+              //     Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //       child: Text(
+              //         'OR',
+              //         style: TextStyle(
+              //           fontSize: 18,
+              //           color: Colors.grey.withOpacity(.2),
+              //         ),
+              //       ),
+              //     ),
+              //     Expanded(
+              //       child: Container(
+              //         width: 100,
+              //         height: 1,
+              //         color: Colors.grey.withOpacity(.1),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const Gap(10),
+              // InkWell(
+              //   onTap: () {},
+              //   child: Text(
+              //     AppStrings.continueWithEmail,
+              //     style: context.displaySmall?.copyWith(
+              //         color: context.secondary, fontWeight: FontWeight.bold),
+              //   ),
+              // ),
               const Spacer(),
               Divider(
                 color: Colors.grey.withOpacity(.3),

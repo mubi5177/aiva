@@ -6,6 +6,7 @@ import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
+import 'package:aivi/widgets/delete_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -125,12 +126,21 @@ class _TaskDetailsState extends State<TaskDetails> {
         centerTitle: true,
         title: AppStrings.taskDetails,
         scaffoldKey: _scaffoldKey,
-        actions: const [
-          Icon(
-            Icons.more_horiz,
-            size: 30,
+        actions: [
+          InkWell(
+            onTap: () {
+              context.showBottomSheet(
+                  child: DeleteSheet(
+                docId: widget.id,
+                collection: widget.task['type'].toString().toLowerCase(),
+              ));
+            },
+            child: const Icon(
+              Icons.more_horiz,
+              size: 30,
+            ),
           ),
-          Gap(12),
+          const Gap(12),
         ],
       ),
       body: FutureBuilder<DocumentSnapshot>(
@@ -167,7 +177,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                   ),
                   const Gap(10),
                   Text(
-                    "Meeting Agenda",
+                    data['type_desc'] ?? "Meeting Agenda",
                     style: context.displayLarge?.copyWith(fontWeight: FontWeight.w600),
                   ),
                   const Gap(14),
