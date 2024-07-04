@@ -317,7 +317,7 @@ class ChatMessage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: CircleAvatar(
-                backgroundImage: AssetImage(Assets.images.profile.path),
+                backgroundImage: AssetImage(Assets.images.logo.path),
                 radius: 16,
               ),
             ),

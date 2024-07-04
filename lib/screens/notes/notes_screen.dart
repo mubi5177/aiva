@@ -191,7 +191,7 @@ class EmptyScreen extends StatelessWidget {
             const Gap(20),
             Center(
               child: Text(
-                "No $screen notes Found",
+                "No $screen Found",
                 style: context.titleSmall?.copyWith(color: context.primary, fontWeight: FontWeight.w500),
               ),
             ),
