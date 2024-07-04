@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
@@ -12,10 +11,7 @@ import 'package:aivi/model/user_model.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:aivi/core/mixins/validations.dart';
 import 'package:go_router/go_router.dart';
@@ -67,7 +63,7 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
             AppButton.outlineShrink(
                 onPressed: () {
                   saveUserJoinedDate();
-                  context.push(AppRoute.habits);
+                  context.push(AppRoute.tabs);
                 },
                 height: 50,
                 width: 170,
@@ -87,7 +83,7 @@ class _CreateProfileScreenOneState extends State<CreateProfileScreenOne> with Va
                               phoneNumber: "${countryCode.text.trim()}${phone.text.trim()}",
                               loginType: currentUser?.loginType ?? '')
                           .then((value) {
-                        context.push(AppRoute.habits);
+                        context.push(AppRoute.tabs);
                       });
                     });
                   } else {

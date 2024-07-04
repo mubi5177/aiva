@@ -1,12 +1,16 @@
+import 'dart:math';
+
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/extensions/e_string_to_dateTime.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/action_cubit.dart';
 import 'package:aivi/cubit/date_time_cubit.dart';
 import 'package:aivi/cubit/expansion_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/utils/services/firebase_messaging_handler.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:aivi/widgets/date_time_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -82,6 +86,7 @@ class _EditTaskState extends State<EditTask> {
                                     "location": location.text.trim(),
                                     "date": _endDateTimeCubit.state,
                                     "userId": userId,
+                                    "isCompleted": false
                                   };
                                   await updateDataOnFirestore(action.trim().toLowerCase(), data, widget.taskId).then((value) {
                                     setState(() {
@@ -94,6 +99,14 @@ class _EditTaskState extends State<EditTask> {
                                       backgroundColor: Colors.black54,
                                       textColor: Colors.white,
                                       fontSize: 14.0,
+                                    );
+                                    DateTime dateTime = _endDateTimeCubit.state.toDateTime();
+                                    print('_AddNewAppointmentState.build: ${dateTime}');
+                                    FirebaseMessagingHandler().scheduleNotification(
+                                      id: Random().nextInt(1000),
+                                      title: type.text.trim(),
+                                      body: description.text.trim(),
+                                      scheduledNotificationDateTime: dateTime,
                                     );
                                   }).onError((error, stackTrace) {
                                     Fluttertoast.showToast(

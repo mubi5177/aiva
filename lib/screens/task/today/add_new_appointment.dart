@@ -1,12 +1,16 @@
+import 'dart:math';
+
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/extensions/e_string_to_dateTime.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/action_cubit.dart';
 import 'package:aivi/cubit/date_time_cubit.dart';
 import 'package:aivi/cubit/expansion_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/utils/services/firebase_messaging_handler.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:aivi/widgets/date_time_sheet.dart';
 import 'package:flutter/cupertino.dart';
@@ -80,7 +84,7 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                     "location": location.text.trim(),
                                     "date": _endDateTimeCubit.state,
                                     "userId": userId,
-                                    "isCompleted":false
+                                    "isCompleted": false
                                   };
                                   await uploadDataToFirestore(action.trim().toLowerCase(), data).then((value) {
                                     setState(() {
@@ -93,6 +97,14 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                       backgroundColor: Colors.black54,
                                       textColor: Colors.white,
                                       fontSize: 14.0,
+                                    );
+                                    DateTime dateTime = _endDateTimeCubit.state.toDateTime();
+                                    print('_AddNewAppointmentState.build: ${dateTime}');
+                                    FirebaseMessagingHandler().scheduleNotification(
+                                      id: Random().nextInt(1000),
+                                      title: type.text.trim(),
+                                      body: description.text.trim(),
+                                      scheduledNotificationDateTime: dateTime,
                                     );
                                   }).onError((error, stackTrace) {
                                     Fluttertoast.showToast(
@@ -361,12 +373,7 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                         OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
                                     hintText: "Search for Area, Street name..."),
                                 keyboardType: TextInputType.name,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Location required!';
-                                  }
-                                  return null;
-                                },
+
                                 // onSaved: (value) => _auth['email'] = value!,
                                 autovalidateMode: AutovalidateMode.onUserInteraction,
                               ),

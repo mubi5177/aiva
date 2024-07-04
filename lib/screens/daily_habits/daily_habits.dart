@@ -241,7 +241,7 @@ class _DailyHabitsState extends State<DailyHabits> {
                         itemBuilder: (BuildContext context, int index) {
                           final data = currentUserDocuments[index].data() as Map<String, dynamic>;
                           final docId = currentUserDocuments[index].id;
-                          return _YourHabits(
+                          return YourHabits(
                             data: data,
                             docId: docId,
                           );
@@ -319,7 +319,7 @@ class _DailyHabitsState extends State<DailyHabits> {
                                   style: context.titleSmall?.copyWith(color: context.primary),
                                 ),
                                 subtitle: Text(
-                                  habitsItemsListCompleted[index].time,
+                                  data['pickedTime'] ?? "",
                                   style: context.titleSmall?.copyWith(fontSize: 12),
                                 ),
                                 trailing: AppButton.primary(
@@ -357,17 +357,17 @@ class _DailyHabitsState extends State<DailyHabits> {
   }
 }
 
-class _YourHabits extends StatefulWidget {
+class YourHabits extends StatefulWidget {
   final Map<String, dynamic> data;
   final String docId;
 
-  const _YourHabits({super.key, required this.data, required this.docId});
+  const YourHabits({super.key, required this.data, required this.docId});
 
   @override
-  State<_YourHabits> createState() => _YourHabitsState();
+  State<YourHabits> createState() => _YourHabitsState();
 }
 
-class _YourHabitsState extends State<_YourHabits> {
+class _YourHabitsState extends State<YourHabits> {
   late ConfettiController _confettiController;
   @override
   void initState() {

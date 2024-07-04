@@ -6,7 +6,7 @@ import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/model/user_model.dart';
-import 'package:aivi/utils/services/firebase_messaging_handler.dart';
+import 'package:aivi/testing.dart';
 import 'package:aivi/widgets/app_drawer.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -123,14 +123,21 @@ class _DashboardState extends State<Dashboard> {
         title: "Good Morning, ${currentUser?.name ?? '---'}",
         scaffoldKey: _scaffoldKey,
         actions: [
-          InkWell(
-              onTap: () {
-                FirebaseMessagingHandler().scheduleNotification(
-                    title: 'Scheduled Notification',
-                    body: '${DateTime.now().add(const Duration(minutes: 1))}',
-                    scheduledNotificationDateTime: DateTime.now().add(const Duration(seconds: 5)));
-              },
-              child: AppImage.svg(assetName: Assets.svgs.notificatons)),
+          // InkWell(
+          //     onTap: () {
+          //       //
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (BuildContext context) => const SpeechToTextPage(),
+          //         ),
+          //       );
+          //       // FirebaseMessagingHandler().scheduleNotification(
+          //       //     title: 'Scheduled Notification',
+          //       //     body: '${DateTime.now().add(const Duration(minutes: 1))}',
+          //       //     scheduledNotificationDateTime: DateTime.now().add(const Duration(seconds: 5)));
+          //     },
+          //     child: AppImage.svg(assetName: Assets.svgs.notificatons)),
           const Gap(10),
           InkWell(
               onTap: () {
@@ -237,10 +244,16 @@ class _DashboardState extends State<Dashboard> {
                       itemBuilder: (BuildContext context, int index) {
                         final data = todayAgendaList[index];
                         final docId = todayAgendaList[index]['id'];
-                        return _AgendaListItem(
-                          index: index,
-                          docId: docId,
-                          data: data,
+                        print('_DashboardState.build: $docId');
+                        return InkWell(
+                          onTap: () {
+                            context.push(AppRoute.taskDetails, extra: {"item": data, "id": docId});
+                          },
+                          child: _AgendaListItem(
+                            index: index,
+                            docId: docId,
+                            data: data,
+                          ),
                         );
                       },
                     ),
@@ -519,58 +532,6 @@ class _AgendaListItemState extends State<_AgendaListItem> {
       child: Stack(
         children: [
           ListTile(
-            onTap: () async {
-              setState(() {
-                selectedIndex = widget.index;
-              });
-              if (widget.data['isCompleted']) {
-              } else {
-                Vibration.vibrate();
-                _confettiController.play();
-                await Future.delayed(const Duration(seconds: 1));
-
-                try {
-                  // Get reference to the document
-                  DocumentReference documentReference = FirebaseFirestore.instance
-                      .collection(widget.data['type'] == "tasks" ? 'tasks' : "appointments")
-                      .doc(widget.docId.toString()); // Provide the document ID you want to update
-
-                  // Update the field
-                  documentReference.update({
-                    'isCompleted': true,
-                  }).then((value) {
-                    Fluttertoast.showToast(
-                      msg: "Completed!",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.SNACKBAR,
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      fontSize: 14.0,
-                    );
-                  }).onError((error, stackTrace) {
-                    Fluttertoast.showToast(
-                      msg: error.toString(),
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.SNACKBAR,
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      fontSize: 14.0,
-                    );
-                  });
-
-                  // context.pop();
-                } catch (e) {
-                  Fluttertoast.showToast(
-                    msg: e.toString(),
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.SNACKBAR,
-                    backgroundColor: Colors.black54,
-                    textColor: Colors.white,
-                    fontSize: 14.0,
-                  );
-                }
-              }
-            },
             dense: true,
             // isThreeLine: agendaList[index].timingText != null ? true : false,
             contentPadding: const EdgeInsets.only(right: 20),

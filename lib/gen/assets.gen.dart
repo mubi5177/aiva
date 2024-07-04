@@ -15,11 +15,14 @@ class $AssetsGifGen {
   /// File path: assets/gif/audio.gif
   AssetGenImage get audio => const AssetGenImage('assets/gif/audio.gif');
 
+  /// File path: assets/gif/loading.gif
+  AssetGenImage get loading => const AssetGenImage('assets/gif/loading.gif');
+
   /// File path: assets/gif/success.gif
   AssetGenImage get success => const AssetGenImage('assets/gif/success.gif');
 
   /// List of all assets
-  List<AssetGenImage> get values => [audio, success];
+  List<AssetGenImage> get values => [audio, loading, success];
 }
 
 class $AssetsImagesGen {

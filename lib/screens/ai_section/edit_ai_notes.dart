@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
@@ -20,14 +19,35 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-class AddNotes extends StatefulWidget {
-  const AddNotes({super.key});
+class EditAINotes extends StatefulWidget {
+  final String title;
+  final String description;
+  final DateTime date;
+  const EditAINotes({super.key, required this.date, required this.title, required this.description});
 
   @override
-  State<AddNotes> createState() => _AddNotesState();
+  State<EditAINotes> createState() => _EditAINotesState();
 }
 
-class _AddNotesState extends State<AddNotes> {
+class _EditAINotesState extends State<EditAINotes> {
+
+  @override
+  void initState() {
+    updateData();
+    super.initState();
+  }
+
+  void updateData() {
+    print('ChatMessage.build: ${widget.date}');
+    setState(() {
+
+      title.text = widget.title;
+      description.text = widget.description;
+      _endDateTimeCubit.update(widget.date);
+    });
+  }
+
+
   final List<String> tagsList = [
     "Meeting",
     "Task",
@@ -144,12 +164,12 @@ class _AddNotesState extends State<AddNotes> {
                       background: context.secondary,
                       child: isUploading
                           ? const SizedBox(
-                              height: 25,
-                              width: 25,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                            )
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
                           : const Text("Save"),
                     ),
                   ],
@@ -303,15 +323,15 @@ class _AddNotesState extends State<AddNotes> {
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderSide:
-                                      const BorderSide(color: Colors.grey),
+                                  const BorderSide(color: Colors.grey),
                                   borderRadius: BorderRadius.circular(14)),
                               enabledBorder: OutlineInputBorder(
                                   borderSide:
-                                      const BorderSide(color: Colors.grey),
+                                  const BorderSide(color: Colors.grey),
                                   borderRadius: BorderRadius.circular(14)),
                               focusedBorder: OutlineInputBorder(
                                   borderSide:
-                                      const BorderSide(color: Colors.grey),
+                                  const BorderSide(color: Colors.grey),
                                   borderRadius: BorderRadius.circular(14)),
                               hintText: AppStrings.whatNeedToBeDone),
                           keyboardType: TextInputType.name,
@@ -354,7 +374,7 @@ class _AddNotesState extends State<AddNotes> {
                                         decoration: BoxDecoration(
                                           color: const Color(0xffE4EAF9),
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                          BorderRadius.circular(10),
                                         ),
                                         child: Row(
                                           children: [
@@ -362,16 +382,16 @@ class _AddNotesState extends State<AddNotes> {
                                               tagsList[index],
                                               style: context.labelLarge
                                                   ?.copyWith(
-                                                      color: Colors.black
-                                                          .withOpacity(.8)),
+                                                  color: Colors.black
+                                                      .withOpacity(.8)),
                                             ),
                                             const Gap(5),
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
                                                   tagsList.removeWhere(
-                                                      (element) =>
-                                                          element ==
+                                                          (element) =>
+                                                      element ==
                                                           tagsList[index]);
                                                 });
                                               },
@@ -389,7 +409,7 @@ class _AddNotesState extends State<AddNotes> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: TextField(
                                   controller: label,
 
@@ -462,7 +482,7 @@ class _AddNotesState extends State<AddNotes> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(bottom: 10, top: 10),
+                                const EdgeInsets.only(bottom: 10, top: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -503,7 +523,7 @@ class _AddNotesState extends State<AddNotes> {
                             return TextFormField(
                               readOnly: true,
                               autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                              AutovalidateMode.onUserInteraction,
                               enableInteractiveSelection: false,
                               controller: TextEditingController(text: text),
                               // The validator receives the text that the user has entered.
@@ -517,15 +537,15 @@ class _AddNotesState extends State<AddNotes> {
                                 hintText: "Date & Time ",
                                 border: OutlineInputBorder(
                                     borderSide:
-                                        const BorderSide(color: Colors.grey),
+                                    const BorderSide(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(14)),
                                 enabledBorder: OutlineInputBorder(
                                     borderSide:
-                                        const BorderSide(color: Colors.grey),
+                                    const BorderSide(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(14)),
                                 focusedBorder: OutlineInputBorder(
                                     borderSide:
-                                        const BorderSide(color: Colors.grey),
+                                    const BorderSide(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(14)),
                                 suffixIcon: InkWell(
                                   onTap: () {

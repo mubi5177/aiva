@@ -9,7 +9,7 @@ import 'package:aivi/screens/notes/notes_details.dart';
 import 'package:aivi/screens/notes/notes_screen.dart';
 import 'package:aivi/screens/notification_settings.dart';
 import 'package:aivi/screens/onboarding_screen.dart';
-import 'package:aivi/screens/say_something.dart';
+import 'package:aivi/screens/ai_section/say_something.dart';
 import 'package:aivi/screens/search/ssearch_screen.dart';
 import 'package:aivi/screens/splash.dart';
 import 'package:aivi/screens/tab_bar/tab_bar.dart';
@@ -33,7 +33,8 @@ final router = GoRouter(
     GoRoute(
       path: AppRoute.welcome,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const WelcomeScreen()),
-    ),    GoRoute(
+    ),
+    GoRoute(
       path: AppRoute.onBoarding,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const OnBoardingScreen()),
     ),
@@ -113,7 +114,12 @@ final router = GoRouter(
       path: AppRoute.taskDetails,
       pageBuilder: (context, state) {
         var data = state.extra as Map<String, dynamic>;
-        return CupertinoPage(key: state.pageKey, child: TaskDetails(task: data['item'],id: data['id'],));
+        return CupertinoPage(
+            key: state.pageKey,
+            child: TaskDetails(
+              task: data['item'],
+              id: data['id'],
+            ));
       },
     ),
     GoRoute(
@@ -138,7 +144,11 @@ final router = GoRouter(
     ),
     GoRoute(
       path: AppRoute.saySomething,
-      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: SaySomething()),
+      pageBuilder: (context, state) => CupertinoPage(
+          key: state.pageKey,
+          child: SaySomething(
+            recordedText: state.extra as String,
+          )),
     ),
     GoRoute(
       path: AppRoute.addNewAppointment,

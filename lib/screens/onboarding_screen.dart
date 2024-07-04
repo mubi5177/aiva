@@ -136,8 +136,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         try {
                           // Add your onPressed logic here
                           cred = await signInWithApple();
-
-                          saveUserData(UserModel(
+                          print('_OnBoardingScreenState.build: $cred');
+                        saveUserData(UserModel(
                             email: cred?.user?.email ?? '',
                             phone: cred?.user?.phoneNumber ?? '',
                             profile: cred?.user?.photoURL ?? '',

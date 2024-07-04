@@ -3,7 +3,10 @@ import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/screens/search/habits_search.dart';
+import 'package:aivi/screens/search/notes_search.dart';
 import 'package:aivi/screens/search/recent_tab.dart';
+import 'package:aivi/screens/search/tasks_search.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -103,19 +106,22 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
       ),
       body: TabBarView(
         controller: _controller,
-        children: const [
-          RecentSearchTab(),
-          SearchEmptyScreen(
-            screen: "Task",
+        children: [
+          const RecentSearchTab(),
+          SearchTasks(
+            data: searchDataResult['tasks'] ?? [],
           ),
-          SearchEmptyScreen(
-            screen: "Appointments",
+          // SearchEmptyScreen(
+          //   screen: "Task",
+          // ),
+          SearchTasks(
+            data: searchDataResult['appointments'] ?? [],
           ),
-          SearchEmptyScreen(
-            screen: "Notes",
+          NotesSearchTasks(
+            data: searchDataResult['notes'] ?? [],
           ),
-          SearchEmptyScreen(
-            screen: "Habit",
+          HabitsSearchTasks(
+            data: searchDataResult['userHabits'] ?? [],
           ),
         ],
       ),
@@ -130,12 +136,22 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
       // Query tasks collection
       var taskSnapshot =
           await FirebaseFirestore.instance.collection('tasks').where("userId", isEqualTo: userId).where('type_desc', isEqualTo: searchData).get();
-      searchDataResult['tasks'] = taskSnapshot.docs.map((doc) => doc.data()).toList();
+      searchDataResult['tasks'] = taskSnapshot.docs
+          .map((doc) => {
+                'id': doc.id, // Add document ID to the data
+                ...doc.data(), // Spread existing document data
+              })
+          .toList();
 
       // Query notes collection
       var notesSnapshot =
           await FirebaseFirestore.instance.collection('notes').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
-      searchDataResult['notes'] = notesSnapshot.docs.map((doc) => doc.data()).toList();
+      searchDataResult['notes'] = notesSnapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data(),
+              })
+          .toList();
 
       // Query appointments collection
       var appointmentsSnapshot = await FirebaseFirestore.instance
@@ -143,12 +159,22 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
           .where("userId", isEqualTo: userId)
           .where('type_desc', isEqualTo: searchData)
           .get();
-      searchDataResult['appointments'] = appointmentsSnapshot.docs.map((doc) => doc.data()).toList();
+      searchDataResult['appointments'] = appointmentsSnapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data(),
+              })
+          .toList();
 
       // Query userHabits collection
       var userHabitsSnapshot =
           await FirebaseFirestore.instance.collection('userHabits').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
-      searchDataResult['userHabits'] = userHabitsSnapshot.docs.map((doc) => doc.data()).toList();
+      searchDataResult['userHabits'] = userHabitsSnapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data(),
+              })
+          .toList();
     } catch (e) {
       print('Error retrieving data: $e');
       // Handle error as needed
@@ -156,11 +182,51 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
 
     setState(() {
       // Update UI with search results
+      // Since you already updated searchDataResult in each map operation, no need to assign it again.
 
-      searchDataResult = searchDataResult;
-
+      // Example: Update UI code here
     });
   }
+
+  // Future<void> searchData() async {
+  //   String userId = getCurrentUserId(); // Replace with actual user ID
+  //   String searchData = searchText.trim();
+  //
+  //   try {
+  //     // Query tasks collection
+  //     var taskSnapshot =
+  //         await FirebaseFirestore.instance.collection('tasks').where("userId", isEqualTo: userId).where('type_desc', isEqualTo: searchData).get();
+  //     searchDataResult['tasks'] = taskSnapshot.docs.map((doc) => doc.data()).toList();
+  //
+  //     // Query notes collection
+  //     var notesSnapshot =
+  //         await FirebaseFirestore.instance.collection('notes').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
+  //     searchDataResult['notes'] = notesSnapshot.docs.map((doc) => doc.data()).toList();
+  //
+  //
+  //     // Query appointments collection
+  //     var appointmentsSnapshot = await FirebaseFirestore.instance
+  //         .collection('appointments')
+  //         .where("userId", isEqualTo: userId)
+  //         .where('type_desc', isEqualTo: searchData)
+  //         .get();
+  //     searchDataResult['appointments'] = appointmentsSnapshot.docs.map((doc) => doc.data()).toList();
+  //
+  //     // Query userHabits collection
+  //     var userHabitsSnapshot =
+  //         await FirebaseFirestore.instance.collection('userHabits').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
+  //     searchDataResult['userHabits'] = userHabitsSnapshot.docs.map((doc) => doc.data()).toList();
+  //   } catch (e) {
+  //     print('Error retrieving data: $e');
+  //     // Handle error as needed
+  //   }
+  //
+  //   setState(() {
+  //     // Update UI with search results
+  //
+  //     searchDataResult = searchDataResult;
+  //   });
+  // }
 }
 
 class SearchEmptyScreen extends StatelessWidget {

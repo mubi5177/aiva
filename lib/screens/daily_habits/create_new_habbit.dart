@@ -1,14 +1,20 @@
+import 'dart:math';
+
 import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
+import 'package:aivi/core/extensions/e_calculate_dates.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/extensions/e_string_to_dateTime.dart';
+import 'package:aivi/core/extensions/e_update_time.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/action_cubit.dart';
 import 'package:aivi/cubit/date_time_cubit.dart';
 import 'package:aivi/cubit/expansion_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
 import 'package:aivi/screens/daily_habits/habits.dart';
+import 'package:aivi/utils/services/firebase_messaging_handler.dart';
 import 'package:aivi/widgets/app_switch.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
 import 'package:aivi/widgets/date_time_sheet.dart';
@@ -40,16 +46,19 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
   TimeOfDay? pickedTime;
   bool sendReminder = true;
   bool isUploading = false;
-@override
+
+  @override
   void dispose() {
-    repeatDays=[];
+    repeatDays = [];
     super.dispose();
   }
+
   @override
   void initState() {
     repeatDays.clear();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ExpansionCubit, bool>(
@@ -88,15 +97,7 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                                 isUploading = true;
                               });
                               String userId = getCurrentUserId();
-                              //
-                              // print('_CreateNewHabbitState.build: title ${title.text}');
-                              // print('_CreateNewHabbitState.build: repeatDays ${repeatDays.toString()}');
-                              // print('_CreateNewHabbitState.build: pickedTime ${pickedTime?.hour}:${pickedTime?.minute}${pickedTime?.period.name}');
-                              // print('_CreateNewHabbitState.build: start date ${_startDateTimeCubit.state}');
-                              // print('_CreateNewHabbitState.build: end date ${_endDateTimeCubit.state}');
-                              // print('_CreateNewHabbitState.build: description ${description.text}');
-                              // print('_CreateNewHabbitState.build: sendReminder $sendReminder');
-                              // print('_CreateNewHabbitState.build: sendReminder action $action');
+
                               var data = {
                                 "title": title.text.trim(),
                                 "repeatDays": repeatDays,
@@ -107,8 +108,9 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                                 "sendReminder": sendReminder,
                                 "sendReminderAction": action,
                                 "userId": userId,
-                                "image": "https://firebasestorage.googleapis.com/v0/b/aiva-e74f3.appspot.com/o/habits%2Fdumbell.png?alt=media&token=f985b21f-5aac-4067-a145-7a5b90be4625",
-                                "isCompleted":false
+                                "image":
+                                    "https://firebasestorage.googleapis.com/v0/b/aiva-e74f3.appspot.com/o/habits%2Fdumbell.png?alt=media&token=f985b21f-5aac-4067-a145-7a5b90be4625",
+                                "isCompleted": false
                               };
                               await uploadDataToFirestore("userHabits", data).then((value) {
                                 setState(() {
@@ -122,6 +124,7 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                                   textColor: Colors.white,
                                   fontSize: 14.0,
                                 );
+                                initiateNotifications();
                               }).onError((error, stackTrace) {
                                 Fluttertoast.showToast(
                                   msg: error.toString(),
@@ -594,5 +597,35 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
         );
       },
     );
+  }
+
+  void initiateNotifications() {
+    // Create an instance of Random
+
+
+    DateTime startDate = _startDateTimeCubit.state.toDateTime();
+    DateTime endDate = _endDateTimeCubit.state.toDateTime();
+
+    List<DateTime> allDates = startDate.datesUntilWithTime(endDate);
+    String time = "${pickedTime?.hour}:${pickedTime?.minute}";
+    // Print all dates
+
+    for (DateTime date in allDates) {
+      // Parse the original date-time string into a DateTime object
+      DateTime originalDateTime = DateTime.parse(date.toString());
+
+      // Update the time part of the original DateTime using the extension method
+      DateTime updatedDateTime = originalDateTime.updateTime(time);
+
+      //   // Print or use the updated date-time
+      print("updatedDateTime: $updatedDateTime"); // Output:
+      // print('_CreateNewHabbitState.initiateNotifications: ${DateTime.now().add(Duration(seconds: 10))}');
+      FirebaseMessagingHandler().scheduleNotification(
+        id: Random().nextInt(100),
+        title: title.text.trim(),
+        body: description.text.trim(),
+        scheduledNotificationDateTime: updatedDateTime,
+      );
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:aivi/model/user_model.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
+import 'package:intl/intl.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 import 'package:rxdart/rxdart.dart';
@@ -269,14 +271,25 @@ Future<void> deleteDocument(String docId, String collection) async {
 }
 
 Stream<List<Map<String, dynamic>>> fetchDataFromFirestore() {
+  // Get today's date in "MM/dd/yyyy" format
+  String formattedDate = DateFormat("MM/dd/yyyy").format(DateTime.now());
   // Reference to Firestore collections
   final collection1Ref = FirebaseFirestore.instance.collection('appointments');
   final collection2Ref = FirebaseFirestore.instance.collection('tasks');
   String userId = getCurrentUserId();
   // Function to fetch snapshots from Firestore
-  Stream<QuerySnapshot<Map<String, dynamic>>> snapshots1 = collection1Ref.where('userId', isEqualTo: userId).snapshots();
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> snapshots2 = collection2Ref.where('userId', isEqualTo: userId).snapshots();
+  // Stream<QuerySnapshot<Map<String, dynamic>>> snapshots1 = collection1Ref.where('userId', isEqualTo: userId,).snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> snapshots1 = collection1Ref
+      .where('userId', isEqualTo: userId) // Up to end of today
+      .where("date", isGreaterThanOrEqualTo: formattedDate)
+      .snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> snapshots2 = collection2Ref
+      .where(
+        'userId',
+        isEqualTo: userId,
+      )
+      .where("date", isGreaterThanOrEqualTo: formattedDate)
+      .snapshots();
 
   // Combine snapshots from both collections
   Stream<List<Map<String, dynamic>>> combinedStream =
@@ -405,31 +418,24 @@ Future<Map<String, List<Map<String, dynamic>>>> fetchData(String searchText) asy
   return fetchedData;
 }
 
-
-Future<Map<String, dynamic>> searchDataFromCollections( String searchData) async {
+Future<Map<String, dynamic>> searchDataFromCollections(String searchData) async {
   Map<String, dynamic> result = {
     'tasks': [],
     'notes': [],
     'appointments': [],
     'userHabits': [],
   };
-String userId= getCurrentUserId();
+  String userId = getCurrentUserId();
   try {
     // Query tasks collection
-    var taskSnapshot = await FirebaseFirestore.instance
-        .collection('tasks')
-        .where("userId", isEqualTo: userId)
-        .where('type_desc', isEqualTo: searchData)
-        .get();
+    var taskSnapshot =
+        await FirebaseFirestore.instance.collection('tasks').where("userId", isEqualTo: userId).where('type_desc', isEqualTo: searchData).get();
 
     result['tasks'] = taskSnapshot.docs.map((doc) => doc.data()).toList();
 
     // Query notes collection
-    var notesSnapshot = await FirebaseFirestore.instance
-        .collection('notes')
-        .where("userId", isEqualTo: userId)
-        .where('title', isEqualTo: searchData)
-        .get();
+    var notesSnapshot =
+        await FirebaseFirestore.instance.collection('notes').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
 
     result['notes'] = notesSnapshot.docs.map((doc) => doc.data()).toList();
 
@@ -443,11 +449,8 @@ String userId= getCurrentUserId();
     result['appointments'] = appointmentsSnapshot.docs.map((doc) => doc.data()).toList();
 
     // Query userHabits collection
-    var userHabitsSnapshot = await FirebaseFirestore.instance
-        .collection('userHabits')
-        .where("userId", isEqualTo: userId)
-        .where('title', isEqualTo: searchData)
-        .get();
+    var userHabitsSnapshot =
+        await FirebaseFirestore.instance.collection('userHabits').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
 
     result['userHabits'] = userHabitsSnapshot.docs.map((doc) => doc.data()).toList();
     print('the data is $result');
@@ -458,3 +461,67 @@ String userId= getCurrentUserId();
   }
 }
 
+///API
+
+class ApiResponse {
+  final String action;
+  final Map<String, String> entities;
+
+  ApiResponse({
+    required this.action,
+    required this.entities,
+  });
+
+  factory ApiResponse.fromJson(Map<String, dynamic> json) {
+    return ApiResponse(
+      action: json['action'],
+      entities: Map<String, String>.from(json['entities']),
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Action: $action\nEntities: $entities';
+  }
+}
+
+Future<ApiResponse?> callApi(String text) async {
+  var headers = {
+    'Content-Type': 'application/json',
+    'Cookie':
+        'ARRAffinity=cafe441b5f83725edc9bf516b4ea569e812ab6508c389d9aafdccfebe722c0ef; ARRAffinitySameSite=cafe441b5f83725edc9bf516b4ea569e812ab6508c389d9aafdccfebe722c0ef'
+  };
+
+  var data = json.encode({"input_text": text});
+
+  var dio = Dio();
+
+  try {
+    var response = await dio.post(
+      'https://mobi-ai-app-stage.azurewebsites.net/identify-aiva-action',
+      options: Options(
+        headers: headers,
+      ),
+      data: data,
+    );
+
+    if (response.statusCode == 200) {
+      // Parse the JSON response into Task object
+      print('callApi: ${response.data}');
+
+      ApiResponse task = ApiResponse.fromJson(response.data);
+
+      // Return the Task object
+      return task;
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+      print('Response: ${response.data}');
+      // Handle error scenario
+      return null; // or throw an exception
+    }
+  } catch (e) {
+    print('Exception caught: $e');
+    // Handle Dio errors such as DioError
+    return null; // or throw an exception
+  }
+}

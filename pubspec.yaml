@@ -44,7 +44,11 @@ dependencies:
   cached_network_image:
   gap: ^3.0.1
   country_code_picker: ^3.0.0
+  permission_handler:
+  dio: ^5.4.3+1
   timezone: ^0.9.3
+  record: ^5.1.2
+  speech_to_text: ^5.5.0
   firebase_messaging: ^14.7.16
   flutter_local_notifications: ^17.1.2
   google_sign_in: ^6.2.1
