@@ -1,18 +1,13 @@
-import 'dart:math';
 
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
-import 'package:aivi/core/extensions/e_string_to_dateTime.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/action_cubit.dart';
-import 'package:aivi/cubit/date_time_cubit.dart';
 import 'package:aivi/cubit/expansion_cubit.dart';
 import 'package:aivi/gen/assets.gen.dart';
-import 'package:aivi/utils/services/firebase_messaging_handler.dart';
 import 'package:aivi/widgets/custom_app_bar.dart';
-import 'package:aivi/widgets/date_time_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +32,7 @@ class _AddNotesState extends State<AddNotes> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
+  // final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
 
   TextEditingController title = TextEditingController();
   TextEditingController label = TextEditingController();
@@ -75,8 +70,7 @@ class _AddNotesState extends State<AddNotes> {
                     AppButton.primary(
                       onPressed: () async {
                         if (_formKey.currentState!.validate() &&
-                            (tagsList.isNotEmpty &&
-                                _endDateTimeCubit.state.isNotEmpty)) {
+                            (tagsList.isNotEmpty  )) {
                           try {
                             setState(() {
                               isUploading = true;
@@ -87,7 +81,7 @@ class _AddNotesState extends State<AddNotes> {
                               "type": action.trim(),
                               "labels": tagsList,
                               "description": description.text.trim(),
-                              "date": _endDateTimeCubit.state,
+                              // "date": _endDateTimeCubit.state,
                               "userId": userId,
                             };
                             await uploadDataToFirestore("notes", data)
@@ -103,13 +97,13 @@ class _AddNotesState extends State<AddNotes> {
                                 textColor: Colors.white,
                                 fontSize: 14.0,
                               );
-                              DateTime dateTime = _endDateTimeCubit.state.toDateTime();
-                              FirebaseMessagingHandler().scheduleNotification(
-                                id: Random().nextInt(1000),
-                                title: title.text.trim(),
-                                body: description.text.trim(),
-                                scheduledNotificationDateTime: dateTime,
-                              );
+                              // DateTime dateTime = _endDateTimeCubit.state.toDateTime();
+                              // FirebaseMessagingHandler().scheduleNotification(
+                              //   id: Random().nextInt(1000),
+                              //   title: title.text.trim(),
+                              //   body: description.text.trim(),
+                              //   scheduledNotificationDateTime: dateTime,
+                              // );
                             }).onError((error, stackTrace) {
                               Fluttertoast.showToast(
                                 msg: error.toString(),
@@ -497,53 +491,53 @@ class _AddNotesState extends State<AddNotes> {
                           ),
                         ),
                         const Gap(22),
-                        BlocBuilder<DateTimeCubit, String>(
-                          bloc: _endDateTimeCubit,
-                          builder: (context, text) {
-                            return TextFormField(
-                              readOnly: true,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              enableInteractiveSelection: false,
-                              controller: TextEditingController(text: text),
-                              // The validator receives the text that the user has entered.
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Date required!';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Date & Time ",
-                                border: OutlineInputBorder(
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(14)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(14)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(14)),
-                                suffixIcon: InkWell(
-                                  onTap: () {
-                                    context.closeKeyboard();
-                                    context.showBottomSheet(
-                                      maxHeight: context.height * .9,
-                                      child: EndDateTimeSheet(
-                                          dateName: "Date",
-                                          dateTimeCubit: _endDateTimeCubit),
-                                    );
-                                  },
-                                  // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
-                                  child: const Icon(Icons.calendar_month),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                        // BlocBuilder<DateTimeCubit, String>(
+                        //   bloc: _endDateTimeCubit,
+                        //   builder: (context, text) {
+                        //     return TextFormField(
+                        //       readOnly: true,
+                        //       autovalidateMode:
+                        //           AutovalidateMode.onUserInteraction,
+                        //       enableInteractiveSelection: false,
+                        //       controller: TextEditingController(text: text),
+                        //       // The validator receives the text that the user has entered.
+                        //       validator: (value) {
+                        //         if (value == null || value.isEmpty) {
+                        //           return 'Date required!';
+                        //         }
+                        //         return null;
+                        //       },
+                        //       decoration: InputDecoration(
+                        //         hintText: "Date & Time ",
+                        //         border: OutlineInputBorder(
+                        //             borderSide:
+                        //                 const BorderSide(color: Colors.grey),
+                        //             borderRadius: BorderRadius.circular(14)),
+                        //         enabledBorder: OutlineInputBorder(
+                        //             borderSide:
+                        //                 const BorderSide(color: Colors.grey),
+                        //             borderRadius: BorderRadius.circular(14)),
+                        //         focusedBorder: OutlineInputBorder(
+                        //             borderSide:
+                        //                 const BorderSide(color: Colors.grey),
+                        //             borderRadius: BorderRadius.circular(14)),
+                        //         suffixIcon: InkWell(
+                        //           onTap: () {
+                        //             context.closeKeyboard();
+                        //             context.showBottomSheet(
+                        //               maxHeight: context.height * .9,
+                        //               child: EndDateTimeSheet(
+                        //                   dateName: "Date",
+                        //                   dateTimeCubit: _endDateTimeCubit),
+                        //             );
+                        //           },
+                        //           // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
+                        //           child: const Icon(Icons.calendar_month),
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        // ),
                       ],
                     ),
                   ),

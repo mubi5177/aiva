@@ -34,7 +34,7 @@ class _EditNotesState extends State<EditNotes> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
+  // final DateTimeCubit _endDateTimeCubit = DateTimeCubit();
 
   TextEditingController title = TextEditingController();
   TextEditingController label = TextEditingController();
@@ -69,7 +69,7 @@ class _EditNotesState extends State<EditNotes> {
                       const Gap(10.0),
                       AppButton.primary(
                         onPressed: () async {
-                          if (_formKey.currentState!.validate() && (tagsList.isNotEmpty && _endDateTimeCubit.state.isNotEmpty)) {
+                          if (_formKey.currentState!.validate() && tagsList.isNotEmpty ) {
                             try
                             {
                               setState(() {
@@ -81,7 +81,7 @@ class _EditNotesState extends State<EditNotes> {
                                 "type": action.trim(),
                                 "labels": tagsList,
                                 "description": description.text.trim(),
-                                "date": _endDateTimeCubit.state,
+                                // "date": _endDateTimeCubit.state,
                                 "userId": userId,
                               };
                               await updateDataOnFirestore("notes", data,widget.noteId).then((value) {
@@ -96,14 +96,14 @@ class _EditNotesState extends State<EditNotes> {
                                   textColor: Colors.white,
                                   fontSize: 14.0,
                                 );
-                                DateTime dateTime = _endDateTimeCubit.state.toDateTime();
-                                print('_AddNewAppointmentState.build: ${dateTime}');
-                                FirebaseMessagingHandler().scheduleNotification(
-                                  id: Random().nextInt(1000),
-                                  title: title.text.trim(),
-                                  body: description.text.trim(),
-                                  scheduledNotificationDateTime: dateTime,
-                                );
+                                // DateTime dateTime = _endDateTimeCubit.state.toDateTime();
+                                // print('_AddNewAppointmentState.build: ${dateTime}');
+                                // FirebaseMessagingHandler().scheduleNotification(
+                                //   id: Random().nextInt(1000),
+                                //   title: title.text.trim(),
+                                //   body: description.text.trim(),
+                                //   scheduledNotificationDateTime: dateTime,
+                                // );
                               }).onError((error, stackTrace) {
                                 Fluttertoast.showToast(
                                   msg: error.toString(),
@@ -471,44 +471,44 @@ class _EditNotesState extends State<EditNotes> {
                                 ),
                               ),
                               const Gap(22),
-                              BlocBuilder<DateTimeCubit, String>(
-                                bloc: _endDateTimeCubit,
-                                builder: (context, text) {
-                                  return TextFormField(
-                                    readOnly: true,
-                                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                                    enableInteractiveSelection: false,
-                                    controller: TextEditingController(text: text),
-                                    // The validator receives the text that the user has entered.
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Date required!';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: "Date & Time ",
-                                      border: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                      suffixIcon: InkWell(
-                                        onTap: () {
-                                          context.closeKeyboard();
-                                          context.showBottomSheet(
-                                            maxHeight: context.height * .9,
-                                            child: EndDateTimeSheet(dateName: "Date", dateTimeCubit: _endDateTimeCubit),
-                                          );
-                                        },
-                                        // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
-                                        child: const Icon(Icons.calendar_month),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                              // BlocBuilder<DateTimeCubit, String>(
+                              //   bloc: _endDateTimeCubit,
+                              //   builder: (context, text) {
+                              //     return TextFormField(
+                              //       readOnly: true,
+                              //       autovalidateMode: AutovalidateMode.onUserInteraction,
+                              //       enableInteractiveSelection: false,
+                              //       controller: TextEditingController(text: text),
+                              //       // The validator receives the text that the user has entered.
+                              //       validator: (value) {
+                              //         if (value == null || value.isEmpty) {
+                              //           return 'Date required!';
+                              //         }
+                              //         return null;
+                              //       },
+                              //       decoration: InputDecoration(
+                              //         hintText: "Date & Time ",
+                              //         border: OutlineInputBorder(
+                              //             borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              //         enabledBorder: OutlineInputBorder(
+                              //             borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              //         focusedBorder: OutlineInputBorder(
+                              //             borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              //         suffixIcon: InkWell(
+                              //           onTap: () {
+                              //             context.closeKeyboard();
+                              //             context.showBottomSheet(
+                              //               maxHeight: context.height * .9,
+                              //               child: EndDateTimeSheet(dateName: "Date", dateTimeCubit: _endDateTimeCubit),
+                              //             );
+                              //           },
+                              //           // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
+                              //           child: const Icon(Icons.calendar_month),
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              // ),
                             ],
                           ),
                         ),

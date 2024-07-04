@@ -113,21 +113,21 @@ class NotesDetails extends StatelessWidget {
                   style: context.displayLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const Gap(14),
-                Row(
-                  children: [
-                    AppImage.assets(
-                      assetName: Assets.images.clock.path,
-                      height: 20,
-                      width: 20,
-                      fit: BoxFit.cover,
-                    ),
-                    const Gap(10),
-                    Text(
-                      data['date'] ?? "6:00 PM",
-                      style: context.titleSmall?.copyWith(fontWeight: FontWeight.w500, color: Colors.black.withOpacity(.6)),
-                    )
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     AppImage.assets(
+                //       assetName: Assets.images.clock.path,
+                //       height: 20,
+                //       width: 20,
+                //       fit: BoxFit.cover,
+                //     ),
+                //     const Gap(10),
+                //     Text(
+                //       data['date'] ?? "6:00 PM",
+                //       style: context.titleSmall?.copyWith(fontWeight: FontWeight.w500, color: Colors.black.withOpacity(.6)),
+                //     )
+                //   ],
+                // ),
                 SizedBox(
                   width: context.width,
                   height: 55,

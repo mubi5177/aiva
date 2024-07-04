@@ -417,14 +417,13 @@ class ChatMessage extends StatelessWidget {
                           children: [
                             AppButton.outlineShrink(
                                 onPressed: () {
-                                  print('ChatMessage.build: $action');
                                   if (action!.trim().toLowerCase() == "notes") {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (BuildContext context) => EditAINotes(
                                           title: actionTitle ?? "",
-                                          date: date ?? DateTime.now(),
+
                                           description: actionDescription ?? '',
                                         ),
                                       ),
