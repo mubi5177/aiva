@@ -273,6 +273,7 @@ Future<void> deleteDocument(String docId, String collection) async {
 Stream<List<Map<String, dynamic>>> fetchDataFromFirestore() {
   // Get today's date in "MM/dd/yyyy" format
   String formattedDate = DateFormat("MM/dd/yyyy").format(DateTime.now());
+  print('fetchDataFromFirestore: $formattedDate');
   // Reference to Firestore collections
   final collection1Ref = FirebaseFirestore.instance.collection('appointments');
   final collection2Ref = FirebaseFirestore.instance.collection('tasks');
@@ -281,14 +282,14 @@ Stream<List<Map<String, dynamic>>> fetchDataFromFirestore() {
   // Stream<QuerySnapshot<Map<String, dynamic>>> snapshots1 = collection1Ref.where('userId', isEqualTo: userId,).snapshots();
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots1 = collection1Ref
       .where('userId', isEqualTo: userId) // Up to end of today
-      .where("date", isGreaterThanOrEqualTo: formattedDate)
+      .where("date", isEqualTo: formattedDate.trim())
       .snapshots();
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots2 = collection2Ref
       .where(
         'userId',
         isEqualTo: userId,
       )
-      .where("date", isGreaterThanOrEqualTo: formattedDate)
+      .where("date", isEqualTo: formattedDate.trim())
       .snapshots();
 
   // Combine snapshots from both collections

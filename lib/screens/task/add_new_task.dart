@@ -75,6 +75,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                   setState(() {
                                     isUploading = true;
                                   });
+                                  String date = _endDateTimeCubit.state.split(" ")[0];
                                   String userId = getCurrentUserId();
                                   var data = {
                                     "type_desc": type.text.trim(),
@@ -82,7 +83,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                     "labels": tagsList,
                                     "description": description.text.trim(),
                                     "location": location.text.trim(),
-                                    "date": _endDateTimeCubit.state,
+                                    "date": date,
                                     "userId": userId,
                                     "isCompleted":false
                                   };

@@ -402,10 +402,11 @@ class ChatMessage extends StatelessWidget {
                                     color: context.secondary,
                                   ),
                                   const Gap(10),
-                                  Text(
-                                    actionDate ?? "30, April 2024",
-                                    style: context.titleSmall?.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
-                                  ),
+                                  if (!(action!.trim().toLowerCase() == "notes"))
+                                    Text(
+                                      actionDate ?? "30, April 2024",
+                                      style: context.titleSmall?.copyWith(fontSize: 12, fontWeight: FontWeight.w500),
+                                    ),
                                 ],
                               )
                             ],
@@ -423,7 +424,6 @@ class ChatMessage extends StatelessWidget {
                                       MaterialPageRoute(
                                         builder: (BuildContext context) => EditAINotes(
                                           title: actionTitle ?? "",
-
                                           description: actionDescription ?? '',
                                         ),
                                       ),
@@ -468,7 +468,7 @@ class ChatMessage extends StatelessWidget {
                                           toastLength: Toast.LENGTH_LONG,
                                           gravity: ToastGravity.SNACKBAR,
                                           backgroundColor: Colors.black54,
-                                           textColor: Colors.white,
+                                          textColor: Colors.white,
                                           fontSize: 14.0,
                                         );
 

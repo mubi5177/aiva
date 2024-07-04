@@ -223,6 +223,7 @@ class _DashboardState extends State<Dashboard> {
                         const Gap(20),
                         Center(
                           child: AppButton.primary(
+                            onPressed: () => context.push(AppRoute.addNewTask),
                             height: 50,
                             width: 250,
                             background: context.secondary,
@@ -315,6 +316,7 @@ class _DashboardState extends State<Dashboard> {
                           const Gap(10),
                           Center(
                             child: AppButton.primary(
+                              onPressed: () => context.push(AppRoute.createNewHabits),
                               height: 50,
                               width: 250,
                               background: context.secondary,

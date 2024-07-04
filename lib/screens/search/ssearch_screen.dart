@@ -32,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     searchDataFromCollections("This is Task");
-    _controller = TabController(length: 5, vsync: this);
+    _controller = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -86,9 +86,9 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
           unselectedLabelColor: context.primary,
           labelStyle: context.titleLarge?.copyWith(fontWeight: FontWeight.w500),
           tabs: const [
-            Tab(
-              text: "Recent",
-            ),
+            // Tab(
+            //   text: "Recent",
+            // ),
             Tab(
               text: "Tasks",
             ),
@@ -107,7 +107,7 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
       body: TabBarView(
         controller: _controller,
         children: [
-          const RecentSearchTab(),
+          // const RecentSearchTab(),
           SearchTasks(
             data: searchDataResult['tasks'] ?? [],
           ),

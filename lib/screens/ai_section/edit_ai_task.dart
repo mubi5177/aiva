@@ -55,7 +55,6 @@ class _EditAIAppointmentState extends State<EditAIAppointment> {
   void updateData() {
     print('ChatMessage.build: ${widget.date}');
     setState(() {
-
       type.text = widget.title;
       description.text = widget.description;
       _endDateTimeCubit.update(widget.date);
@@ -93,6 +92,7 @@ class _EditAIAppointmentState extends State<EditAIAppointment> {
                                 setState(() {
                                   isUploading = true;
                                 });
+                                String date = _endDateTimeCubit.state.split(" ")[0];
                                 String userId = getCurrentUserId();
                                 var data = {
                                   "type_desc": type.text.trim(),
@@ -100,7 +100,7 @@ class _EditAIAppointmentState extends State<EditAIAppointment> {
                                   "labels": tagsList,
                                   "description": description.text.trim(),
                                   "location": location.text.trim(),
-                                  "date": _endDateTimeCubit.state,
+                                  "date": date,
                                   "userId": userId,
                                   "isCompleted": false
                                 };

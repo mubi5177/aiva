@@ -241,26 +241,30 @@ class _TodayTaskSectionState extends State<TodayTaskSection> {
                                         ],
                                       ),
                                       const Gap(10),
-                                      Row(
-                                        children: [
-                                          AppImage.assets(
-                                            assetName: Assets.images.location.path,
-                                            height: 14,
-                                            width: 14,
-                                            color: context.secondary,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          const Gap(10),
-                                          SizedBox(
-                                            width: context.width * .7,
-                                            child: Text(
-                                              task['location'] ?? appointmentList[index].streetName ?? '',
-                                              style: context.titleSmall?.copyWith(fontSize: 12, color: Colors.black.withOpacity(.7)),
+                                      if( task['location'].toString().isNotEmpty)...[
+                                        Row(
+                                          children: [
+                                            AppImage.assets(
+                                              assetName: Assets.images.location.path,
+                                              height: 14,
+                                              width: 14,
+                                              color: context.secondary,
+                                              fit: BoxFit.cover,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Gap(14),
+                                            const Gap(10),
+
+                                            SizedBox(
+                                              width: context.width * .7,
+                                              child: Text(
+                                                task['location'] ?? appointmentList[index].streetName ?? '',
+                                                style: context.titleSmall?.copyWith(fontSize: 12, color: Colors.black.withOpacity(.7)),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Gap(14),
+                                      ],
+
                                       SizedBox(
                                         width: context.width * 0.7,
                                         child: Text(
