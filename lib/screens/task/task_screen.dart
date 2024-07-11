@@ -13,6 +13,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+enum DaysType { today, tomorrow, week, custom }
+
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
 
@@ -120,18 +122,22 @@ class _TaskScreenState extends State<TaskScreen> with SingleTickerProviderStateM
                     controller: _controller,
                     children: [
                       TodaySTaskBar(
+                        type: DaysType.today,
                         appointmentSnapshot: appointmentSnapshot,
                         taskSnapshot: taskSnapshot,
                       ),
                       TodaySTaskBar(
+                        type: DaysType.tomorrow,
                         appointmentSnapshot: appointmentSnapshot,
                         taskSnapshot: taskSnapshot,
                       ),
                       TodaySTaskBar(
+                        type: DaysType.week,
                         appointmentSnapshot: appointmentSnapshot,
                         taskSnapshot: taskSnapshot,
                       ),
                       TodaySTaskBar(
+                        type: DaysType.custom,
                         appointmentSnapshot: appointmentSnapshot,
                         taskSnapshot: taskSnapshot,
                       ),

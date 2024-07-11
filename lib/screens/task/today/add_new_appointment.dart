@@ -101,6 +101,7 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                     );
                                     DateTime dateTime = _endDateTimeCubit.state.toDateTime();
                                     print('_AddNewAppointmentState.build: ${dateTime}');
+
                                     FirebaseMessagingHandler().scheduleNotification(
                                       id: Random().nextInt(1000),
                                       title: type.text.trim(),

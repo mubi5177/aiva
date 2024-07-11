@@ -2,17 +2,20 @@ import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/gen/assets.gen.dart';
+import 'package:aivi/screens/task/task_screen.dart';
 import 'package:aivi/screens/task/today/today_appointments.dart';
 import 'package:aivi/screens/task/today/today_task_section.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 class TodaySTaskBar extends StatefulWidget {
   final AsyncSnapshot<QuerySnapshot<Object?>> appointmentSnapshot;
   final AsyncSnapshot<QuerySnapshot<Object?>> taskSnapshot;
+  final DaysType type;
 
-  const TodaySTaskBar({super.key, required this.appointmentSnapshot, required this.taskSnapshot});
+  const TodaySTaskBar({super.key, required this.appointmentSnapshot, required this.taskSnapshot, required this.type});
 
   @override
   _TodaySTaskBarState createState() => _TodaySTaskBarState();
@@ -21,33 +24,90 @@ class TodaySTaskBar extends StatefulWidget {
 class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<QueryDocumentSnapshot> currentUserDocumentsTask = [];
+  List<QueryDocumentSnapshot> currentUserDocumentsTaskFiltered = [];
   List<QueryDocumentSnapshot> currentUserDocumentsAppointment = [];
+  List<QueryDocumentSnapshot> currentUserDocumentsAppointmentFiltered = [];
 
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabChange);
+    currentUserDocumentsAppointment = [];
+    currentUserDocumentsAppointmentFiltered = [];
+    currentUserDocumentsTask = [];
+    currentUserDocumentsTaskFiltered = [];
+    // Get today's date
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+
+    // Get tomorrow's date
+    DateTime tomorrow = today.add(const Duration(days: 1));
+
+    // Get start and end of the current week
+    DateTime startOfWeek = today.subtract(Duration(days: today.weekday - 1));
+    DateTime endOfWeek = startOfWeek.add(const Duration(days: 6));
+
+    // Formatter to parse and compare dates (assuming date is stored in the document as a string)
+    DateFormat dateFormat = DateFormat('MM/dd/yyyy');
 
     String currentUserId = getCurrentUserId();
     final List<QueryDocumentSnapshot> appointmentDocuments = widget.appointmentSnapshot.data!.docs;
-    for (var document in appointmentDocuments) {
-      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-      String userId = data['userId'];
-      bool isCompleted = data['isCompleted'];
-      if (userId == currentUserId && isCompleted==false) {
-        currentUserDocumentsAppointment.add(document);
-      }
-    }
     final List<QueryDocumentSnapshot> taskDocuments = widget.taskSnapshot.data!.docs;
-    for (var document in taskDocuments) {
+    /*List<QueryDocumentSnapshot> todayAppointments = [];
+    List<QueryDocumentSnapshot> tomorrowAppointments = [];
+    List<QueryDocumentSnapshot> weekAppointments = [];*/
+    if (widget.type == DaysType.today) {
+      currentUserDocumentsAppointment = appointmentDocuments.where((doc) {
+        DateTime appointmentDate = dateFormat.parse(doc['date']);
+        return appointmentDate == today;
+      }).toList();
+
+      currentUserDocumentsTask = taskDocuments.where((doc) {
+        DateTime taskDate = dateFormat.parse(doc['date']);
+        return taskDate == today;
+      }).toList();
+    } else if (widget.type == DaysType.tomorrow) {
+      currentUserDocumentsAppointment = appointmentDocuments.where((doc) {
+        DateTime appointmentDate = dateFormat.parse(doc['date']);
+        return appointmentDate == tomorrow;
+      }).toList();
+
+      currentUserDocumentsTask = taskDocuments.where((doc) {
+        DateTime taskDate = dateFormat.parse(doc['date']);
+        return taskDate == tomorrow;
+      }).toList();
+    } else if (widget.type == DaysType.week) {
+      currentUserDocumentsAppointment = appointmentDocuments.where((doc) {
+        DateTime appointmentDate = dateFormat.parse(doc['date']);
+        return appointmentDate.isAfter(startOfWeek.subtract(const Duration(days: 1))) &&
+            appointmentDate.isBefore(endOfWeek.add(const Duration(days: 1)));
+      }).toList();
+
+      currentUserDocumentsTask = taskDocuments.where((doc) {
+        DateTime taskDate = dateFormat.parse(doc['date']);
+        return taskDate.isAfter(startOfWeek.subtract(const Duration(days: 1))) && taskDate.isBefore(endOfWeek.add(const Duration(days: 1)));
+      }).toList();
+    } else {}
+
+    for (var document in currentUserDocumentsAppointment) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
       String userId = data['userId'];
-      bool isCompleted = data['isCompleted'];
-      if (userId == currentUserId && isCompleted==false) {
-        currentUserDocumentsTask.add(document);
+      bool isCompleted = data['isCompleted'] ?? false;
+      if (userId == currentUserId && isCompleted == false) {
+        currentUserDocumentsAppointmentFiltered.add(document);
       }
     }
 
+    for (var document in currentUserDocumentsTask) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      String userId = data['userId'];
+      bool isCompleted = data['isCompleted'] ?? false;
+      if (userId == currentUserId && isCompleted == false) {
+        currentUserDocumentsTaskFiltered.add(document);
+      }
+    }
+    // Now you can use these lists to populate your tabs
+    print('${widget.type} Appointments: ${currentUserDocumentsAppointmentFiltered.length}');
     super.initState();
   }
 
@@ -108,7 +168,7 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
                           color: currentIndex == 0 ? Colors.white : context.secondary,
                         ),
                         const Gap(7),
-                        Text('Appointments (${currentUserDocumentsAppointment.length})'),
+                        Text('Appointments (${currentUserDocumentsAppointmentFiltered.length})'),
                       ],
                     ),
                   ),
@@ -124,7 +184,7 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
                           color: currentIndex == 1 ? Colors.white : context.secondary,
                         ),
                         const Gap(10),
-                        Text('Tasks (${currentUserDocumentsTask.length})'),
+                        Text('Tasks (${currentUserDocumentsTaskFiltered.length})'),
                       ],
                     ),
                   ),
@@ -138,10 +198,10 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
                 children: [
                   // first tab bar view widget
                   TodayAppointments(
-                    appointmentDocuments: currentUserDocumentsAppointment,
+                    appointmentDocuments: currentUserDocumentsAppointmentFiltered,
                   ),
                   TodayTaskSection(
-                    taskDocuments: currentUserDocumentsTask,
+                    taskDocuments: currentUserDocumentsTaskFiltered,
                   )
                 ],
               ),
