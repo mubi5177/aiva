@@ -58,6 +58,7 @@ dependencies:
   table_calendar: ^3.1.1
   vibration: ^1.8.4
   confetti: ^0.7.0
+  livespeechtotext: ^1.0.9
   lottie: ^3.1.1
   flutter_bloc:
   provider: ^6.0.5

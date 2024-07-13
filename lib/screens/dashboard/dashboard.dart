@@ -123,21 +123,17 @@ class _DashboardState extends State<Dashboard> {
         title: "Good Morning, ${currentUser?.name ?? '---'}",
         scaffoldKey: _scaffoldKey,
         actions: [
-          // InkWell(
-          //     onTap: () {
-          //       //
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (BuildContext context) => const SpeechToTextPage(),
-          //         ),
-          //       );
-          //       // FirebaseMessagingHandler().scheduleNotification(
-          //       //     title: 'Scheduled Notification',
-          //       //     body: '${DateTime.now().add(const Duration(minutes: 1))}',
-          //       //     scheduledNotificationDateTime: DateTime.now().add(const Duration(seconds: 5)));
-          //     },
-          //     child: AppImage.svg(assetName: Assets.svgs.notificatons)),
+          InkWell(
+              onTap: () {
+                //
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => MyApp(),
+                  ),
+                );
+              },
+              child: AppImage.svg(assetName: Assets.svgs.notificatons)),
           const Gap(10),
           InkWell(
               onTap: () {

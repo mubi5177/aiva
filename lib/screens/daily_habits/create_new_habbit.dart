@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
