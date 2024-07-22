@@ -14,7 +14,8 @@ import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 class EndDateTimeSheet extends StatefulWidget {
   final String dateName;
-  const EndDateTimeSheet({required this.dateName, required this.dateTimeCubit});
+  final bool isTask;
+  const EndDateTimeSheet({required this.dateName, required this.dateTimeCubit, required this.isTask});
 
   final DateTimeCubit dateTimeCubit;
 
@@ -87,7 +88,10 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
                 _today.formatTime(format: 'EEEE'),
                 style: context.displaySmall?.copyWith(color: context.tertiary),
               ),
-              trailing: TimePickerSpinnerPopUp(
+              trailing:
+
+              widget.isTask==true?SizedBox.shrink():
+              TimePickerSpinnerPopUp(
                 mode: CupertinoDatePickerMode.time,
                 initTime: _selectedTime,
                 minTime: _selectedTime.subtract(const Duration(days: 10)),
@@ -120,7 +124,6 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
                   DateTime mergedDate = _mergeEndDate(date1, date2);
                   widget.dateTimeCubit.update(mergedDate);
 
-
                   context.pop();
                 },
                 child: const Text("Done"),
@@ -129,7 +132,6 @@ class EndDateTimeSheetState extends State<EndDateTimeSheet> {
             const Gap(20.0),
           ],
         );
-
       },
     );
   }

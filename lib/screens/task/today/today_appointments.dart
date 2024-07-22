@@ -418,23 +418,24 @@ class _TodayAppointmentsState extends State<TodayAppointments> {
                                         ],
                                       ),
                                       const Gap(10),
-                                      Row(
-                                        children: [
-                                          AppImage.assets(
-                                            assetName: Assets.images.location.path,
-                                            height: 14,
-                                            width: 14,
-                                            color: context.secondary,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          const Gap(10),
-                                          Text(
-                                            data['location'],
-                                            // appointmentList[index].streetName ?? '',
-                                            style: context.titleSmall?.copyWith(fontSize: 12, color: Colors.black.withOpacity(.7)),
-                                          ),
-                                        ],
-                                      ),
+                                      if (data['location'].toString().isNotEmpty)
+                                        Row(
+                                          children: [
+                                            AppImage.assets(
+                                              assetName: Assets.images.location.path,
+                                              height: 14,
+                                              width: 14,
+                                              color: context.secondary,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            const Gap(10),
+                                            Text(
+                                              data['location'],
+                                              // appointmentList[index].streetName ?? '',
+                                              style: context.titleSmall?.copyWith(fontSize: 12, color: Colors.black.withOpacity(.7)),
+                                            ),
+                                          ],
+                                        ),
                                     ],
                                   ),
                                   const Gap(14),

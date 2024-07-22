@@ -4,6 +4,7 @@ import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/extensions/e_formated_to_datetime.dart';
 import 'package:aivi/core/extensions/e_string_to_dateTime.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/action_cubit.dart';
@@ -73,7 +74,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                           const Gap(10.0),
                           AppButton.primary(
                             onPressed: () async {
-                              if (_formKey.currentState!.validate() && (tagsList.isNotEmpty && _endDateTimeCubit.state.isNotEmpty)) {
+                              if (_formKey.currentState!.validate() && ( _endDateTimeCubit.state.isNotEmpty)) {
                                 try {
                                   setState(() {
                                     isUploading = true;
@@ -83,7 +84,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                                   var data = {
                                     "type_desc": type.text.trim(),
                                     "type": action.trim(),
-                                    "labels": tagsList,
+                                    // "labels": tagsList,
                                     "description": description.text.trim(),
                                     "location": location.text.trim(),
                                     "date": date,
@@ -180,14 +181,16 @@ class _EditAppointmentState extends State<EditAppointment> {
                           type.text = data["type_desc"];
                           location.text = data["location"];
                           description.text = data["description"];
+
+                          _endDateTimeCubit.update(data['date'].toString().toDate());
                           // Assuming data['labels'] is of type List<dynamic>
-                          List<dynamic> labels = data['labels']; // Extract the list from data
-
-                          // Convert the list to List<String>
-                          List<String> stringLabels = labels.map((label) => label.toString()).toList();
-
-                          // Add the string labels to tagsList
-                          tagsList.addAll(stringLabels);
+                          // List<dynamic> labels = data['labels']; // Extract the list from data
+                          //
+                          // // Convert the list to List<String>
+                          // List<String> stringLabels = labels.map((label) => label.toString()).toList();
+                          //
+                          // // Add the string labels to tagsList
+                          // tagsList.addAll(stringLabels);
 
                           // Now you can use the data from the document as needed
                           return Form(
@@ -282,86 +285,86 @@ class _EditAppointmentState extends State<EditAppointment> {
                                         ),
                                       ),
                                     const Gap(20),
+                                    // Text(
+                                    //   "Label",
+                                    //   style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                                    // ),
+                                    // const Gap(12),
+                                    // Container(
+                                    //   height: 110,
+                                    //   decoration: BoxDecoration(
+                                    //       color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                                    //   child: Column(
+                                    //     children: [
+                                    //       SizedBox(
+                                    //         width: context.width,
+                                    //         height: 55,
+                                    //         child: ListView.builder(
+                                    //           scrollDirection: Axis.horizontal,
+                                    //           itemCount: tagsList.length,
+                                    //           itemBuilder: (BuildContext context, int index) {
+                                    //             return Padding(
+                                    //               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                                    //               child: Container(
+                                    //                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    //                 margin: const EdgeInsets.symmetric(vertical: 10),
+                                    //                 decoration: BoxDecoration(
+                                    //                   color: const Color(0xffE4EAF9),
+                                    //                   borderRadius: BorderRadius.circular(10),
+                                    //                 ),
+                                    //                 child: Row(
+                                    //                   children: [
+                                    //                     Text(
+                                    //                       tagsList[index],
+                                    //                       style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
+                                    //                     ),
+                                    //                     const Gap(5),
+                                    //                     InkWell(
+                                    //                       onTap: () {
+                                    //                         setState(() {
+                                    //                           tagsList.removeWhere((element) => element == tagsList[index]);
+                                    //                         });
+                                    //                       },
+                                    //                       child: const Icon(
+                                    //                         Icons.close,
+                                    //                         size: 14,
+                                    //                       ),
+                                    //                     )
+                                    //                   ],
+                                    //                 ),
+                                    //               ),
+                                    //             );
+                                    //           },
+                                    //         ),
+                                    //       ),
+                                    //       Padding(
+                                    //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    //         child: TextField(
+                                    //           controller: label,
+                                    //
+                                    //           // Set decoration to null to remove borders
+                                    //           onSubmitted: (val) {
+                                    //             tagsList.add(val.trim());
+                                    //             setState(() {
+                                    //               label.clear();
+                                    //               // label.text=''
+                                    //             });
+                                    //           },
+                                    //           decoration: const InputDecoration(
+                                    //             hintText: "Search for Labels ",
+                                    //             border: InputBorder.none,
+                                    //             enabledBorder: InputBorder.none,
+                                    //             focusedBorder: InputBorder.none,
+                                    //             errorBorder: InputBorder.none,
+                                    //           ),
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    // const Gap(20),
                                     Text(
-                                      "Label",
-                                      style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
-                                    ),
-                                    const Gap(12),
-                                    Container(
-                                      height: 110,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            width: context.width,
-                                            height: 55,
-                                            child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: tagsList.length,
-                                              itemBuilder: (BuildContext context, int index) {
-                                                return Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                                                  child: Container(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                                    margin: const EdgeInsets.symmetric(vertical: 10),
-                                                    decoration: BoxDecoration(
-                                                      color: const Color(0xffE4EAF9),
-                                                      borderRadius: BorderRadius.circular(10),
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          tagsList[index],
-                                                          style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
-                                                        ),
-                                                        const Gap(5),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              tagsList.removeWhere((element) => element == tagsList[index]);
-                                                            });
-                                                          },
-                                                          child: const Icon(
-                                                            Icons.close,
-                                                            size: 14,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                            child: TextField(
-                                              controller: label,
-
-                                              // Set decoration to null to remove borders
-                                              onSubmitted: (val) {
-                                                tagsList.add(val.trim());
-                                                setState(() {
-                                                  label.clear();
-                                                  // label.text=''
-                                                });
-                                              },
-                                              decoration: const InputDecoration(
-                                                hintText: "Search for Labels ",
-                                                border: InputBorder.none,
-                                                enabledBorder: InputBorder.none,
-                                                focusedBorder: InputBorder.none,
-                                                errorBorder: InputBorder.none,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Gap(20),
-                                    Text(
-                                      "Type",
+                                      "Title",
                                       style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
                                     ),
                                     const Gap(12),
@@ -379,7 +382,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                                       keyboardType: TextInputType.name,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'Type required!';
+                                          return 'Title required!';
                                         }
                                         return null;
                                       },
@@ -448,12 +451,12 @@ class _EditAppointmentState extends State<EditAppointment> {
                                               child: TextFormField(
                                                 controller: description,
                                                 maxLines: 15,
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'Description required!';
-                                                  }
-                                                  return null;
-                                                },
+                                                // validator: (value) {
+                                                //   if (value == null || value.isEmpty) {
+                                                //     return 'Description required!';
+                                                //   }
+                                                //   return null;
+                                                // },
                                                 // Set decoration to null to remove borders
                                                 decoration: const InputDecoration(
                                                   hintText: "Describe in details",
@@ -530,7 +533,9 @@ class _EditAppointmentState extends State<EditAppointment> {
                                                 context.closeKeyboard();
                                                 context.showBottomSheet(
                                                   maxHeight: context.height * .9,
-                                                  child: EndDateTimeSheet(dateName: "End  Date", dateTimeCubit: _endDateTimeCubit),
+                                                  child: EndDateTimeSheet(
+                                                      isTask: false,
+                                                      dateName: "End  Date", dateTimeCubit: _endDateTimeCubit),
                                                 );
                                               },
                                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),

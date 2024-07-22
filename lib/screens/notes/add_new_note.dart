@@ -434,12 +434,12 @@ class _AddNotesState extends State<AddNotes> {
                                     controller: description,
                                     maxLines: 15,
                                     // The validator receives the text that the user has entered.
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Description required!';
-                                      }
-                                      return null;
-                                    },
+                                    // validator: (value) {
+                                    //   if (value == null || value.isEmpty) {
+                                    //     return 'Description required!';
+                                    //   }
+                                    //   return null;
+                                    // },
                                     // Set decoration to null to remove borders
                                     decoration: const InputDecoration(
                                       hintText: "Describe in details",

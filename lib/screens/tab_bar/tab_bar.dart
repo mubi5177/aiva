@@ -167,6 +167,7 @@ class _VoiceSheetState extends State<VoiceSheet> {
   @override
   void initState() {
     super.initState();
+
     _livespeechtotextPlugin = Livespeechtotext();
 
     _livespeechtotextPlugin.getLocaleDisplayName().then((value) => setState(
@@ -176,6 +177,11 @@ class _VoiceSheetState extends State<VoiceSheet> {
     binding().whenComplete(() => null);
 
     _recognisedText = '';
+
+    _livespeechtotextPlugin.start();
+    setState(() {
+      isListening = true;
+    });
   }
 
   @override

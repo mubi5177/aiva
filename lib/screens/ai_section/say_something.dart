@@ -4,6 +4,8 @@ import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
 import 'package:aivi/core/constant/app_strings.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
+import 'package:aivi/core/extensions/e_date_time.dart';
+import 'package:aivi/core/extensions/e_format.dart';
 import 'package:aivi/core/extensions/e_formated_to_datetime.dart';
 import 'package:aivi/core/extensions/e_formatted_dates.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
@@ -234,10 +236,10 @@ class _SaySomethingState extends State<SaySomething> {
     if (task != null) {
       textController.clear();
       _lastWords = '';
-      print('Action: ${task.action}');
-      print('Task Title: ${task.entities['task_title']}');
-      print('Task Content: ${task.entities['task_content']}');
-      print('Task Due Date: ${task.entities['task_due_date']}');
+      // print('Action: ${task.action}');
+      // print('Task Title: ${task.entities['task_title']}');
+      // print('Task Content: ${task.entities['task_content']}');
+      // print('Task Due Date: ${task.entities['task_due_date']}');
       // Handle task data as needed
       String formattedDate = '';
       if (task.entities['task_due_date'] != null) {
@@ -307,6 +309,10 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime? date = actionDate?.toDate();
+
+    // Format the DateTime object into "YYYY/MM/DD" format
+    String formattedDate = (date ?? DateTime.now()).toString().formatDate;
+
     return Align(
       alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Row(
@@ -457,7 +463,7 @@ class ChatMessage extends StatelessWidget {
                                       var data = {
                                         "title": actionTitle,
                                         "type": "Tasks",
-                                        "labels": tagsList,
+                                        // "labels": tagsList,
                                         "description": actionDescription,
                                         "date": date.toString(),
                                         "userId": userId,
@@ -505,10 +511,10 @@ class ChatMessage extends StatelessWidget {
                                       var data = {
                                         "type_desc": actionTitle,
                                         "type": action,
-                                        "labels": tagsList,
+                                        // "labels": tagsList,
                                         "description": actionDescription,
-                                        "location": "",
-                                        "date": date.toString(),
+                                        // "location": "",
+                                        "date": formattedDate,
                                         "userId": userId,
                                         "isCompleted": false
                                       };

@@ -70,7 +70,7 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                           const Gap(10.0),
                           AppButton.primary(
                             onPressed: () async {
-                              if (_formKey.currentState!.validate() && (tagsList.isNotEmpty && _endDateTimeCubit.state.isNotEmpty)) {
+                              if (_formKey.currentState!.validate() && (_endDateTimeCubit.state.isNotEmpty)) {
                                 try {
                                   setState(() {
                                     isUploading = true;
@@ -80,7 +80,7 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                   var data = {
                                     "type_desc": type.text.trim(),
                                     "type": action.trim(),
-                                    "labels": tagsList,
+                                    // "labels": tagsList,
                                     "description": description.text.trim(),
                                     "location": location.text.trim(),
                                     "date": date,
@@ -253,86 +253,86 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                   ),
                                 ),
                               const Gap(20),
+                              // Text(
+                              //   "Label",
+                              //   style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                              // ),
+                              // const Gap(12),
+                              // Container(
+                              //   height: 110,
+                              //   decoration: BoxDecoration(
+                              //       color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              //   child: Column(
+                              //     children: [
+                              //       SizedBox(
+                              //         width: context.width,
+                              //         height: 55,
+                              //         child: ListView.builder(
+                              //           scrollDirection: Axis.horizontal,
+                              //           itemCount: tagsList.length,
+                              //           itemBuilder: (BuildContext context, int index) {
+                              //             return Padding(
+                              //               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                              //               child: Container(
+                              //                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              //                 margin: const EdgeInsets.symmetric(vertical: 10),
+                              //                 decoration: BoxDecoration(
+                              //                   color: const Color(0xffE4EAF9),
+                              //                   borderRadius: BorderRadius.circular(10),
+                              //                 ),
+                              //                 child: Row(
+                              //                   children: [
+                              //                     Text(
+                              //                       tagsList[index],
+                              //                       style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
+                              //                     ),
+                              //                     const Gap(5),
+                              //                     InkWell(
+                              //                       onTap: () {
+                              //                         setState(() {
+                              //                           tagsList.removeWhere((element) => element == tagsList[index]);
+                              //                         });
+                              //                       },
+                              //                       child: const Icon(
+                              //                         Icons.close,
+                              //                         size: 14,
+                              //                       ),
+                              //                     )
+                              //                   ],
+                              //                 ),
+                              //               ),
+                              //             );
+                              //           },
+                              //         ),
+                              //       ),
+                              //       Padding(
+                              //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              //         child: TextField(
+                              //           controller: label,
+                              //
+                              //           // Set decoration to null to remove borders
+                              //           onSubmitted: (val) {
+                              //             tagsList.add(val.trim());
+                              //             setState(() {
+                              //               label.clear();
+                              //               // label.text=''
+                              //             });
+                              //           },
+                              //           decoration: const InputDecoration(
+                              //             hintText: "Search for Labels ",
+                              //             border: InputBorder.none,
+                              //             enabledBorder: InputBorder.none,
+                              //             focusedBorder: InputBorder.none,
+                              //             errorBorder: InputBorder.none,
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                              // const Gap(20),
                               Text(
-                                "Label",
-                                style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
-                              ),
-                              const Gap(12),
-                              Container(
-                                height: 110,
-                                decoration: BoxDecoration(
-                                    color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      width: context.width,
-                                      height: 55,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: tagsList.length,
-                                        itemBuilder: (BuildContext context, int index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                              margin: const EdgeInsets.symmetric(vertical: 10),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xffE4EAF9),
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    tagsList[index],
-                                                    style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
-                                                  ),
-                                                  const Gap(5),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        tagsList.removeWhere((element) => element == tagsList[index]);
-                                                      });
-                                                    },
-                                                    child: const Icon(
-                                                      Icons.close,
-                                                      size: 14,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: TextField(
-                                        controller: label,
-
-                                        // Set decoration to null to remove borders
-                                        onSubmitted: (val) {
-                                          tagsList.add(val.trim());
-                                          setState(() {
-                                            label.clear();
-                                            // label.text=''
-                                          });
-                                        },
-                                        decoration: const InputDecoration(
-                                          hintText: "Search for Labels ",
-                                          border: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Gap(20),
-                              Text(
-                                "Type",
+                                "Title",
                                 style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
                               ),
                               const Gap(12),
@@ -350,7 +350,7 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                 keyboardType: TextInputType.name,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Type required!';
+                                    return 'Title required!';
                                   }
                                   return null;
                                 },
@@ -414,12 +414,12 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                         child: TextFormField(
                                           controller: description,
                                           maxLines: 15,
-                                          validator: (value) {
-                                            if (value == null || value.isEmpty) {
-                                              return 'Description required!';
-                                            }
-                                            return null;
-                                          },
+                                          // validator: (value) {
+                                          //   if (value == null || value.isEmpty) {
+                                          //     return 'Description required!';
+                                          //   }
+                                          //   return null;
+                                          // },
                                           // Set decoration to null to remove borders
                                           decoration: const InputDecoration(
                                             hintText: "Describe in details",
@@ -496,7 +496,9 @@ class _AddNewAppointmentState extends State<AddNewAppointment> {
                                           context.closeKeyboard();
                                           context.showBottomSheet(
                                             maxHeight: context.height * .9,
-                                            child: EndDateTimeSheet(dateName: "End  Date", dateTimeCubit: _endDateTimeCubit),
+                                            child: EndDateTimeSheet(
+                                                isTask: false,
+                                                dateName: "End  Date", dateTimeCubit: _endDateTimeCubit),
                                           );
                                         },
                                         // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),

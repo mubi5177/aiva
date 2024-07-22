@@ -30,7 +30,7 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this,initialIndex: 1);
     _tabController.addListener(_handleTabChange);
     currentUserDocumentsAppointment = [];
     currentUserDocumentsAppointmentFiltered = [];

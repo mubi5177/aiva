@@ -29,6 +29,7 @@ class AppStrings {
   static const addNewNote = 'Add New Note';
   static const editNote = 'Edit Note';
   static const addNewTask = 'Add New Task';
+  static const editTask = 'Edit Task';
   static const addNewAppointment = 'Add New Appointment';
   static const notesDetails = 'Notes Details';
   static const taskDetails = 'Tasks Details';

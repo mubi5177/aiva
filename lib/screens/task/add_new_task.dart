@@ -39,7 +39,6 @@ class _AddNewTaskState extends State<AddNewTask> {
 
   TextEditingController type = TextEditingController();
   TextEditingController description = TextEditingController();
-  TextEditingController location = TextEditingController();
   TextEditingController label = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isUploading = false;
@@ -75,14 +74,15 @@ class _AddNewTaskState extends State<AddNewTask> {
                                   setState(() {
                                     isUploading = true;
                                   });
+
                                   String date = _endDateTimeCubit.state.split(" ")[0];
+
                                   String userId = getCurrentUserId();
                                   var data = {
                                     "type_desc": type.text.trim(),
                                     "type": action.trim(),
-                                    "labels": tagsList,
+                                    // "labels": tagsList,
                                     "description": description.text.trim(),
-                                    "location": location.text.trim(),
                                     "date": date,
                                     "userId": userId,
                                     "isCompleted":false
@@ -251,87 +251,87 @@ class _AddNewTaskState extends State<AddNewTask> {
                                     },
                                   ),
                                 ),
+                              // const Gap(20),
+                              // Text(
+                              //   "Label",
+                              //   style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                              // ),
+                              // const Gap(12),
+                              // Container(
+                              //   height: 110,
+                              //   decoration: BoxDecoration(
+                              //       color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              //   child: Column(
+                              //     children: [
+                              //       SizedBox(
+                              //         width: context.width,
+                              //         height: 55,
+                              //         child: ListView.builder(
+                              //           scrollDirection: Axis.horizontal,
+                              //           itemCount: tagsList.length,
+                              //           itemBuilder: (BuildContext context, int index) {
+                              //             return Padding(
+                              //               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                              //               child: Container(
+                              //                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              //                 margin: const EdgeInsets.symmetric(vertical: 10),
+                              //                 decoration: BoxDecoration(
+                              //                   color: const Color(0xffE4EAF9),
+                              //                   borderRadius: BorderRadius.circular(10),
+                              //                 ),
+                              //                 child: Row(
+                              //                   children: [
+                              //                     Text(
+                              //                       tagsList[index],
+                              //                       style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
+                              //                     ),
+                              //                     const Gap(5),
+                              //                     InkWell(
+                              //                       onTap: () {
+                              //                         setState(() {
+                              //                           tagsList.removeWhere((element) => element == tagsList[index]);
+                              //                         });
+                              //                       },
+                              //                       child: const Icon(
+                              //                         Icons.close,
+                              //                         size: 14,
+                              //                       ),
+                              //                     )
+                              //                   ],
+                              //                 ),
+                              //               ),
+                              //             );
+                              //           },
+                              //         ),
+                              //       ),
+                              //       Padding(
+                              //         padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              //         child: TextField(
+                              //           controller: label,
+                              //
+                              //           // Set decoration to null to remove borders
+                              //           onSubmitted: (val) {
+                              //             tagsList.add(val.trim());
+                              //             setState(() {
+                              //               label.clear();
+                              //               // label.text=''
+                              //             });
+                              //           },
+                              //           decoration: const InputDecoration(
+                              //             hintText: "Search for Labels ",
+                              //             border: InputBorder.none,
+                              //             enabledBorder: InputBorder.none,
+                              //             focusedBorder: InputBorder.none,
+                              //             errorBorder: InputBorder.none,
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               const Gap(20),
                               Text(
-                                "Label",
-                                style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
-                              ),
-                              const Gap(12),
-                              Container(
-                                height: 110,
-                                decoration: BoxDecoration(
-                                    color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      width: context.width,
-                                      height: 55,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: tagsList.length,
-                                        itemBuilder: (BuildContext context, int index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                              margin: const EdgeInsets.symmetric(vertical: 10),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xffE4EAF9),
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    tagsList[index],
-                                                    style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
-                                                  ),
-                                                  const Gap(5),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        tagsList.removeWhere((element) => element == tagsList[index]);
-                                                      });
-                                                    },
-                                                    child: const Icon(
-                                                      Icons.close,
-                                                      size: 14,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: TextField(
-                                        controller: label,
-
-                                        // Set decoration to null to remove borders
-                                        onSubmitted: (val) {
-                                          tagsList.add(val.trim());
-                                          setState(() {
-                                            label.clear();
-                                            // label.text=''
-                                          });
-                                        },
-                                        decoration: const InputDecoration(
-                                          hintText: "Search for Labels ",
-                                          border: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Gap(20),
-                              Text(
-                                "Type",
+                                "Title",
                                 style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
                               ),
                               const Gap(12),
@@ -349,7 +349,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                                 keyboardType: TextInputType.name,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Type required!';
+                                    return 'Title required!';
                                   }
                                   return null;
                                 },
@@ -357,41 +357,41 @@ class _AddNewTaskState extends State<AddNewTask> {
                                 autovalidateMode: AutovalidateMode.onUserInteraction,
                               ),
                               const Gap(20),
-                              Text(
-                                "Location",
-                                style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
-                              ),
-                              const Gap(12),
-                              TextFormField(
-                                onTap: () async {},
-                                controller: location,
-                                decoration: InputDecoration(
-                                    border:
-                                        OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                    enabledBorder:
-                                        OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                    focusedBorder:
-                                        OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
-                                    hintText: "Search for Area, Street name..."),
-                                keyboardType: TextInputType.name,
-
-                                // onSaved: (value) => _auth['email'] = value!,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                              ),
-                              const Gap(10),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.my_location_rounded,
-                                    color: context.secondary,
-                                  ),
-                                  const Gap(8),
-                                  Text(
-                                    "Use your Current Location",
-                                    style: context.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: context.secondary),
-                                  ),
-                                ],
-                              ),
+                              // Text(
+                              //   "Location",
+                              //   style: context.displayMedium?.copyWith(fontWeight: FontWeight.w600, color: context.primary),
+                              // ),
+                              // const Gap(12),
+                              // TextFormField(
+                              //   onTap: () async {},
+                              //   controller: location,
+                              //   decoration: InputDecoration(
+                              //       border:
+                              //           OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              //       enabledBorder:
+                              //           OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              //       focusedBorder:
+                              //           OutlineInputBorder(borderSide: const BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(14)),
+                              //       hintText: "Search for Area, Street name..."),
+                              //   keyboardType: TextInputType.name,
+                              //
+                              //   // onSaved: (value) => _auth['email'] = value!,
+                              //   autovalidateMode: AutovalidateMode.onUserInteraction,
+                              // ),
+                              // const Gap(10),
+                              // Row(
+                              //   children: [
+                              //     Icon(
+                              //       Icons.my_location_rounded,
+                              //       color: context.secondary,
+                              //     ),
+                              //     const Gap(8),
+                              //     Text(
+                              //       "Use your Current Location",
+                              //       style: context.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: context.secondary),
+                              //     ),
+                              //   ],
+                              // ),
                               const Gap(20),
                               Text(
                                 "Description",
@@ -495,7 +495,9 @@ class _AddNewTaskState extends State<AddNewTask> {
                                           context.closeKeyboard();
                                           context.showBottomSheet(
                                             maxHeight: context.height * .9,
-                                            child: EndDateTimeSheet(dateName: "End  Date", dateTimeCubit: _endDateTimeCubit),
+                                            child: EndDateTimeSheet(
+                                                isTask: true,
+                                                dateName: "End  Date", dateTimeCubit: _endDateTimeCubit),
                                           );
                                         },
                                         // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),

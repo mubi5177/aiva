@@ -1,6 +1,7 @@
 import 'package:aivi/config/routes/app_routes.dart';
 import 'package:aivi/core/components/app_button.dart';
 import 'package:aivi/core/components/app_image.dart';
+import 'package:aivi/core/extensions/e_capital.dart';
 import 'package:aivi/core/extensions/e_context_extension.dart';
 import 'package:aivi/core/helper/helper_funtions.dart';
 import 'package:aivi/cubit/drawer_cubit.dart';
@@ -123,17 +124,17 @@ class _DashboardState extends State<Dashboard> {
         title: "Good Morning, ${currentUser?.name ?? '---'}",
         scaffoldKey: _scaffoldKey,
         actions: [
-          InkWell(
-              onTap: () {
-                //
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => MyApp(),
-                  ),
-                );
-              },
-              child: AppImage.svg(assetName: Assets.svgs.notificatons)),
+          // InkWell(
+          //     onTap: () {
+          //       //
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (BuildContext context) => MyApp(),
+          //         ),
+          //       );
+          //     },
+          //     child: AppImage.svg(assetName: Assets.svgs.notificatons)),
           const Gap(10),
           InkWell(
               onTap: () {
@@ -186,6 +187,24 @@ class _DashboardState extends State<Dashboard> {
                   }
 
                   todayAgendaList = snapshot.data ?? [];
+                  // Sort the list based on the 'isCompleted' field
+                  todayAgendaList.sort((a, b) {
+                    bool isCompletedA = a['isCompleted'];
+                    bool isCompletedB = b['isCompleted'];
+
+                    // If a is completed and b is not, move a to the bottom
+                    if (isCompletedA && !isCompletedB) {
+                      return 1; // return a positive number to move a downwards
+                    }
+                    // If a is not completed and b is completed, keep a above
+                    else if (!isCompletedA && isCompletedB) {
+                      return -1; // return a negative number to keep a above
+                    }
+                    // Otherwise, maintain the relative order of a and b
+                    else {
+                      return 0;
+                    }
+                  });
 
                   if (todayAgendaList.isEmpty) {
                     return Column(
@@ -559,7 +578,7 @@ class _AgendaListItemState extends State<_AgendaListItem> {
                       try {
                         // Get reference to the document
                         DocumentReference documentReference = FirebaseFirestore.instance
-                            .collection(widget.data['type'] == "tasks" ? 'tasks' : "appointments")
+                            .collection(widget.data['type'].toString().toLowerCase() == "tasks" ? 'tasks' : "appointments")
                             .doc(widget.docId.toString()); // Provide the document ID you want to update
 
                         // Update the field
@@ -613,7 +632,9 @@ class _AgendaListItemState extends State<_AgendaListItem> {
                     ],
                   )
                 : const SizedBox.shrink(),
-            title: Text((widget.data['type_desc'] ?? "")),
+            title: Text((widget.data['type_desc'] ?? "").toString().capitalizeFirstLetter(),style: const TextStyle(
+              fontWeight: FontWeight.bold
+            ),),
             trailing: AppImage.assets(
               assetName: Assets.images.bgMenu.path,
               height: 30,

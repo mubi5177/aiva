@@ -396,7 +396,10 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                                 context.closeKeyboard();
                                 context.showBottomSheet(
                                   maxHeight: context.height * .9,
-                                  child: EndDateTimeSheet(dateName: "End Time", dateTimeCubit: _endDateTimeCubit),
+                                  child: EndDateTimeSheet(
+
+                                      isTask: false,
+                                      dateName: "End Time", dateTimeCubit: _endDateTimeCubit),
                                 );
                               },
                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),

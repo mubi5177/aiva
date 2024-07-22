@@ -341,7 +341,9 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                                                 context.closeKeyboard();
                                                 context.showBottomSheet(
                                                   maxHeight: context.height * .9,
-                                                  child: EndDateTimeSheet(dateName: "Start Date", dateTimeCubit: _startDateTimeCubit),
+                                                  child: EndDateTimeSheet(
+                                                      isTask: false,
+                                                      dateName: "Start Date", dateTimeCubit: _startDateTimeCubit),
                                                 );
                                               },
                                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),
@@ -389,7 +391,9 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                                                 context.closeKeyboard();
                                                 context.showBottomSheet(
                                                   maxHeight: context.height * .9,
-                                                  child: EndDateTimeSheet(dateName: "End Date", dateTimeCubit: _endDateTimeCubit),
+                                                  child: EndDateTimeSheet(
+                                                      isTask: false,
+                                                      dateName: "End Date", dateTimeCubit: _endDateTimeCubit),
                                                 );
                                               },
                                               // child: Transform.scale(scale: .5, child: AppImage.svg(size: 10, assetName: Assets.svg.clock)),

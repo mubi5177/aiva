@@ -199,6 +199,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                         ],
                       ),
                       const Gap(20),
+                      if(data['location']!=null)
                       Row(
                         children: [
                           AppImage.assets(
@@ -209,10 +210,11 @@ class _TaskDetailsState extends State<TaskDetails> {
                             fit: BoxFit.cover,
                           ),
                           const Gap(10),
+
                           SizedBox(
                             width: context.width * .7,
                             child: Text(
-                              '${data['location']}',
+                              '${data['location']??""}',
                               style: context.titleSmall?.copyWith(fontWeight: FontWeight.w500, color: Colors.black.withOpacity(.6)),
                             ),
                           ),
@@ -220,31 +222,31 @@ class _TaskDetailsState extends State<TaskDetails> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    width: context.width,
-                    height: 55,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: data['labels'].length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xffE4EAF9),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              data['labels'][index],
-                              style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: context.width,
+                  //   height: 55,
+                  //   child: ListView.builder(
+                  //     scrollDirection: Axis.horizontal,
+                  //     itemCount: data['labels'].length,
+                  //     itemBuilder: (BuildContext context, int index) {
+                  //       return Padding(
+                  //         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                  //         child: Container(
+                  //           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  //           margin: const EdgeInsets.symmetric(vertical: 10),
+                  //           decoration: BoxDecoration(
+                  //             color: const Color(0xffE4EAF9),
+                  //             borderRadius: BorderRadius.circular(10),
+                  //           ),
+                  //           child: Text(
+                  //             data['labels'][index],
+                  //             style: context.labelLarge?.copyWith(color: Colors.black.withOpacity(.8)),
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                   const Divider(),
                   Text(
                     "${data['description']}",
