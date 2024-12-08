@@ -190,7 +190,6 @@ class _CreateNewHabbitState extends State<CreateNewHabbit> {
                         const Gap(12),
                         TextFormField(
                           controller: title,
-                          onTap: () async {},
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Title required!';

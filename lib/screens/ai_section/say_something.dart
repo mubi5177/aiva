@@ -25,7 +25,9 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 class SaySomething extends StatefulWidget {
   final String? recordedText;
+
   const SaySomething({super.key, this.recordedText});
+
   @override
   _SaySomethingState createState() => _SaySomethingState();
 }
@@ -231,9 +233,17 @@ class _SaySomethingState extends State<SaySomething> {
   }
 
   bool isFetchingData = false;
+
   void fetchData() async {
-    ApiResponse? task = await callApi(textController.text.trim());
-    if (task != null) {
+    AivaResponse? response = await callApi(textController.text.trim());
+    if (response == null) {
+      print('------ No response from API');
+      return;
+    }
+
+    if (response.note != null) {
+      // Handle plain text note
+      print('------ Note: ${response.note}');
       textController.clear();
       _lastWords = '';
       // print('Action: ${task.action}');
@@ -242,26 +252,33 @@ class _SaySomethingState extends State<SaySomething> {
       // print('Task Due Date: ${task.entities['task_due_date']}');
       // Handle task data as needed
       String formattedDate = '';
-      if (task.entities['task_due_date'] != null) {
-        formattedDate = task.entities['task_due_date']!.toString().formatDateString();
-      } else {
-        // Format the DateTime object using DateFormat from intl package
-        formattedDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
-      }
+      // if (task.entities['task_due_date'] != null) {
+      //   formattedDate = task.entities['task_due_date']!.toString().formatDateString();
+      // } else {
+      // Format the DateTime object using DateFormat from intl package
+      formattedDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
+      // }
 
       setState(() {
         messages.add(ChatMessage(
             ownProfile: currentUser?.profile ?? AppStrings.dummyImage,
-            actionTitle: task.entities['task_title'] ?? '',
+            actionTitle: response.note ?? '',
             actionDate: formattedDate,
-            actionDescription: task.entities['task_content'] ?? '',
-            message: "Sure! Here ${task!.action == 'create_note' ? 'Notes' : 'Task'} is the preview",
+            actionDescription: response.note ?? '',
+            message: "Sure! Here ${response.note!.contains("task") ? 'Tasks' : 'Notes'} is the preview",
             isMediaIncluded: true,
-            action: task!.action == 'create_note' ? 'Notes' : 'Tasks',
+            action: response.note!.contains("task") ? 'Tasks' : 'Notes',
             isSentByMe: false));
       });
+    }
+    if (response.structuredData != null) {
+      // Handle structured data
+      print('------ Structured Data:');
+      response.structuredData!.forEach((key, value) {
+        print('$key: $value');
+      });
     } else {
-      print('Failed to fetch task data.');
+      print('----- Failed to fetch task data.');
       context.showSnackBar(text: "Please try again with correct command!");
       // Handle error scenario
     }

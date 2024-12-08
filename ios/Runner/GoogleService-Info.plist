@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>978412153928-0duqe4285ct8sd575aadmdggk4kgb6fe.apps.googleusercontent.com</string>
+	<string>812720331101-pn93chqa5sa038n5nild1j3lb353ruil.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.978412153928-0duqe4285ct8sd575aadmdggk4kgb6fe</string>
+	<string>com.googleusercontent.apps.812720331101-pn93chqa5sa038n5nild1j3lb353ruil</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>978412153928-u9od4rt062nr5jj1q7tpb422vk7vi7e8.apps.googleusercontent.com</string>
+	<string>812720331101-2fg6h3j9ig8p87qddtbje0rudijh4199.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCQ6c88ivVwXWPYR7ue3Ot9Twp5WfKL9cU</string>
+	<string>AIzaSyDZuZIcq7bj8AvyESsHuxTfRPIIAfnZ6Yg</string>
 	<key>GCM_SENDER_ID</key>
-	<string>978412153928</string>
+	<string>812720331101</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.jegan.aiva</string>
+	<string>com.example.fyp</string>
 	<key>PROJECT_ID</key>
-	<string>aiva-e74f3</string>
+	<string>chore-flick</string>
 	<key>STORAGE_BUCKET</key>
-	<string>aiva-e74f3.appspot.com</string>
+	<string>chore-flick.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:978412153928:ios:8462192bc366fe28f07c7d</string>
+	<string>1:812720331101:ios:831305ddf78aa76995b0b4</string>
 </dict>
 </plist>

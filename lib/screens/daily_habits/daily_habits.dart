@@ -231,22 +231,24 @@ class _DailyHabitsState extends State<DailyHabits> {
                             ),
                           ],
                         );
+                      } else if (currentUserDocuments.isNotEmpty) {
+                        return ListView.builder(
+                          controller: _listView1Controller,
+                          physics: const ClampingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemCount: currentUserDocuments.length,
+                          // itemCount: habitsItemsList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final data = currentUserDocuments[index].data() as Map<String, dynamic>;
+                            final docId = currentUserDocuments[index].id;
+                            return YourHabits(
+                              data: data,
+                              docId: docId,
+                            );
+                          },
+                        );
                       }
-                      return ListView.builder(
-                        controller: _listView1Controller,
-                        physics: const ClampingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: currentUserDocuments.length,
-                        // itemCount: habitsItemsList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final data = currentUserDocuments[index].data() as Map<String, dynamic>;
-                          final docId = currentUserDocuments[index].id;
-                          return YourHabits(
-                            data: data,
-                            docId: docId,
-                          );
-                        },
-                      );
+                      return const SizedBox.shrink();
                     }),
               ),
               Text(
@@ -369,6 +371,7 @@ class YourHabits extends StatefulWidget {
 
 class _YourHabitsState extends State<YourHabits> {
   late ConfettiController _confettiController;
+
   @override
   void initState() {
     _confettiController = ConfettiController(duration: const Duration(seconds: 1));
@@ -392,7 +395,8 @@ class _YourHabitsState extends State<YourHabits> {
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: ListTile(
-        leading: AppImage.network(imageUrl: widget.data['image']),
+        leading: AppImage.assets(assetName: Assets.images.dumbell.path),
+        // leading: AppImage.network(imageUrl: widget.data['image'] ?? ''),
         title: Text(
           widget.data['title'],
           style: context.titleSmall?.copyWith(color: context.primary),
@@ -470,12 +474,18 @@ class _YourHabitsState extends State<YourHabits> {
               right: 0,
               child: ConfettiWidget(
                 confettiController: _confettiController,
-                blastDirection: 0, // radial value - DOWN
-                particleDrag: 0.05, // apply drag to the confetti
-                emissionFrequency: 0.05, // how often it should emit
-                numberOfParticles: 20, // number of particles to emit
-                gravity: 0.05, // gravity - or fall speed
-                shouldLoop: false, // start again as soon as the animation is finished
+                blastDirection: 0,
+                // radial value - DOWN
+                particleDrag: 0.05,
+                // apply drag to the confetti
+                emissionFrequency: 0.05,
+                // how often it should emit
+                numberOfParticles: 20,
+                // number of particles to emit
+                gravity: 0.05,
+                // gravity - or fall speed
+                shouldLoop: false,
+                // start again as soon as the animation is finished
                 colors: const [
                   Colors.green,
                   Colors.blue,
@@ -496,6 +506,7 @@ class WeekDays {
   final String day;
   final String date;
   final String icon;
+
   WeekDays({required this.icon, required this.date, required this.day});
 }
 
@@ -514,6 +525,7 @@ class HabitsItems {
   final String time;
   final String icon;
   final bool isCompleted;
+
   HabitsItems({required this.icon, required this.isCompleted, required this.title, required this.time});
 }
 

@@ -179,7 +179,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   const Gap(10),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                    height: context.height * .37,
+                    height: context.height * .4,
                     decoration:
                         BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey.shade200)),
                     child: Column(
@@ -351,7 +351,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
                   const Gap(20),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                    height: context.height * .2,
+                    height: context.height * .25,
                     decoration:
                         BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey.shade200)),
                     child: Column(

@@ -77,12 +77,14 @@ class _TodaySTaskBarState extends State<TodaySTaskBar> with SingleTickerProvider
         return taskDate == tomorrow;
       }).toList();
     } else if (widget.type == DaysType.week) {
+      print('_TodaySTaskBarState.initState length:${taskDocuments.length}');
+      print('_TodaySTaskBarState.initState startOfWeek:${startOfWeek}');
+      print('_TodaySTaskBarState.initState endOfWeek:${endOfWeek}');
       currentUserDocumentsAppointment = appointmentDocuments.where((doc) {
         DateTime appointmentDate = dateFormat.parse(doc['date']);
         return appointmentDate.isAfter(startOfWeek.subtract(const Duration(days: 1))) &&
             appointmentDate.isBefore(endOfWeek.add(const Duration(days: 1)));
       }).toList();
-
       currentUserDocumentsTask = taskDocuments.where((doc) {
         DateTime taskDate = dateFormat.parse(doc['date']);
         return taskDate.isAfter(startOfWeek.subtract(const Duration(days: 1))) && taskDate.isBefore(endOfWeek.add(const Duration(days: 1)));

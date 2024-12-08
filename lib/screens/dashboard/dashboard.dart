@@ -256,7 +256,8 @@ class _DashboardState extends State<Dashboard> {
                       controller: _listView1Controller,
                       physics: const ClampingScrollPhysics(),
 
-                      itemCount: todayAgendaList.length, // Number of list items
+                      itemCount: todayAgendaList.length,
+                      // Number of list items
                       itemBuilder: (BuildContext context, int index) {
                         final data = todayAgendaList[index];
                         final docId = todayAgendaList[index]['id'];
@@ -283,7 +284,7 @@ class _DashboardState extends State<Dashboard> {
               ),
               const Gap(10),
               SizedBox(
-                height: context.height * .18,
+                height: context.height * .2,
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance.collection('userHabits').snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -311,7 +312,8 @@ class _DashboardState extends State<Dashboard> {
                     }
 
                     if (currentUserDocuments.isEmpty) {
-                      return Column(
+                      return ListView(
+                        physics: const NeverScrollableScrollPhysics(),
                         children: [
                           const Gap(40),
                           Center(
@@ -500,6 +502,7 @@ class HabitsItems {
   final String title;
   final String logo;
   final bool isCompleted;
+
   HabitsItems({required this.title, required this.isCompleted, required this.logo});
 }
 
@@ -522,6 +525,7 @@ class _AgendaListItem extends StatefulWidget {
 
 class _AgendaListItemState extends State<_AgendaListItem> {
   late ConfettiController _confettiController;
+
   @override
   void initState() {
     _confettiController = ConfettiController(duration: const Duration(seconds: 1));
@@ -536,6 +540,7 @@ class _AgendaListItemState extends State<_AgendaListItem> {
   }
 
   int? selectedIndex;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -632,9 +637,10 @@ class _AgendaListItemState extends State<_AgendaListItem> {
                     ],
                   )
                 : const SizedBox.shrink(),
-            title: Text((widget.data['type_desc'] ?? "").toString().capitalizeFirstLetter(),style: const TextStyle(
-              fontWeight: FontWeight.bold
-            ),),
+            title: Text(
+              (widget.data['type_desc'] ?? "").toString().capitalizeFirstLetter(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             trailing: AppImage.assets(
               assetName: Assets.images.bgMenu.path,
               height: 30,
@@ -649,12 +655,18 @@ class _AgendaListItemState extends State<_AgendaListItem> {
             right: 0,
             child: ConfettiWidget(
               confettiController: _confettiController,
-              blastDirection: 0, // radial value - DOWN
-              particleDrag: 0.05, // apply drag to the confetti
-              emissionFrequency: 0.05, // how often it should emit
-              numberOfParticles: 20, // number of particles to emit
-              gravity: 0.05, // gravity - or fall speed
-              shouldLoop: false, // start again as soon as the animation is finished
+              blastDirection: 0,
+              // radial value - DOWN
+              particleDrag: 0.05,
+              // apply drag to the confetti
+              emissionFrequency: 0.05,
+              // how often it should emit
+              numberOfParticles: 20,
+              // number of particles to emit
+              gravity: 0.05,
+              // gravity - or fall speed
+              shouldLoop: false,
+              // start again as soon as the animation is finished
               colors: const [
                 Colors.green,
                 Colors.blue,

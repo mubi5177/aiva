@@ -1,40 +1,56 @@
 {
   "project_info": {
-    "project_number": "978412153928",
-    "project_id": "aiva-e74f3",
-    "storage_bucket": "aiva-e74f3.appspot.com"
+    "project_number": "812720331101",
+    "project_id": "chore-flick",
+    "storage_bucket": "chore-flick.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:978412153928:android:d0ef97d8b4a99ddef07c7d",
+        "mobilesdk_app_id": "1:812720331101:android:1b476aa499aefd9b95b0b4",
         "android_client_info": {
-          "package_name": "com.jegan.aiva"
+          "package_name": "com.example.fyp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "978412153928-coa2ei5f9bhbjg76vl7b3fumhq4gno4k.apps.googleusercontent.com",
+          "client_id": "812720331101-2fg6h3j9ig8p87qddtbje0rudijh4199.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fyp",
+            "certificate_hash": "4ff24d457a9573457d4eecacfea765f3e87b6cb1"
+          }
+        },
+        {
+          "client_id": "812720331101-o1rnmh1lghocrcnr8bsfu3fdrmikthgj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fyp",
+            "certificate_hash": "26526854a2b3fa8361226d3bc6287f59c0c1ce29"
+          }
+        },
+        {
+          "client_id": "812720331101-pb9uoif1f5d3nogg12a7grslkla12rr8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCf22WLBZrWGo3dcewnp-lw_L2caiZxuCY"
+          "current_key": "AIzaSyCTiPQwwCZmMnuwJk8y_86ZexZQesdZaVs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "978412153928-coa2ei5f9bhbjg76vl7b3fumhq4gno4k.apps.googleusercontent.com",
+              "client_id": "812720331101-pb9uoif1f5d3nogg12a7grslkla12rr8.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "978412153928-0duqe4285ct8sd575aadmdggk4kgb6fe.apps.googleusercontent.com",
+              "client_id": "812720331101-pn93chqa5sa038n5nild1j3lb353ruil.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.jegan.aiva"
+                "bundle_id": "com.example.fyp"
               }
             }
           ]

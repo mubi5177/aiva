@@ -47,7 +47,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             children: [
               const Spacer(),
               AppImage.assets(
-                assetName: Assets.images.aviaLogo.path,
+                assetName: Assets.images.aivaMic.path,
                 height: 150,
                 width: 150,
               ),

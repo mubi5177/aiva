@@ -50,21 +50,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCf22WLBZrWGo3dcewnp-lw_L2caiZxuCY',
-    appId: '1:978412153928:android:d0ef97d8b4a99ddef07c7d',
-    messagingSenderId: '978412153928',
-    projectId: 'aiva-e74f3',
-    storageBucket: 'aiva-e74f3.appspot.com',
+    apiKey: 'AIzaSyCTiPQwwCZmMnuwJk8y_86ZexZQesdZaVs',
+    appId: '1:812720331101:android:1b476aa499aefd9b95b0b4',
+    messagingSenderId: '812720331101',
+    projectId: 'chore-flick',
+    storageBucket: 'chore-flick.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCQ6c88ivVwXWPYR7ue3Ot9Twp5WfKL9cU',
-    appId: '1:978412153928:ios:8462192bc366fe28f07c7d',
-    messagingSenderId: '978412153928',
-    projectId: 'aiva-e74f3',
-    storageBucket: 'aiva-e74f3.appspot.com',
-    iosClientId: '978412153928-0duqe4285ct8sd575aadmdggk4kgb6fe.apps.googleusercontent.com',
-    iosBundleId: 'com.jegan.aiva',
+    apiKey: 'AIzaSyDZuZIcq7bj8AvyESsHuxTfRPIIAfnZ6Yg',
+    appId: '1:812720331101:ios:831305ddf78aa76995b0b4',
+    messagingSenderId: '812720331101',
+    projectId: 'chore-flick',
+    storageBucket: 'chore-flick.firebasestorage.app',
+    androidClientId: '812720331101-2fg6h3j9ig8p87qddtbje0rudijh4199.apps.googleusercontent.com',
+    iosClientId: '812720331101-pn93chqa5sa038n5nild1j3lb353ruil.apps.googleusercontent.com',
+    iosBundleId: 'com.example.fyp',
   );
 
 }

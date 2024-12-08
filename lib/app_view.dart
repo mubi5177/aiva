@@ -24,7 +24,7 @@ class _AppViewState extends State<AppView> {
       },
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Chore Flick',
         theme: LightTheme().themeData,
         routerConfig: router,
       ),

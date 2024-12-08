@@ -37,12 +37,17 @@ class _SplashScreenState extends State<SplashScreen> {
       body: SizedBox(
         height: context.height,
         width: context.width,
-        child: Center(
-          child: AppImage.assets(
-            assetName: Assets.images.logo.path,
-            height: 150,
-            width: 150,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AppImage.assets(
+              assetName: Assets.images.logo.path,
+              height: 150,
+              width: 150,
+            ),
+            const SizedBox(height: 10),
+            const Text("Chore Flick", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ],
         ),
       ),
     );

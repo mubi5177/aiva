@@ -129,7 +129,9 @@ Future<String> uploadImage(File imageFile) async {
   try {
     // Upload image to Firebase Storage
     final firebase_storage.Reference ref =
-        firebase_storage.FirebaseStorage.instance.ref().child('images').child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+    firebase_storage.FirebaseStorage.instance.ref().child('images').child('${DateTime
+        .now()
+        .millisecondsSinceEpoch}.jpg');
     await ref.putFile(imageFile!);
 
     // Get download URL of the uploaded image
@@ -219,7 +221,7 @@ Future<Map<String, dynamic>> getDataByField() async {
   String userId = getCurrentUserId();
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await FirebaseFirestore.instance.collection("notificationsSettings").where("userId", isEqualTo: userId).get();
+    await FirebaseFirestore.instance.collection("notificationsSettings").where("userId", isEqualTo: userId).get();
 
     for (var doc in querySnapshot.docs) {
       dataList.add(doc.data());
@@ -239,7 +241,7 @@ Future<String> getNotificationDocumentId() async {
 
   try {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await FirebaseFirestore.instance.collection("notificationsSettings").where("userId", isEqualTo: userId).get();
+    await FirebaseFirestore.instance.collection("notificationsSettings").where("userId", isEqualTo: userId).get();
 
     if (querySnapshot.docs.isNotEmpty) {
       // Return the first document found (assuming userId is unique)
@@ -273,11 +275,11 @@ Future<void> deleteDocument(String docId, String collection) async {
 Stream<List<Map<String, dynamic>>> fetchDataFromFirestore() {
   // Get today's date in "MM/dd/yyyy" format
   String formattedDate = DateFormat("MM/dd/yyyy").format(DateTime.now());
-  print('fetchDataFromFirestore: $formattedDate');
   // Reference to Firestore collections
   final collection1Ref = FirebaseFirestore.instance.collection('appointments');
   final collection2Ref = FirebaseFirestore.instance.collection('tasks');
   String userId = getCurrentUserId();
+  print('fetchDataFromFirestore: $userId');
   // Function to fetch snapshots from Firestore
   // Stream<QuerySnapshot<Map<String, dynamic>>> snapshots1 = collection1Ref.where('userId', isEqualTo: userId,).snapshots();
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots1 = collection1Ref
@@ -286,28 +288,30 @@ Stream<List<Map<String, dynamic>>> fetchDataFromFirestore() {
       .snapshots();
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots2 = collection2Ref
       .where(
-        'userId',
-        isEqualTo: userId,
-      )
+    'userId',
+    isEqualTo: userId,
+  )
       .where("date", isEqualTo: formattedDate.trim())
       .snapshots();
 
   // Combine snapshots from both collections
   Stream<List<Map<String, dynamic>>> combinedStream =
-      Rx.combineLatest2(snapshots1, snapshots2, (QuerySnapshot<Map<String, dynamic>> snapshot1, QuerySnapshot<Map<String, dynamic>> snapshot2) {
+  Rx.combineLatest2(snapshots1, snapshots2, (QuerySnapshot<Map<String, dynamic>> snapshot1, QuerySnapshot<Map<String, dynamic>> snapshot2) {
     List<Map<String, dynamic>> mergedData = [];
 
     // Add documents from collection1
-    mergedData.addAll(snapshot1.docs.map((doc) => {
-          'id': doc.id,
-          ...doc.data(),
-        }));
+    mergedData.addAll(snapshot1.docs.map((doc) =>
+    {
+      'id': doc.id,
+      ...doc.data(),
+    }));
 
     // Add documents from collection2
-    mergedData.addAll(snapshot2.docs.map((doc) => {
-          'id': doc.id,
-          ...doc.data(),
-        }));
+    mergedData.addAll(snapshot2.docs.map((doc) =>
+    {
+      'id': doc.id,
+      ...doc.data(),
+    }));
 
     return mergedData;
   });
@@ -332,10 +336,11 @@ Future<List<Map<String, dynamic>>> fetchDataFromTwoCollections() async {
   // Merge the results into a single list
   List<Map<String, dynamic>> mergedData = [];
   for (var result in results) {
-    mergedData.addAll(result.docs.map((doc) => {
-          'id': doc.id, // Include the document ID
-          ...doc.data()! as Map<String, dynamic>, // Include all other document data
-        }));
+    mergedData.addAll(result.docs.map((doc) =>
+    {
+      'id': doc.id, // Include the document ID
+      ...doc.data()! as Map<String, dynamic>, // Include all other document data
+    }));
   }
 
   return mergedData;
@@ -430,13 +435,13 @@ Future<Map<String, dynamic>> searchDataFromCollections(String searchData) async 
   try {
     // Query tasks collection
     var taskSnapshot =
-        await FirebaseFirestore.instance.collection('tasks').where("userId", isEqualTo: userId).where('type_desc', isEqualTo: searchData).get();
+    await FirebaseFirestore.instance.collection('tasks').where("userId", isEqualTo: userId).where('type_desc', isEqualTo: searchData).get();
 
     result['tasks'] = taskSnapshot.docs.map((doc) => doc.data()).toList();
 
     // Query notes collection
     var notesSnapshot =
-        await FirebaseFirestore.instance.collection('notes').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
+    await FirebaseFirestore.instance.collection('notes').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
 
     result['notes'] = notesSnapshot.docs.map((doc) => doc.data()).toList();
 
@@ -451,7 +456,7 @@ Future<Map<String, dynamic>> searchDataFromCollections(String searchData) async 
 
     // Query userHabits collection
     var userHabitsSnapshot =
-        await FirebaseFirestore.instance.collection('userHabits').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
+    await FirebaseFirestore.instance.collection('userHabits').where("userId", isEqualTo: userId).where('title', isEqualTo: searchData).get();
 
     result['userHabits'] = userHabitsSnapshot.docs.map((doc) => doc.data()).toList();
     print('the data is $result');
@@ -464,64 +469,95 @@ Future<Map<String, dynamic>> searchDataFromCollections(String searchData) async 
 
 ///API
 
-class ApiResponse {
-  final String action;
-  final Map<String, String> entities;
+class AivaResponse {
+  final String? note;
+  final Map<String, dynamic>? structuredData;
 
-  ApiResponse({
-    required this.action,
-    required this.entities,
-  });
+  AivaResponse({this.note, this.structuredData});
 
-  factory ApiResponse.fromJson(Map<String, dynamic> json) {
-    return ApiResponse(
-      action: json['action'],
-      entities: Map<String, String>.from(json['entities']),
-    );
+  factory AivaResponse.fromJson(dynamic response) {
+    if (response is String) {
+      return AivaResponse(note: response);
+    } else if (response is Map<String, dynamic>) {
+      return AivaResponse(structuredData: response);
+    } else {
+      throw Exception("Unsupported response format");
+    }
   }
 
   @override
   String toString() {
-    return 'Action: $action\nEntities: $entities';
+    if (note != null) {
+      return note!;
+    } else if (structuredData != null) {
+      return structuredData.toString();
+    }
+    return "Empty Response";
   }
 }
+// class ApiResponse {
+//   final String description;
+//   final String title;
+//   final String date;
+//   final String time;
+//
+//   // final Map<String, String> entities;
+//
+//   ApiResponse({
+//     required this.description,
+//     required this.title,
+//     required this.date,
+//     required this.time,
+//     // required this.entities,
+//   });
+//
+//   factory ApiResponse.fromJson(String description, String title, String date, String time) {
+//     return ApiResponse(
+//       description: description,
+//       title: title,
+//       date: date,
+//       time: time,
+//       // entities: Map<String, String>.from(json['entities']),
+//     );
+//   }
 
-Future<ApiResponse?> callApi(String text) async {
+// @override
+// String toString() {
+//   return 'Action: $action\nEntities: $entities';
+// }
+// }
+
+Future<AivaResponse?> callApi(String text) async {
   var headers = {
     'Content-Type': 'application/json',
     'Cookie':
-        'ARRAffinity=cafe441b5f83725edc9bf516b4ea569e812ab6508c389d9aafdccfebe722c0ef; ARRAffinitySameSite=cafe441b5f83725edc9bf516b4ea569e812ab6508c389d9aafdccfebe722c0ef'
+    'ARRAffinity=cafe441b5f83725edc9bf516b4ea569e812ab6508c389d9aafdccfebe722c0ef; ARRAffinitySameSite=cafe441b5f83725edc9bf516b4ea569e812ab6508c389d9aafdccfebe722c0ef'
   };
-
   var data = json.encode({"input_text": text});
-
   var dio = Dio();
-
   try {
     var response = await dio.post(
       'https://mobi-ai-app-stage.azurewebsites.net/identify-aiva-action',
-      options: Options(
-        headers: headers,
-      ),
+      options: Options(headers: headers),
       data: data,
     );
 
     if (response.statusCode == 200) {
       // Parse the JSON response into Task object
-      print('callApi: ${response.data}');
-
-      ApiResponse task = ApiResponse.fromJson(response.data);
-
+      print('------ response.data: ${response.data}');
+      // print('callApi:${response.data.toString().split("**Task:**")[0]}');
+      // print('callApi:${response.data.toString().split("**Task:**")[1]}');
+      AivaResponse task = AivaResponse.fromJson(response.data);
       // Return the Task object
       return task;
     } else {
-      print('Request failed with status: ${response.statusCode}');
-      print('Response: ${response.data}');
+      print('------ Request failed with status: ${response.statusCode}');
+      print('------ Response: ${response.data}');
       // Handle error scenario
       return null; // or throw an exception
     }
   } catch (e) {
-    print('Exception caught: $e');
+    print('------ Exception caught: $e');
     // Handle Dio errors such as DioError
     return null; // or throw an exception
   }

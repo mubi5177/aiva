@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -20,6 +21,7 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   UserModel? currentUser;
+
   @override
   void initState() {
     super.initState();
@@ -99,10 +101,13 @@ class _AppDrawerState extends State<AppDrawer> {
                       context.pop();
                       context.push(AppRoute.editProfile);
                       break;
-                    case 3:
+                    case 1:
                       bool exists = await checkAndAddNotificationSettings();
-
                       context.push(AppRoute.notificationSettings, extra: exists);
+                      break;
+                    case 2:
+                      context.pop();
+                      context.push(AppRoute.aboutMe);
                       break;
 
                     // case 2:
@@ -119,44 +124,46 @@ class _AppDrawerState extends State<AppDrawer> {
             },
             // separatorBuilder: (_, __) => const Divider(indent: 20.0, endIndent: 20.0),
           ),
-          const SliverToBoxAdapter(child: Divider()),
+          // const SliverToBoxAdapter(child: Divider()),
           const SliverPadding(
-            padding: EdgeInsets.symmetric(vertical: 80.0), // Adjust the padding as needed
+            padding: EdgeInsets.symmetric(vertical: 150.0), // Adjust the padding as needed
             sliver: SliverToBoxAdapter(
               child: SizedBox.shrink(), // Replace YourWidgetHere with the widget you want to add
             ),
           ),
           SliverToBoxAdapter(
               child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              const Divider(),
               const Text(AppStrings.completelySafe),
               Text(
                 AppStrings.readTermConditions,
                 style: context.titleSmall?.copyWith(color: context.secondary, fontWeight: FontWeight.bold),
               ),
+              const Divider(),
+              ListTile(
+                title: Text(
+                  AppStrings.logout,
+                  style: context.displayMedium?.copyWith(
+                    color: context.primary,
+                  ),
+                ),
+                leading: AppImage.svg(
+                  assetName: Assets.svgs.logout,
+                  color: context.primary,
+                  size: 24.0,
+                ),
+                dense: true,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
+                onTap: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.remove("isLoggedIn");
+                  context.go(AppRoute.onBoarding);
+                },
+              )
             ],
           )),
-          const SliverToBoxAdapter(child: Divider()),
-          SliverToBoxAdapter(
-              child: ListTile(
-            title: Text(
-              AppStrings.logout,
-              style: context.displayMedium?.copyWith(
-                color: context.primary,
-              ),
-            ),
-            leading: AppImage.svg(
-              assetName: Assets.svgs.logout,
-              color: context.primary,
-              size: 24.0,
-            ),
-            dense: true,
-            // selected: selectedIndex == index,
-            // selectedTileColor: selectedIndex == index ? context.primary : null,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
-            // trailing: Icon(CupertinoIcons.chevron_right, color: context.primary),
-            onTap: () {},
-          ))
         ],
       ),
     );
@@ -165,15 +172,16 @@ class _AppDrawerState extends State<AppDrawer> {
 
 List<SettingsModel> drawerList = [
   SettingsModel(title: AppStrings.editProfile, leadingIcon: Assets.svgs.profile),
-  SettingsModel(title: AppStrings.notes, leadingIcon: Assets.svgs.notes),
-  SettingsModel(title: AppStrings.dailyHabits, leadingIcon: Assets.svgs.cycle),
+  // SettingsModel(title: AppStrings.notes, leadingIcon: Assets.svgs.notes),
+  // SettingsModel(title: AppStrings.dailyHabits, leadingIcon: Assets.svgs.cycle),
   SettingsModel(title: AppStrings.notificationSetting, leadingIcon: Assets.svgs.notificatons),
-  SettingsModel(title: AppStrings.labels, leadingIcon: Assets.svgs.labels),
+  // SettingsModel(title: AppStrings.labels, leadingIcon: Assets.svgs.labels),
   SettingsModel(title: AppStrings.about, leadingIcon: Assets.svgs.about),
 ];
 
 class SettingsModel {
   final String title;
   final String leadingIcon;
+
   SettingsModel({required this.title, required this.leadingIcon});
 }

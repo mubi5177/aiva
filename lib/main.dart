@@ -35,6 +35,9 @@ void listenForPermissions() async {
       break;
     case PermissionStatus.restricted:
       break;
+    case PermissionStatus.provisional:
+      // TODO: Handle this case.
+      break;
   }
 }
 

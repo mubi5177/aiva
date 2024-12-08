@@ -1,4 +1,4 @@
-package com.jegan.aiva
+package com.example.fyp
 
 import io.flutter.embedding.android.FlutterActivity
 

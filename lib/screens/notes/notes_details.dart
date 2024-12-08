@@ -15,8 +15,11 @@ import 'package:go_router/go_router.dart';
 
 class NotesDetails extends StatelessWidget {
   final String noteId;
+
   NotesDetails({super.key, required this.noteId});
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,9 +66,9 @@ class NotesDetails extends StatelessWidget {
             onTap: () {
               context.showBottomSheet(
                   child: DeleteSheet(
-                    docId: noteId,
-                    collection: "notes",
-                  ));
+                docId: noteId,
+                collection: "notes",
+              ));
             },
             child: const Icon(
               Icons.more_horiz,
@@ -154,30 +157,31 @@ class NotesDetails extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: data['description'].length ?? notesPointList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          horizontalTitleGap: 0,
-                          leading: const Icon(
-                            Icons.circle,
-                            size: 10,
-                          ),
-                          title: Text(
-                            data['description'] ?? [index],
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                Expanded(child: Text(data['description'])),
+                // Expanded(
+                //   child: ListView.builder(
+                //     scrollDirection: Axis.vertical,
+                //     itemCount: data['description'].length ?? notesPointList.length,
+                //     itemBuilder: (BuildContext context, int index) {
+                //       return Padding(
+                //         padding: const EdgeInsets.symmetric(horizontal: 10),
+                //         child: ListTile(
+                //           contentPadding: EdgeInsets.zero,
+                //           horizontalTitleGap: 0,
+                //           leading: const Icon(
+                //             Icons.circle,
+                //             size: 10,
+                //           ),
+                //           title: Text(
+                //             data['description'] ?? [index],
+                //             overflow: TextOverflow.ellipsis,
+                //             maxLines: 2,
+                //           ),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
               ],
             ),
           );

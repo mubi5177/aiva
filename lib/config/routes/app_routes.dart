@@ -1,3 +1,4 @@
+import 'package:aivi/screens/about_me_page.dart';
 import 'package:aivi/screens/create_profile/create_profile_screen_1.dart';
 import 'package:aivi/screens/daily_habits/create_new_habbit.dart';
 import 'package:aivi/screens/daily_habits/habits.dart';
@@ -45,6 +46,10 @@ final router = GoRouter(
     GoRoute(
       path: AppRoute.editProfile,
       pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const EditProfile()),
+    ),
+    GoRoute(
+      path: AppRoute.aboutMe,
+      pageBuilder: (context, state) => CupertinoPage(key: state.pageKey, child: const AboutPage()),
     ),
     GoRoute(
       path: AppRoute.dashboard,
@@ -172,6 +177,7 @@ class AppRoute {
   static const String notes = '/notes';
   static const String notesDetails = '/notes-details';
   static const String editProfile = '/edit-profile';
+  static const String aboutMe = '/about-me';
   static const String editNotes = '/edit-notes';
   static const String editAppointment = '/edit-appointment';
   static const String editTask = '/edit-task';
